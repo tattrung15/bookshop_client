@@ -1,22 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
+import { RecoilRoot } from "recoil";
 
 import "./index.css";
 import App from "./App";
-import store from "./stores";
 
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
+  <RecoilRoot>
+    <React.StrictMode>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+    </React.StrictMode>
+  </RecoilRoot>,
   document.getElementById("root")
 );
 

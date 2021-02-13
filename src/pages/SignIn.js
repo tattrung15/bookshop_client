@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import {
   Avatar,
@@ -17,7 +16,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
-import { login } from "../features/signin/signinSlice";
+import { useRecoilState } from "recoil";
+import { auth } from "../utils/auth";
+import { userSeletor } from "../recoil/userState";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,7 +42,45 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  
+
+  const [userState, setUserState] = useRecoilState(userSeletor);
+
+  const [account, setAccount] = useState({
+    username: "",
+    password: "",
+    loginError: "",
+  });
+
+  const handleLogin = async () => {
+    const rememberMe = document.forms[0].rememberMe.checked;
+    auth
+      .login(account.username, account.password, rememberMe)
+      .then((data) => {
+        setUserState({
+          userId: data.userId,
+          username: data.username,
+          token: data.token,
+          role: data.role,
+        });
+        window.location = "/";
+      })
+      .catch((err) => {
+        setAccount({
+          username: account.username,
+          password: account.password,
+          loginError: err.message,
+        });
+      });
+  };
+
+  const handleInputUsername = (event) => {
+    setAccount(Object.assign(account, { username: event.target.value }));
+  };
+
+  const handleInputPassword = (event) => {
+    setAccount(Object.assign(account, { password: event.target.value }));
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -52,17 +91,17 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form}>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
+            id="username"
+            label="Username"
+            name="username"
             autoComplete="email"
-            autoFocus
+            onChange={handleInputUsername}
           />
           <TextField
             variant="outlined"
@@ -74,17 +113,24 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleInputPassword}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox name="rememberMe" value="remember" color="primary" />
+            }
             label="Remember me"
           />
+          <br />
+          <span style={{ color: "red" }}>{account.loginError}</span>
           <Button
-            type="submit"
+            id="btnSubmit"
+            type="button"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleLogin}
           >
             Sign In
           </Button>

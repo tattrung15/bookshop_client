@@ -11,7 +11,7 @@ function isAuthenticated() {
 }
 
 async function login(usernameLogin, passwordLogin, rememberMe) {
-  const { userId, username, token } = await signin(
+  const { userId, username, token, role } = await signin(
     usernameLogin,
     passwordLogin
   );
@@ -22,10 +22,10 @@ async function login(usernameLogin, passwordLogin, rememberMe) {
     sessionStorage.setItem(TOKEN_KEY, token);
   }
 
-  return { userId, username, token };
+  return { userId, username, token, role };
 }
 
-async function logout() {
+function logout() {
   sessionStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(TOKEN_KEY);
 }

@@ -2,6 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import {
+  Avatar,
   AppBar,
   Toolbar,
   IconButton,
@@ -16,15 +17,19 @@ import {
   ListItemIcon,
   ListItemText,
   SwipeableDrawer,
+  Chip,
 } from "@material-ui/core";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
+
+import { useRecoilState } from "recoil";
+import { userSeletor } from "../../recoil/userState";
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -99,6 +104,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
+
+  const [userState, setUserState] = useRecoilState(userSeletor);
 
   const [state, setState] = React.useState({
     left: false,
@@ -252,16 +259,33 @@ export default function PrimarySearchAppBar() {
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
-                <Icon className="fa fa-shopping-cart" />
+                <Icon
+                  style={{ overflow: "visible" }}
+                  className="fa fa-shopping-cart"
+                />
               </Badge>
             </IconButton>
-            <Link to="/login" style={{ color: "white" }}>
+            <Link
+              to={userState.username === null ? "/login" : "/dashboard"}
+              style={{ color: "white", textDecoration: "none" }}
+            >
               <IconButton
                 aria-label="show 17 new notifications"
                 color="inherit"
+                disableRipple
               >
                 <Badge color="secondary">
-                  <Icon className="fa fa-user" />
+                  {(!userState.username && <Icon className="fa fa-user" />) || (
+                    <Chip
+                      style={{ cursor: "pointer" }}
+                      label={userState.username}
+                      avatar={
+                        <Avatar>
+                          {userState.username.substring(0, 1).toUpperCase()}
+                        </Avatar>
+                      }
+                    />
+                  )}
                 </Badge>
               </IconButton>
             </Link>
