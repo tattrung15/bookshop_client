@@ -1,9 +1,11 @@
 import React from "react";
 
 function User() {
-  return <div>
+  return (
+    <div>
       <h1>Profile</h1>
-  </div>;
+    </div>
+  );
 }
 
 export default User;

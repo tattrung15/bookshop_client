@@ -255,7 +255,7 @@ export default function PrimarySearchAppBar() {
                 <Icon className="fa fa-shopping-cart" />
               </Badge>
             </IconButton>
-            <Link to="/user" style={{ color: "white" }}>
+            <Link to="/login" style={{ color: "white" }}>
               <IconButton
                 aria-label="show 17 new notifications"
                 color="inherit"
