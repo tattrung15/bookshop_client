@@ -36,6 +36,12 @@ import { userSeletor } from "../../recoil/userState";
 import { auth } from "../../utils/auth";
 
 const useStyles = makeStyles((theme) => ({
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
   grow: {
     flexGrow: 1,
   },
@@ -97,11 +103,16 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  small: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+  },
 }));
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
 
+  const [state, setState] = useState({ left: false });
   const [anchorEl, setAnchorEl] = useState(null);
   const [userState, setUserState] = useRecoilState(userSeletor);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -122,6 +133,10 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
   const handleMenuLogout = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
@@ -133,10 +148,6 @@ export default function PrimarySearchAppBar() {
       isAdmin: null,
     });
     window.location = "/";
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = "primary-search-account-menu";
@@ -206,13 +217,73 @@ export default function PrimarySearchAppBar() {
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
+          disableRipple
+          disableTouchRipple
         >
-          <Icon className="fa fa-user" />
+          {userState.username && (
+            <Box>
+              <Avatar className={classes.small}>
+                {userState.username.substring(0, 1).toUpperCase()}
+              </Avatar>
+            </Box>
+          )}
+          {!userState.username && <Icon className="fa fa-user" />}
         </IconButton>
-        <p>Profile</p>
+        {userState.username && <p>{userState.username}</p>}
+        {!userState.username && <p>Log in</p>}
       </MenuItem>
     </Menu>
   );
+
+  const list = (anchor) => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === "top" || anchor === "bottom",
+      })}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        <ListItem button>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary="Inbox" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <MailIcon />
+          </ListItemIcon>
+          <ListItemText primary="Starred" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary="Send email" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <MailIcon />
+          </ListItemIcon>
+          <ListItemText primary="Drafts" />
+        </ListItem>
+      </List>
+    </div>
+  );
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
 
   return (
     <div className={classes.grow}>
@@ -223,9 +294,18 @@ export default function PrimarySearchAppBar() {
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
+            onClick={toggleDrawer("left", true)}
           >
             <MenuIcon />
           </IconButton>
+          <SwipeableDrawer
+            anchor={"left"}
+            open={state["left"]}
+            onClose={toggleDrawer("left", false)}
+            onOpen={toggleDrawer("left", true)}
+          >
+            {list("left")}
+          </SwipeableDrawer>
           <Link to="/" style={{ color: "white", textDecoration: "none" }}>
             <Typography className={classes.title} variant="h6" noWrap>
               BOOKSHOP
@@ -261,6 +341,7 @@ export default function PrimarySearchAppBar() {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
+              disableRipple
             >
               {userState.username && (
                 <Chip
