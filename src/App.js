@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     const token = auth.getToken();
-    if (token) {
+    if (!userState.username && token) {
       validateToken(token)
         .then((data) => {
           setUserState({
@@ -49,13 +49,12 @@ function App() {
           <AppBar />
           <SignIn />
         </Route>
-        <Route path={userState.isAdmin ? "/dashboard" : "/user"} exact>
-          {(userState.isAdmin && <Dashboard />) || (
-            <div>
-              <AppBar />
-              <User />
-            </div>
-          )}
+        <Route path="/dashboard" exact>
+          <Dashboard />
+        </Route>
+        <Route path="/profile" exact>
+          <AppBar />
+          <User />
         </Route>
       </Switch>
     </div>

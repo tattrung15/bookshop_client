@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { useRecoilState } from "recoil";
 
@@ -24,6 +24,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
+import { Link } from "react-router-dom";
+
 import { mainListItems, secondaryListItems } from "./listItems";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
@@ -31,6 +33,7 @@ import Orders from "./Orders";
 
 import { userSeletor } from "../../recoil/userState";
 import { auth } from "../../utils/auth";
+import { validateToken } from "../../api/authAPI";
 
 const drawerWidth = 240;
 
@@ -144,6 +147,29 @@ export default function Dashboard() {
     window.location = "/";
   };
 
+  useEffect(() => {
+    const token = auth.getToken();
+    if (!userState.username && token) {
+      validateToken(token)
+        .then((data) => {
+          setUserState({
+            userId: data.userId,
+            username: data.username,
+            token: data.token,
+            role: data.role,
+          });
+        })
+        .catch((err) => {
+          setUserState({
+            userId: null,
+            username: null,
+            token: null,
+            isAdmin: null,
+          });
+        });
+    }
+  });
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -155,7 +181,9 @@ export default function Dashboard() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <Link to="/profile" style={{ color: "black", textDecoration: "none" }}>
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </Link>
       <MenuItem onClick={handleLogout}>Log out</MenuItem>
     </Menu>
   );
@@ -207,7 +235,8 @@ export default function Dashboard() {
               label={userState.username}
               avatar={
                 <Avatar>
-                  {userState.username.substring(0, 1).toUpperCase()}
+                  {userState.username &&
+                    userState.username.substring(0, 1).toUpperCase()}
                 </Avatar>
               }
             />
