@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import {
@@ -28,8 +29,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import { useRecoilState } from "recoil";
 import { userSeletor } from "../../recoil/userState";
@@ -117,6 +116,8 @@ export default function PrimarySearchAppBar() {
   const [userState, setUserState] = useRecoilState(userSeletor);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
+  const history = useHistory();
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -147,7 +148,7 @@ export default function PrimarySearchAppBar() {
       token: null,
       isAdmin: null,
     });
-    window.location = "/";
+    history.push("/");
   };
 
   const menuId = "primary-search-account-menu";

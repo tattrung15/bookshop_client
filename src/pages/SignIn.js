@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -51,6 +51,8 @@ export default function SignIn() {
     loginError: "",
   });
 
+  const history = useHistory();
+
   const handleLogin = async () => {
     const rememberMe = document.forms[0].rememberMe.checked;
     auth
@@ -62,7 +64,7 @@ export default function SignIn() {
           token: data.token,
           role: data.role,
         });
-        window.location = "/";
+        history.push("/");
       })
       .catch((err) => {
         setAccount({
