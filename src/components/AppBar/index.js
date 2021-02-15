@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import {
@@ -18,6 +18,7 @@ import {
   ListItemText,
   SwipeableDrawer,
   Chip,
+  Box,
 } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
@@ -27,17 +28,14 @@ import SearchIcon from "@material-ui/icons/Search";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import { useRecoilState } from "recoil";
 import { userSeletor } from "../../recoil/userState";
+import { auth } from "../../utils/auth";
 
 const useStyles = makeStyles((theme) => ({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: "auto",
-  },
   grow: {
     flexGrow: 1,
   },
@@ -88,7 +86,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sectionDesktop: {
-    marginRight: "8ch",
     display: "none",
     [theme.breakpoints.up("md")]: {
       display: "flex",
@@ -105,17 +102,16 @@ const useStyles = makeStyles((theme) => ({
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
 
+  const [anchorEl, setAnchorEl] = useState(null);
   const [userState, setUserState] = useRecoilState(userSeletor);
-
-  const [state, setState] = React.useState({
-    left: false,
-  });
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -124,6 +120,19 @@ export default function PrimarySearchAppBar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleMenuLogout = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    auth.logout();
+    setUserState({
+      userId: null,
+      username: null,
+      token: null,
+      isAdmin: null,
+    });
+    window.location = "/";
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -141,8 +150,31 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {userState.isAdmin && (
+        <Link
+          to="/dashboard"
+          style={{ color: "black", textDecoration: "none" }}
+        >
+          <MenuItem onClick={handleMenuClose}>Dashboard</MenuItem>
+        </Link>
+      )}
+      {userState.username && (
+        <Box>
+          <Link
+            to="/profile"
+            style={{ color: "black", textDecoration: "none" }}
+          >
+            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+          </Link>
+
+          <MenuItem onClick={handleMenuLogout}>Log out</MenuItem>
+        </Box>
+      )}
+      {!userState.username && (
+        <Link to="/login" style={{ color: "black", textDecoration: "none" }}>
+          <MenuItem onClick={handleMenuClose}>Log in</MenuItem>
+        </Link>
+      )}
     </Menu>
   );
 
@@ -160,61 +192,27 @@ export default function PrimarySearchAppBar() {
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
-            <Icon className="fa fa-shopping-cart" />
+            <Icon
+              style={{ overflow: "visible" }}
+              className="fa fa-shopping-cart"
+            />
           </Badge>
         </IconButton>
         <p>Cart</p>
       </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 17 new notifications" color="inherit">
-          <Badge color="secondary">
-            <Icon className="fa fa-user" />
-          </Badge>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <Icon className="fa fa-user" />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Icon className="fas fa-map-marker-alt" />
-        </IconButton>
-        <p>Address</p>
-      </MenuItem>
     </Menu>
   );
-
-  const list = (anchor) => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
-      })}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-
-    setState({ ...state, [anchor]: open });
-  };
 
   return (
     <div className={classes.grow}>
@@ -225,18 +223,9 @@ export default function PrimarySearchAppBar() {
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
-            onClick={toggleDrawer("left", true)}
           >
             <MenuIcon />
           </IconButton>
-          <SwipeableDrawer
-            anchor={"left"}
-            open={state["left"]}
-            onClose={toggleDrawer("left", false)}
-            onOpen={toggleDrawer("left", true)}
-          >
-            {list("left")}
-          </SwipeableDrawer>
           <Link to="/" style={{ color: "white", textDecoration: "none" }}>
             <Typography className={classes.title} variant="h6" noWrap>
               BOOKSHOP
@@ -265,32 +254,26 @@ export default function PrimarySearchAppBar() {
                 />
               </Badge>
             </IconButton>
-            <Link
-              to={userState.username === null ? "/login" : "/dashboard"}
-              style={{ color: "white", textDecoration: "none" }}
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
             >
-              <IconButton
-                aria-label="show 17 new notifications"
-                color="inherit"
-                disableRipple
-              >
-                <Badge color="secondary">
-                  {(!userState.username && <Icon className="fa fa-user" />) || (
-                    <Chip
-                      style={{ cursor: "pointer" }}
-                      label={userState.username}
-                      avatar={
-                        <Avatar>
-                          {userState.username.substring(0, 1).toUpperCase()}
-                        </Avatar>
-                      }
-                    />
-                  )}
-                </Badge>
-              </IconButton>
-            </Link>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Icon className="fas fa-map-marker-alt" />
+              {userState.username && (
+                <Chip
+                  style={{ cursor: "pointer" }}
+                  label={userState.username}
+                  avatar={
+                    <Avatar>
+                      {userState.username.substring(0, 1).toUpperCase()}
+                    </Avatar>
+                  }
+                />
+              )}
+              {!userState.username && <Icon className="fa fa-user" />}
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
