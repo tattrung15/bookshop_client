@@ -7,52 +7,58 @@ import {
   ListItemText,
   Icon,
   ListSubheader,
+  Tooltip,
 } from "@material-ui/core";
 
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import LayersIcon from "@material-ui/icons/Layers";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
 export const mainListItems = (
   <div>
     <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-      <ListItem button>
-        <ListItemIcon>
-          <Icon className="fa fa-home" />
-        </ListItemIcon>
-        <ListItemText primary="Home" />
-      </ListItem>
+      <Tooltip title="Home" placement="right" arrow>
+        <ListItem button>
+          <ListItemIcon>
+            <Icon className="fa fa-home" />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+      </Tooltip>
     </Link>
     <Link to="/admin" style={{ color: "black", textDecoration: "none" }}>
-      <ListItem button>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
+      <Tooltip title="Dashboard" placement="right" arrow>
+        <ListItem button>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItem>
+      </Tooltip>
     </Link>
     <Link to="/admin/users" style={{ color: "black", textDecoration: "none" }}>
-      <ListItem button>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Users manager" />
-      </ListItem>
+      <Tooltip title="User management" placement="right" arrow>
+        <ListItem button>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Users" />
+        </ListItem>
+      </Tooltip>
     </Link>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItem>
+    <Link
+      to="/admin/categories"
+      style={{ color: "black", textDecoration: "none" }}
+    >
+      <Tooltip title="Category management" placement="right" arrow>
+        <ListItem button>
+          <ListItemIcon>
+            <Icon className="fa fa-list-alt" />
+          </ListItemIcon>
+          <ListItemText primary="Categories" />
+        </ListItem>
+      </Tooltip>
+    </Link>
   </div>
 );
 
