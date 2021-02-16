@@ -153,7 +153,9 @@ export default function AppBarDrawer() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <Link to="profile" style={{ textDecoration: "none", color: "black" }}>
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </Link>
       <MenuItem onClick={handleLogout}>Log out</MenuItem>
     </Menu>
   );

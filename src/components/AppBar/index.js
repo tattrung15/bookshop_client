@@ -163,10 +163,7 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       {userState.isAdmin && (
-        <Link
-          to="/dashboard"
-          style={{ color: "black", textDecoration: "none" }}
-        >
+        <Link to="/admin" style={{ color: "black", textDecoration: "none" }}>
           <MenuItem onClick={handleMenuClose}>Dashboard</MenuItem>
         </Link>
       )}

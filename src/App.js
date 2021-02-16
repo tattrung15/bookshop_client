@@ -50,7 +50,7 @@ function App() {
             <AppBar />
             <SignIn />
           </Route>
-          <Route path="/dashboard" exact>
+          <Route path="/admin">
             <Dashboard />
           </Route>
           <Route path="/profile" exact>

@@ -70,13 +70,14 @@ export default function Dashboard() {
         });
     }
   });
+
   return (
     <div className={classes.root}>
       <AppBarDrawer />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Switch>
-          <Route path="/dashboard" exact>
+          <Route path="/admin" exact>
             <Container maxWidth="lg" className={classes.container}>
               <Grid container spacing={3}>
                 {/* Chart */}
