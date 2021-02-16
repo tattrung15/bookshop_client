@@ -103,7 +103,12 @@ export default function Dashboard() {
           </Route>
           <Route path="/admin/users" exact>
             <Container maxWidth="lg" className={classes.container}>
-              <h1>Admin users</h1>
+              <h1>User management</h1>
+            </Container>
+          </Route>
+          <Route path="/admin/categories" exact>
+            <Container maxWidth="lg" className={classes.container}>
+              <h1>Category management</h1>
             </Container>
           </Route>
         </Switch>
