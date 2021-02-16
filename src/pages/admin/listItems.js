@@ -25,18 +25,22 @@ export const mainListItems = (
         <ListItemText primary="Home" />
       </ListItem>
     </Link>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
+    <Link to="/dashboard" style={{ color: "black", textDecoration: "none" }}>
+      <ListItem button>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </Link>
+    <Link to="/admin/users" style={{ color: "black", textDecoration: "none" }}>
+      <ListItem button>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Users manager" />
+      </ListItem>
+    </Link>
     <ListItem button>
       <ListItemIcon>
         <BarChartIcon />
