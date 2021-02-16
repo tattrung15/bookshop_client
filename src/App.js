@@ -1,6 +1,6 @@
 import "./App.css";
 import { React, useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 
 import AppBar from "./components/AppBar";
 import SignIn from "./pages/SignIn";
@@ -40,24 +40,26 @@ function App() {
   });
 
   return (
-    <div className="App">
-      <Switch>
-        <Route path="/" exact>
-          <AppBar />
-        </Route>
-        <Route path="/login" exact>
-          <AppBar />
-          <SignIn />
-        </Route>
-        <Route path="/dashboard" exact>
-          <Dashboard />
-        </Route>
-        <Route path="/profile" exact>
-          <AppBar />
-          <User />
-        </Route>
-      </Switch>
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/" exact>
+            <AppBar />
+          </Route>
+          <Route path="/login" exact>
+            <AppBar />
+            <SignIn />
+          </Route>
+          <Route path="/dashboard" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/profile" exact>
+            <AppBar />
+            <User />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import { Container, Grid, Paper } from "@material-ui/core";
 
@@ -71,44 +71,42 @@ export default function Dashboard() {
     }
   });
   return (
-    <Router>
-      <div className={classes.root}>
-        <AppBarDrawer />
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Switch>
-            <Route path="/dashboard" exact>
-              <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                  {/* Chart */}
-                  <Grid item xs={12} md={8} lg={9}>
-                    <Paper className={fixedHeightPaper}>
-                      <Chart />
-                    </Paper>
-                  </Grid>
-                  {/* Recent Deposits */}
-                  <Grid item xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}>
-                      <Deposits />
-                    </Paper>
-                  </Grid>
-                  {/* Recent Orders */}
-                  <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                      <Orders />
-                    </Paper>
-                  </Grid>
+    <div className={classes.root}>
+      <AppBarDrawer />
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Switch>
+          <Route path="/dashboard" exact>
+            <Container maxWidth="lg" className={classes.container}>
+              <Grid container spacing={3}>
+                {/* Chart */}
+                <Grid item xs={12} md={8} lg={9}>
+                  <Paper className={fixedHeightPaper}>
+                    <Chart />
+                  </Paper>
                 </Grid>
-              </Container>
-            </Route>
-            <Route path="/admin/users" exact>
-              <Container maxWidth="lg" className={classes.container}>
-                <h1>Admin users</h1>
-              </Container>
-            </Route>
-          </Switch>
-        </main>
-      </div>
-    </Router>
+                {/* Recent Deposits */}
+                <Grid item xs={12} md={4} lg={3}>
+                  <Paper className={fixedHeightPaper}>
+                    <Deposits />
+                  </Paper>
+                </Grid>
+                {/* Recent Orders */}
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <Orders />
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Container>
+          </Route>
+          <Route path="/admin/users" exact>
+            <Container maxWidth="lg" className={classes.container}>
+              <h1>Admin users</h1>
+            </Container>
+          </Route>
+        </Switch>
+      </main>
+    </div>
   );
 }
