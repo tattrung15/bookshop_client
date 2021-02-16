@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import {
@@ -116,8 +115,6 @@ export default function PrimarySearchAppBar() {
   const [userState, setUserState] = useRecoilState(userSeletor);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
-  const history = useHistory();
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -148,7 +145,7 @@ export default function PrimarySearchAppBar() {
       token: null,
       isAdmin: null,
     });
-    history.push("/");
+    window.location = "/";
   };
 
   const menuId = "primary-search-account-menu";
