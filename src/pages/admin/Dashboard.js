@@ -3,13 +3,14 @@ import { useRecoilState } from "recoil";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
 
 import { Container, Grid, Paper } from "@material-ui/core";
 
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
+import NotFound from "../exception/NotFound";
 
 import AppBarDrawer from "./AppBarDrawer";
 import { userSeletor } from "../../recoil/userState";
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
+  const history = useHistory();
 
   const [userState, setUserState] = useRecoilState(userSeletor);
 
@@ -68,6 +70,10 @@ export default function Dashboard() {
             isAdmin: null,
           });
         });
+    } else {
+      if (!token) {
+        history.push("/login");
+      }
     }
   });
 
@@ -110,6 +116,9 @@ export default function Dashboard() {
             <Container maxWidth="lg" className={classes.container}>
               <h1>Category management</h1>
             </Container>
+          </Route>
+          <Route path="*">
+            <NotFound />
           </Route>
         </Switch>
       </main>
