@@ -6,6 +6,7 @@ import AppBar from "./components/AppBar";
 import SignIn from "./pages/SignIn";
 import User from "./pages/profile/User";
 import Dashboard from "./pages/admin/Dashboard";
+import NotFound from "./pages/exception/NotFound";
 
 import { useRecoilState } from "recoil";
 import { userSeletor } from "./recoil/userState";
@@ -56,6 +57,9 @@ function App() {
           <Route path="/profile" exact>
             <AppBar />
             <User />
+          </Route>
+          <Route path="*">
+            <NotFound />
           </Route>
         </Switch>
       </div>
