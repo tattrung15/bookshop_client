@@ -1,5 +1,5 @@
 import "./App.css";
-import { React, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 
 import AppBar from "./components/AppBar";
