@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     const token = auth.getToken();
-    if (!userState.username && token) {
+    if (token) {
       validateToken(token)
         .then((data) => {
           setUserState({
@@ -38,7 +38,7 @@ function App() {
           });
         });
     }
-  });
+  }, []);
 
   return (
     <Router>

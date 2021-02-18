@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Switch, Route, useHistory } from "react-router-dom";
+import { Switch, Route, useHistory, Redirect } from "react-router-dom";
 
 import { Container, Grid, Paper } from "@material-ui/core";
 
@@ -13,6 +13,7 @@ import Orders from "./Orders";
 import NotFound from "../exception/NotFound";
 
 import AppBarDrawer from "./AppBarDrawer";
+import ListUserComponent from "../../components/ListUsers/ListUserComponent";
 import { userSeletor } from "../../recoil/userState";
 import { auth } from "../../utils/auth";
 import { validateToken } from "../../api/authAPI";
@@ -52,7 +53,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const token = auth.getToken();
-    if (!userState.username && token) {
+    if (token) {
       validateToken(token)
         .then((data) => {
           setUserState({
@@ -71,11 +72,9 @@ export default function Dashboard() {
           });
         });
     } else {
-      if (!token) {
-        history.push("/login");
-      }
+      history.push("/login");
     }
-  });
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -108,15 +107,16 @@ export default function Dashboard() {
             </Container>
           </Route>
           <Route path="/admin/users" exact>
-            <Container maxWidth="lg" className={classes.container}>
-              <h1>User management</h1>
+            <Container maxWidth="xl" className={classes.container}>
+              <ListUserComponent />
             </Container>
           </Route>
           <Route path="/admin/categories" exact>
-            <Container maxWidth="lg" className={classes.container}>
+            <Container maxWidth="xl" className={classes.container}>
               <h1>Category management</h1>
             </Container>
           </Route>
+          <Redirect from="/**/profile" to="/profile" />
           <Route path="*">
             <NotFound />
           </Route>
