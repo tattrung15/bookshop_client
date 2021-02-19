@@ -9,9 +9,9 @@ import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <RecoilRoot>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <App />
+    {/* </React.StrictMode> */}
   </RecoilRoot>,
   document.getElementById("root")
 );
