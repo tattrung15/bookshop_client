@@ -31,6 +31,7 @@ const style = {
 
 function ListUserComponent() {
   const [users, setUsers] = useState([]);
+  const [usersSearch, setUsersSearch] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -49,6 +50,22 @@ function ListUserComponent() {
     });
   }, []);
 
+  const handleSearchTerm = (e) => {
+    const searchText = e.target.value;
+    const usersSearchTerm = [].concat([...users]);
+    const newUsers = usersSearchTerm.filter((item) => {
+      if (item.firstName.toLowerCase().includes(searchText.toLowerCase())) {
+        return item;
+      }
+      if (item.lastName.toLowerCase().includes(searchText.toLowerCase())) {
+        return item;
+      }
+      return item;
+    });
+    setUsersSearch(newUsers);
+    console.log(usersSearch);
+  };
+
   return (
     <div>
       <Typography variant="h4" style={style}>
@@ -59,6 +76,7 @@ function ListUserComponent() {
           Add User
         </Button>
         <TextField
+          onChange={handleSearchTerm}
           style={{ position: "absolute", right: 0 }}
           label="Search..."
           id="outlined-size-small"
