@@ -47,6 +47,7 @@ function ListUserComponent() {
   useEffect(() => {
     fetchAllUsers().then((data) => {
       setUsers(data);
+      setUsersSearch(data);
     });
   }, []);
 
@@ -60,7 +61,6 @@ function ListUserComponent() {
       if (item.lastName.toLowerCase().includes(searchText.toLowerCase())) {
         return item;
       }
-      return item;
     });
     setUsersSearch(newUsers);
     console.log(usersSearch);
@@ -109,34 +109,35 @@ function ListUserComponent() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.id}</TableCell>
-                    <TableCell>{item.firstName}</TableCell>
-                    <TableCell>{item.lastName}</TableCell>
-                    <TableCell>{item.username}</TableCell>
-                    <TableCell>{item.phone}</TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.address}</TableCell>
-                    <TableCell align="justify">
-                      <IconButton onClick={() => console.log("s")}>
-                        <VisibilityIcon style={{ color: "black" }} />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="justify">
-                      <IconButton onClick={() => console.log("s")}>
-                        <CreateIcon style={{ color: "black" }} />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="justify">
-                      <IconButton onClick={() => console.log("a")}>
-                        <DeleteIcon style={{ color: "red" }} />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {usersSearch &&
+                usersSearch
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.id}</TableCell>
+                      <TableCell>{item.firstName}</TableCell>
+                      <TableCell>{item.lastName}</TableCell>
+                      <TableCell>{item.username}</TableCell>
+                      <TableCell>{item.phone}</TableCell>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>{item.address}</TableCell>
+                      <TableCell align="justify">
+                        <IconButton onClick={() => console.log("s")}>
+                          <VisibilityIcon style={{ color: "black" }} />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="justify">
+                        <IconButton onClick={() => console.log("s")}>
+                          <CreateIcon style={{ color: "black" }} />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="justify">
+                        <IconButton onClick={() => console.log("a")}>
+                          <DeleteIcon style={{ color: "red" }} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </TableContainer>
