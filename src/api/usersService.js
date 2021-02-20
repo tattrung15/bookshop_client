@@ -18,3 +18,35 @@ export function fetchAllUsers() {
     }
   });
 }
+
+export function createNewUser(newUser) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      fetch(`${BASE_API}/users`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "POST",
+        body: JSON.stringify(newUser),
+      })
+        .then((res) => {
+          if (res.status === 201) {
+            return resolve(res.json());
+          }
+          if (res.status === 400) {
+            res.json().then((data) => {
+              return reject(data);
+            });
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
