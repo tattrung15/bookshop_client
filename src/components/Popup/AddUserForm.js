@@ -24,12 +24,18 @@ const initialFValues = {
 };
 
 export default function EmployeeForm(props) {
-  const { addOrEdit, recordForEdit } = props;
+  const { addOrEdit, recordForEdit, isEdit } = props;
 
   const [showPassword, setShowPassword] = useState(false);
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
+
+    if (isEdit) {
+      temp.password = "";
+      temp.cfPassword = "";
+    }
+
     if ("firstName" in fieldValues) {
       temp.firstName = fieldValues.firstName ? "" : "This field is required";
     }
@@ -57,21 +63,42 @@ export default function EmployeeForm(props) {
         ? ""
         : "Username contains only letters, numbers and characters: . or _";
     }
-    if ("password" in fieldValues) {
-      temp.password = !fieldValues.password
-        ? "This field is required"
-        : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
-            fieldValues.password
-          )
-        ? ""
-        : "Password at least 8 characters, at least one letter and one number";
-    }
-    if ("cfPassword" in fieldValues) {
-      temp.cfPassword =
-        values.password === fieldValues.cfPassword
+    if (isEdit) {
+      if (fieldValues.password) {
+        if ("password" in fieldValues) {
+          temp.password = !fieldValues.password
+            ? "This field is required"
+            : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
+                fieldValues.password
+              )
+            ? ""
+            : "Password at least 8 characters, at least one letter and one number";
+        }
+        if ("cfPassword" in fieldValues) {
+          temp.cfPassword =
+            values.password === fieldValues.cfPassword
+              ? ""
+              : "Doesn't match the password";
+        }
+      }
+    } else {
+      if ("password" in fieldValues) {
+        temp.password = !fieldValues.password
+          ? "This field is required"
+          : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
+              fieldValues.password
+            )
           ? ""
-          : "Doesn't match the password";
+          : "Password at least 8 characters, at least one letter and one number";
+      }
+      if ("cfPassword" in fieldValues) {
+        temp.cfPassword =
+          values.password === fieldValues.cfPassword
+            ? ""
+            : "Doesn't match the password";
+      }
     }
+
     setErrors({
       ...temp,
     });
@@ -91,6 +118,12 @@ export default function EmployeeForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isEdit) {
+      if (validate()) {
+        addOrEdit(values, resetForm);
+      }
+      return;
+    }
     if (validate()) {
       addOrEdit(values, resetForm);
     }
@@ -152,13 +185,24 @@ export default function EmployeeForm(props) {
           />
         </Grid>
         <Grid item xs={6}>
-          <Controls.Input
-            name="username"
-            label="Username"
-            value={values.username}
-            onChange={handleInputChange}
-            error={errors.username}
-          />
+          {isEdit ? (
+            <Controls.Input
+              name="username"
+              label="Username"
+              value={values.username}
+              onChange={handleInputChange}
+              error={errors.username}
+              disabled
+            />
+          ) : (
+            <Controls.Input
+              name="username"
+              label="Username"
+              value={values.username}
+              onChange={handleInputChange}
+              error={errors.username}
+            />
+          )}
           <Controls.Input
             name="password"
             label="Password"
