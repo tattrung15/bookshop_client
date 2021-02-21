@@ -25,7 +25,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SearchIcon from "@material-ui/icons/Search";
 
-import { fetchAllUsers, createNewUser } from "../../api/usersService";
+import {
+  fetchAllUsers,
+  createNewUser,
+  updateUser,
+} from "../../api/usersService";
 
 import PopupAddUser from "../Popup/AddUser";
 import AddUserForm from "../Popup/AddUserForm";
@@ -44,10 +48,11 @@ function ListUserComponent() {
   const [usersFilterAdd, setUsersFilterAdd] = useState(null);
   const [page, setPage] = useState(0);
   const [open, setOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [addUserRes, setAddUserRes] = useState({
+  const [userRes, setUserRes] = useState({
     typeAlert: "success",
     message: "",
   });
@@ -68,6 +73,8 @@ function ListUserComponent() {
   }, [usersFilterAdd]);
 
   const handleAddUser = () => {
+    setRecordForEdit(null);
+    setIsEdit(false);
     setOpenPopup(true);
   };
 
@@ -81,6 +88,38 @@ function ListUserComponent() {
 
   const addOrEdit = (values, resetForm) => {
     setRecordForEdit(null);
+    if (isEdit) {
+      const editUserId = values.id;
+      const editUser = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        password: values.password ? values.password : null,
+        address: values.address,
+        phone: values.mobile,
+        amount: values.amount,
+        role: values.roleId,
+        email: values.email,
+      };
+      Object.keys(editUser).forEach(
+        (key) => editUser[key] == null && delete editUser[key]
+      );
+      updateUser(editUserId, editUser)
+        .then((data) => {
+          resetForm();
+          setOpenPopup(false);
+          setOpen(true);
+          setUserRes({
+            typeAlert: "success",
+            message: "Edited user success",
+          });
+          setUsersFilterAdd(data);
+        })
+        .catch((err) => {
+          setOpen(true);
+          setUserRes({ typeAlert: "error", message: err.message });
+        });
+      return;
+    }
 
     const newUser = {
       firstName: values.firstName,
@@ -99,19 +138,36 @@ function ListUserComponent() {
         resetForm();
         setOpenPopup(false);
         setOpen(true);
-        setAddUserRes({ typeAlert: "success", message: "Created user" });
+        setUserRes({
+          typeAlert: "success",
+          message: "Created user success",
+        });
         setUsersFilterAdd(data);
       })
       .catch((err) => {
         setOpen(true);
-        setAddUserRes({ typeAlert: "error", message: err.message });
+        setUserRes({ typeAlert: "error", message: err.message });
       });
   };
 
-  // const openInPopup = (item) => {
-  //   setRecordForEdit(item);
-  //   setOpenPopup(true);
-  // };
+  const openInPopup = (item) => {
+    const itemEdit = {
+      id: item.id,
+      lastName: item.lastName,
+      firstName: item.firstName,
+      email: item.email,
+      address: item.address,
+      username: item.username,
+      amount: item.amount,
+      mobile: item.phone,
+      roleId: item.role,
+      password: "",
+      cfPassword: "",
+    };
+    setIsEdit(true);
+    setRecordForEdit(itemEdit);
+    setOpenPopup(true);
+  };
 
   return (
     <div>
@@ -127,7 +183,11 @@ function ListUserComponent() {
           openPopup={openPopup}
           setOpenPopup={setOpenPopup}
         >
-          <AddUserForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
+          <AddUserForm
+            isEdit={isEdit}
+            recordForEdit={recordForEdit}
+            addOrEdit={addOrEdit}
+          />
         </PopupAddUser>
         <TextField
           style={{ position: "absolute", right: 0 }}
@@ -179,7 +239,7 @@ function ListUserComponent() {
                       </IconButton>
                     </TableCell>
                     <TableCell align="justify">
-                      <IconButton onClick={() => console.log("s")}>
+                      <IconButton onClick={() => openInPopup(item)}>
                         <CreateIcon style={{ color: "black" }} />
                       </IconButton>
                     </TableCell>
@@ -204,8 +264,8 @@ function ListUserComponent() {
         />
       </Paper>
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={addUserRes.typeAlert}>
-          {addUserRes.message}
+        <Alert onClose={handleClose} severity={userRes.typeAlert}>
+          {userRes.message}
         </Alert>
       </Snackbar>
     </div>
