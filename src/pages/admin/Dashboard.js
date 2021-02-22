@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -47,7 +47,7 @@ export default function Dashboard() {
   const classes = useStyles();
   const history = useHistory();
 
-  const [userState, setUserState] = useRecoilState(userSeletor);
+  const setUserState = useSetRecoilState(userSeletor);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 

@@ -25,14 +25,19 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SearchIcon from "@material-ui/icons/Search";
 
+import { useRecoilState } from "recoil";
+import { userSeletor } from "../../recoil/userState";
+
 import {
   fetchAllUsers,
   createNewUser,
   updateUser,
+  deleteUser,
 } from "../../api/usersService";
 
 import PopupAddUser from "../Popup/AddUser";
 import AddUserForm from "../Popup/AddUserForm";
+import ConfirmDialog from "../Dialog/ConfirmDialog";
 
 const style = {
   display: "flex",
@@ -44,14 +49,17 @@ function Alert(props) {
 }
 
 function ListUserComponent() {
-  const [users, setUsers] = useState([]);
-  const [usersFilterAdd, setUsersFilterAdd] = useState(null);
   const [page, setPage] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openPopup, setOpenPopup] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
+  const [usersFilterAdd, setUsersFilterAdd] = useState(null);
+  const [recordForDelete, setRecordForDelete] = useState(null);
+  const [userState] = useRecoilState(userSeletor);
   const [userRes, setUserRes] = useState({
     typeAlert: "success",
     message: "",
@@ -83,7 +91,7 @@ function ListUserComponent() {
       return;
     }
 
-    setOpen(false);
+    setOpenAlert(false);
   };
 
   const addOrEdit = (values, resetForm) => {
@@ -107,7 +115,7 @@ function ListUserComponent() {
         .then((data) => {
           resetForm();
           setOpenPopup(false);
-          setOpen(true);
+          setOpenAlert(true);
           setUserRes({
             typeAlert: "success",
             message: "Edited user success",
@@ -115,7 +123,7 @@ function ListUserComponent() {
           setUsersFilterAdd(data);
         })
         .catch((err) => {
-          setOpen(true);
+          setOpenAlert(true);
           setUserRes({ typeAlert: "error", message: err.message });
         });
       return;
@@ -137,15 +145,15 @@ function ListUserComponent() {
       .then((data) => {
         resetForm();
         setOpenPopup(false);
-        setOpen(true);
+        setOpenAlert(true);
         setUserRes({
           typeAlert: "success",
-          message: "Created user success",
+          message: "Created user",
         });
         setUsersFilterAdd(data);
       })
       .catch((err) => {
-        setOpen(true);
+        setOpenAlert(true);
         setUserRes({ typeAlert: "error", message: err.message });
       });
   };
@@ -167,6 +175,31 @@ function ListUserComponent() {
     setIsEdit(true);
     setRecordForEdit(itemEdit);
     setOpenPopup(true);
+  };
+
+  const openConfirmDialog = (item) => {
+    setConfirmOpen(true);
+    setRecordForDelete(item);
+  };
+
+  const handleDeleteUser = () => {
+    if (userState.userId === recordForDelete.id) {
+      setOpenAlert(true);
+      setUserRes({
+        typeAlert: "error",
+        message: "Could not delete your account",
+      });
+      return;
+    }
+    deleteUser(recordForDelete.id)
+      .then((data) => {
+        setOpenAlert(true);
+        setUserRes({ typeAlert: "success", message: "Deleted user" });
+        setUsersFilterAdd(data);
+      })
+      .catch((err) => {
+        setUserRes({ typeAlert: "error", message: err.message });
+      });
   };
 
   return (
@@ -244,7 +277,7 @@ function ListUserComponent() {
                       </IconButton>
                     </TableCell>
                     <TableCell align="justify">
-                      <IconButton onClick={() => console.log("a")}>
+                      <IconButton onClick={() => openConfirmDialog(item)}>
                         <DeleteIcon style={{ color: "red" }} />
                       </IconButton>
                     </TableCell>
@@ -263,11 +296,20 @@ function ListUserComponent() {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+      <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={userRes.typeAlert}>
           {userRes.message}
         </Alert>
       </Snackbar>
+      <ConfirmDialog
+        title="Delete User?"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={handleDeleteUser}
+      >
+        Are you sure you want to delete this user:{" "}
+        {recordForDelete && recordForDelete.username}?
+      </ConfirmDialog>
     </div>
   );
 }

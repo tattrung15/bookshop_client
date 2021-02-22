@@ -16,7 +16,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { auth } from "../utils/auth";
 import { userSeletor } from "../recoil/userState";
 
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  const [userState, setUserState] = useRecoilState(userSeletor);
+  const setUserState = useSetRecoilState(userSeletor);
 
   const [account, setAccount] = useState({
     username: "",
