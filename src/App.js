@@ -8,14 +8,14 @@ import User from "./pages/profile/User";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
 
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userSeletor } from "./recoil/userState";
 
 import { auth } from "./utils/auth";
 import { validateToken } from "./api/authAPI";
 
 function App() {
-  const [userState, setUserState] = useRecoilState(userSeletor);
+  const setUserState = useSetRecoilState(userSeletor);
 
   useEffect(() => {
     const token = auth.getToken();
