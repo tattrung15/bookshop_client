@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 import { Grid, IconButton, InputAdornment } from "@material-ui/core";
+
 import Controls from "../../components/controls/Controls";
 import { useForm, Form } from "../../components/Popup/UseForm";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
@@ -21,6 +23,8 @@ const initialFValues = {
   cfPassword: "",
   amount: 0,
   roleId: "MEMBER",
+  createAt: "",
+  updateAt: "",
 };
 
 export default function EmployeeForm(props) {
@@ -339,7 +343,7 @@ export default function EmployeeForm(props) {
               <Controls.Input
                 name="createAt"
                 label="Create At"
-                value={values.createAt}
+                value={moment(values.createAt).format("DD/MM/YYYY HH:mm:ss")}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -347,7 +351,7 @@ export default function EmployeeForm(props) {
               <Controls.Input
                 name="updateAt"
                 label="Update At"
-                value={values.updateAt}
+                value={moment(values.updateAt).format("DD/MM/YYYY HH:mm:ss")}
                 InputProps={{
                   readOnly: true,
                 }}
