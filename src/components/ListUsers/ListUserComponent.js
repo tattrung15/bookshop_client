@@ -52,11 +52,13 @@ function ListUserComponent() {
   const [page, setPage] = useState(0);
   const [users, setUsers] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
+  const [isView, setIsView] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openPopup, setOpenPopup] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
+  const [recordForView, setRecordForView] = useState(null);
   const [usersFilterAdd, setUsersFilterAdd] = useState(null);
   const [recordForDelete, setRecordForDelete] = useState(null);
   const [userState] = useRecoilState(userSeletor);
@@ -81,6 +83,7 @@ function ListUserComponent() {
   }, [usersFilterAdd]);
 
   const handleAddUser = () => {
+    setIsView(false);
     setRecordForEdit(null);
     setIsEdit(false);
     setOpenPopup(true);
@@ -159,6 +162,7 @@ function ListUserComponent() {
   };
 
   const openInPopup = (item) => {
+    setIsView(false);
     const itemEdit = {
       id: item.id,
       lastName: item.lastName,
@@ -202,6 +206,26 @@ function ListUserComponent() {
       });
   };
 
+  const openViewDialog = (item) => {
+    const itemView = {
+      id: item.id,
+      lastName: item.lastName,
+      firstName: item.firstName,
+      email: item.email,
+      address: item.address,
+      username: item.username,
+      amount: item.amount,
+      mobile: item.phone,
+      roleId: item.role,
+      createAt: item.createAt,
+      updateAt: item.updateAt,
+    };
+    setIsView(true);
+    setIsEdit(false);
+    setRecordForEdit(itemView);
+    setOpenPopup(true);
+  };
+
   return (
     <div>
       <Typography variant="h4" style={style}>
@@ -218,6 +242,7 @@ function ListUserComponent() {
         >
           <AddUserForm
             isEdit={isEdit}
+            isView={isView}
             recordForEdit={recordForEdit}
             addOrEdit={addOrEdit}
           />
@@ -267,7 +292,7 @@ function ListUserComponent() {
                     <TableCell>{item.email}</TableCell>
                     <TableCell>{item.address}</TableCell>
                     <TableCell align="justify">
-                      <IconButton onClick={() => console.log("s")}>
+                      <IconButton onClick={() => openViewDialog(item)}>
                         <VisibilityIcon style={{ color: "black" }} />
                       </IconButton>
                     </TableCell>

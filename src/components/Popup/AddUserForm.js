@@ -24,7 +24,7 @@ const initialFValues = {
 };
 
 export default function EmployeeForm(props) {
-  const { addOrEdit, recordForEdit, isEdit } = props;
+  const { addOrEdit, recordForEdit, isEdit, isView } = props;
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -147,128 +147,295 @@ export default function EmployeeForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={6}>
-          <Controls.Input
-            name="firstName"
-            label="First Name"
-            value={values.firstName}
-            onChange={handleInputChange}
-            error={errors.firstName}
-          />
-          <Controls.Input
-            name="lastName"
-            label="Last Name"
-            value={values.lastName}
-            onChange={handleInputChange}
-            error={errors.lastName}
-          />
-          <Controls.Input
-            label="Email"
-            name="email"
-            value={values.email}
-            onChange={handleInputChange}
-            error={errors.email}
-          />
-          <Controls.Input
-            label="Mobile"
-            name="mobile"
-            value={values.mobile}
-            onChange={handleInputChange}
-            error={errors.mobile}
-          />
-          <Controls.Input
-            label="Address"
-            name="address"
-            value={values.address}
-            onChange={handleInputChange}
-            error={errors.address}
-          />
-        </Grid>
+        {isView ? (
+          <Grid item xs={6}>
+            <Controls.Input
+              name="firstName"
+              label="First Name"
+              value={values.firstName}
+              onChange={handleInputChange}
+              error={errors.firstName}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <Controls.Input
+              name="lastName"
+              label="Last Name"
+              value={values.lastName}
+              onChange={handleInputChange}
+              error={errors.lastName}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <Controls.Input
+              label="Email"
+              name="email"
+              value={values.email}
+              onChange={handleInputChange}
+              error={errors.email}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <Controls.Input
+              label="Mobile"
+              name="mobile"
+              value={values.mobile}
+              onChange={handleInputChange}
+              error={errors.mobile}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            <Controls.Input
+              label="Address"
+              name="address"
+              value={values.address}
+              onChange={handleInputChange}
+              error={errors.address}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+        ) : (
+          <Grid item xs={6}>
+            <Controls.Input
+              name="firstName"
+              label="First Name"
+              value={values.firstName}
+              onChange={handleInputChange}
+              error={errors.firstName}
+            />
+            <Controls.Input
+              name="lastName"
+              label="Last Name"
+              value={values.lastName}
+              onChange={handleInputChange}
+              error={errors.lastName}
+            />
+            <Controls.Input
+              label="Email"
+              name="email"
+              value={values.email}
+              onChange={handleInputChange}
+              error={errors.email}
+            />
+            <Controls.Input
+              label="Mobile"
+              name="mobile"
+              value={values.mobile}
+              onChange={handleInputChange}
+              error={errors.mobile}
+            />
+            <Controls.Input
+              label="Address"
+              name="address"
+              value={values.address}
+              onChange={handleInputChange}
+              error={errors.address}
+            />
+          </Grid>
+        )}
         <Grid item xs={6}>
           {isEdit ? (
-            <Controls.Input
-              name="username"
-              label="Username"
-              value={values.username}
-              onChange={handleInputChange}
-              error={errors.username}
-              disabled
-            />
+            <>
+              <Controls.Input
+                name="username"
+                label="Username"
+                value={values.username}
+                onChange={handleInputChange}
+                error={errors.username}
+                disabled
+              />
+              <Controls.Input
+                name="password"
+                label="Password"
+                value={values.password}
+                onChange={handleInputChange}
+                error={errors.password}
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Controls.Input
+                name="cfPassword"
+                label="Confirm password"
+                value={values.cfPassword}
+                onChange={handleInputChange}
+                error={errors.cfPassword}
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Controls.Select
+                name="roleId"
+                label="Role"
+                value={values.roleId}
+                onChange={handleInputChange}
+                options={roleItems()}
+                error={errors.roleId}
+              />
+              <Controls.Input
+                name="amount"
+                label="Amount"
+                value={values.amount}
+                onChange={handleInputChange}
+                error={errors.amount}
+                type="number"
+                InputProps={{ inputProps: { min: 0 } }}
+              />
+            </>
+          ) : isView ? (
+            <>
+              <Controls.Input
+                name="username"
+                label="Username"
+                value={values.username}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <Controls.Input
+                name="roleId"
+                label="Role"
+                value={values.roleId}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <Controls.Input
+                name="amount"
+                label="Amount"
+                value={values.amount}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <Controls.Input
+                name="createAt"
+                label="Create At"
+                value={values.createAt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <Controls.Input
+                name="updateAt"
+                label="Update At"
+                value={values.updateAt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </>
           ) : (
-            <Controls.Input
-              name="username"
-              label="Username"
-              value={values.username}
-              onChange={handleInputChange}
-              error={errors.username}
-            />
+            <>
+              <Controls.Input
+                name="username"
+                label="Username"
+                value={values.username}
+                onChange={handleInputChange}
+                error={errors.username}
+              />
+              <Controls.Input
+                name="password"
+                label="Password"
+                value={values.password}
+                onChange={handleInputChange}
+                error={errors.password}
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Controls.Input
+                name="cfPassword"
+                label="Confirm password"
+                value={values.cfPassword}
+                onChange={handleInputChange}
+                error={errors.cfPassword}
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Controls.Select
+                name="roleId"
+                label="Role"
+                value={values.roleId}
+                onChange={handleInputChange}
+                options={roleItems()}
+                error={errors.roleId}
+              />
+              <Controls.Input
+                name="amount"
+                label="Amount"
+                value={values.amount}
+                onChange={handleInputChange}
+                error={errors.amount}
+                type="number"
+                InputProps={{ inputProps: { min: 0 } }}
+              />
+            </>
           )}
-          <Controls.Input
-            name="password"
-            label="Password"
-            value={values.password}
-            onChange={handleInputChange}
-            error={errors.password}
-            type={showPassword ? "text" : "password"}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Controls.Input
-            name="cfPassword"
-            label="Confirm password"
-            value={values.cfPassword}
-            onChange={handleInputChange}
-            error={errors.cfPassword}
-            type={showPassword ? "text" : "password"}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Controls.Select
-            name="roleId"
-            label="Role"
-            value={values.roleId}
-            onChange={handleInputChange}
-            options={roleItems()}
-            error={errors.roleId}
-          />
-          <Controls.Input
-            name="amount"
-            label="Amount"
-            value={values.amount}
-            onChange={handleInputChange}
-            error={errors.amount}
-            type="number"
-            InputProps={{ inputProps: { min: 0 } }}
-          />
         </Grid>
-        <Grid item xs={12}>
-          <div style={{ textAlign: "center" }}>
-            <Controls.Button type="submit" text="Submit" />
-            <Controls.Button text="Reset" color="default" onClick={resetForm} />
-          </div>
-        </Grid>
+        {!isView && (
+          <Grid item xs={12}>
+            <div style={{ textAlign: "center" }}>
+              <Controls.Button type="submit" text="Submit" />
+              <Controls.Button
+                text="Reset"
+                color="default"
+                onClick={resetForm}
+              />
+            </div>
+          </Grid>
+        )}
       </Grid>
     </Form>
   );
