@@ -324,7 +324,12 @@ export default function PrimarySearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
+            <IconButton
+              aria-label="show 4 new mails"
+              color="inherit"
+              disableRipple
+              disableFocusRipple
+            >
               <Badge badgeContent={4} color="secondary">
                 <Icon
                   style={{ overflow: "visible" }}
@@ -340,6 +345,7 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
               disableRipple
+              disableFocusRipple
             >
               {userState.username && (
                 <Chip
