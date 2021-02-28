@@ -7,12 +7,14 @@ import SignIn from "./pages/SignIn";
 import User from "./pages/profile/User";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
+import HomePage from "./pages/home";
 
 import { useSetRecoilState } from "recoil";
 import { userSeletor } from "./recoil/userState";
 
 import { auth } from "./utils/auth";
 import { validateToken } from "./api/authAPI";
+import { Box } from "@material-ui/core";
 
 function App() {
   const setUserState = useSetRecoilState(userSeletor);
@@ -46,6 +48,7 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <AppBar />
+            <HomePage />
           </Route>
           <Route path="/login" exact>
             <AppBar />
