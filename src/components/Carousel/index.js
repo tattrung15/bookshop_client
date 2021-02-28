@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import ItemsCarousel from "react-items-carousel";
 import range from "lodash/range";
 
-const URL = "https://girl.trungbt.xyz/api?page=1";
-
 const createChildren = (n) =>
   range(n).map((i) => (
     <div key={i} style={{ height: 300, background: "#333" }}></div>
