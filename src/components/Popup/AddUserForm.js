@@ -146,6 +146,7 @@ export default function EmployeeForm(props) {
       setValues({
         ...recordForEdit,
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recordForEdit]);
 
   return (

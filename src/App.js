@@ -14,7 +14,6 @@ import { userSeletor } from "./recoil/userState";
 
 import { auth } from "./utils/auth";
 import { validateToken } from "./api/authAPI";
-import { Box } from "@material-ui/core";
 
 function App() {
   const setUserState = useSetRecoilState(userSeletor);
@@ -40,6 +39,7 @@ function App() {
           });
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

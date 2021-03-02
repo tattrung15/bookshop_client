@@ -74,6 +74,7 @@ export default function Dashboard() {
     } else {
       history.push("/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
