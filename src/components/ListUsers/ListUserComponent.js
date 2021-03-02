@@ -58,7 +58,6 @@ function ListUserComponent() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [recordForView, setRecordForView] = useState(null);
   const [usersFilterAdd, setUsersFilterAdd] = useState(null);
   const [recordForDelete, setRecordForDelete] = useState(null);
   const [userState] = useRecoilState(userSeletor);
