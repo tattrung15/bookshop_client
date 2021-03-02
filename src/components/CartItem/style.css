@@ -1,63 +1,51 @@
 /*book*/
-.book {
-  margin-bottom: 7%;
+
+.bcontent {
+  position: relative;
+  padding-bottom: 2.5em !important;
 }
-.book-title {
-  text-align: center;
-}
-.book-title > a {
-  font-size: 22px;
-  color: black;
-  text-decoration: none !important;
-  font-weight: bold;
-  padding: 1% 4%;
-}
-.book-title > a:hover {
-  color: #eb1c22;
-  box-shadow: 2px 2px 5px 0px black;
-}
-.book-content {
-  margin-top: 5%;
-}
+
 .bcontent:hover {
   cursor: pointer;
   box-shadow: 2px 2px 5px 0px black;
 }
+
 .bcontent a img {
   margin: 5% 15%;
   height: 70%;
   width: 69%;
 }
-.btitle {
-  display: flex;
-  position: relative;
-}
-.price {
-  margin-top: 10%;
-  margin-bottom: 5%;
-  display: flex;
-}
-.buy {
-  position: absolute;
-  right: 5%;
-  display: flex;
-  text-shadow: 0px 0px 10px rgb(170, 167, 167);
-  color: white;
-}
-.buy i {
-  margin: 0px 10%;
-  font-size: 20px;
-}
+
 .name > a {
   font-weight: bold;
   color: black;
   text-decoration: none !important;
 }
+
 .name > a:hover {
   color: #eb1c22;
 }
+
+.buy {
+  position: relative;
+  text-shadow: 0px 0px 5px rgb(152, 152, 152);
+  color: white;
+  right: 0 !important;
+}
+
+.buy i {
+  font-size: 20px;
+  margin-left: 0.5em;
+}
+
 .buy-icon:hover {
   color: #eb1c22 !important;
 }
 
-/*end book*/
+.price {
+  display: flex;
+  width: 85%;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0.5em;
+}
