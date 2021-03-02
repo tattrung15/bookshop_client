@@ -1,5 +1,7 @@
 import { Box } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 
 import { Typography } from "@material-ui/core";
 
@@ -7,7 +9,20 @@ import CartItem from "../../components/CartItem";
 
 import { fetchProductImages } from "../../api/productImageService";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  },
+}));
+
 export default function HomePage() {
+  const classes = useStyles();
+
   const [productImage, setProductImage] = useState([]);
 
   useEffect(() => {
@@ -30,24 +45,32 @@ export default function HomePage() {
             SÁCH MỚI
           </Typography>
 
-          <div className="row">
-            {productImage &&
-              productImage.map((val, index) => (
-                <CartItem key={index} item={val} />
-              ))}
+          <div className={classes.root}>
+            <Grid container spacing={1}>
+              {productImage &&
+                productImage.map((val, index) => (
+                  <Grid key={index} item xs={6} sm={3}>
+                    <CartItem item={val} />
+                  </Grid>
+                ))}
+            </Grid>
           </div>
         </Box>
 
-        <Box marginTop={5}>
+        <Box marginTop={5} marginBottom={5}>
           <Typography variant="h6" gutterBottom align="center">
             SÁCH BÁN CHẠY
           </Typography>
 
-          <div className="row">
-            {productImage &&
-              productImage.map((val, index) => (
-                <CartItem key={index} item={val} />
-              ))}
+          <div className={classes.root}>
+            <Grid container spacing={1}>
+              {productImage &&
+                productImage.map((val, index) => (
+                  <Grid key={index} item xs={6} sm={3}>
+                    <CartItem item={val} />
+                  </Grid>
+                ))}
+            </Grid>
           </div>
         </Box>
       </Box>
