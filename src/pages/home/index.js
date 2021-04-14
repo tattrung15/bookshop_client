@@ -26,10 +26,14 @@ export default function HomePage() {
   const [productImage, setProductImage] = useState([]);
 
   useEffect(() => {
-    fetchProductImages().then((data) => {
-      data.sort((a, b) => (a.id < b.id ? 1 : a.id > b.id ? -1 : 0));
-      setProductImage(data.slice(0, 4));
-    });
+    fetchProductImages()
+      .then((data) => {
+        data.sort((a, b) => (a.id < b.id ? 1 : a.id > b.id ? -1 : 0));
+        setProductImage(data.slice(0, 4));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (

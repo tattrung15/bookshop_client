@@ -4,6 +4,7 @@ import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 
 import AppBar from "./components/AppBar";
 import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import User from "./pages/profile/User";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
@@ -53,6 +54,10 @@ function App() {
           <Route path="/login" exact>
             <AppBar />
             <SignIn />
+          </Route>
+          <Route path="/signup" exact>
+            <AppBar />
+            <SignUp />
           </Route>
           <Route path="/admin">
             <Dashboard />
