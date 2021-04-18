@@ -43,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
   },
   grow: {
     flexGrow: 1,
+    position: "sticky",
+    top: 0,
+    left: 0,
+    zIndex: 999,
+    width: "100%",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -181,7 +186,7 @@ export default function PrimarySearchAppBar() {
       )}
       {!userState.username && (
         <Link to="/login" style={{ color: "black", textDecoration: "none" }}>
-          <MenuItem onClick={handleMenuClose}>Log in</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Đăng nhập</MenuItem>
         </Link>
       )}
     </Menu>
@@ -228,7 +233,7 @@ export default function PrimarySearchAppBar() {
           {!userState.username && <Icon className="fa fa-user" />}
         </IconButton>
         {userState.username && <p>{userState.username}</p>}
-        {!userState.username && <p>Log in</p>}
+        {!userState.username && <p>Đăng nhập</p>}
       </MenuItem>
     </Menu>
   );
