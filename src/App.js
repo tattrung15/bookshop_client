@@ -15,6 +15,7 @@ import { userSeletor } from "./recoil/userState";
 
 import { auth } from "./utils/auth";
 import { validateToken } from "./api/authAPI";
+import ProductsByCategogy from "./pages/products/ProductsByCategogy";
 
 function App() {
   const setUserState = useSetRecoilState(userSeletor);
@@ -50,6 +51,10 @@ function App() {
           <Route path="/" exact>
             <AppBar />
             <HomePage />
+          </Route>
+          <Route path="/categories/:slug">
+            <AppBar />
+            <ProductsByCategogy />
           </Route>
           <Route path="/login" exact>
             <AppBar />
