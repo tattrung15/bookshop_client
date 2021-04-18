@@ -90,7 +90,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Đăng nhập
         </Typography>
         <form className={classes.form}>
           <TextField
@@ -120,7 +120,7 @@ export default function SignIn() {
             control={
               <Checkbox name="rememberMe" value="remember" color="primary" />
             }
-            label="Remember me"
+            label="Ghi nhớ đăng nhập"
           />
           <br />
           <span style={{ color: "red" }}>{account.loginError}</span>
@@ -133,17 +133,17 @@ export default function SignIn() {
             className={classes.submit}
             onClick={handleLogin}
           >
-            Sign In
+            Đăng nhập
           </Button>
           <Grid container>
             <Grid item xs>
               <Link to="#" variant="body2">
-                Forgot password?
+                Quên mật khẩu?
               </Link>
             </Grid>
             <Grid item>
               <Link to="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
+                {"Bạn chưa có tài khoản? Đăng ký"}
               </Link>
             </Grid>
           </Grid>
