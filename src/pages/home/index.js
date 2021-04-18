@@ -4,11 +4,8 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Button, Typography, Box } from "@material-ui/core";
 
-import TwitterIcon from "@material-ui/icons/Twitter";
-import FacebookIcon from "@material-ui/icons/Facebook";
-import InstagramIcon from "@material-ui/icons/Instagram";
-
 import CartItem from "../../components/CartItem";
+import Footer from "../../components/Footer";
 
 import bannerDangKy from "../../img/banner_dangky_mail.jpg";
 import bannerDoremon from "../../img/doremon.png";
@@ -18,6 +15,8 @@ import {
   fetchProductImages,
   fetchProductImageBestSelling,
 } from "../../api/productImageService";
+
+import { fetchAllCategories } from "../../api/categoryService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "black",
     fontWeight: "bolder",
+    textTransform: "uppercase",
     "&:hover": {
       color: "red",
     },
@@ -99,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
 export default function HomePage() {
   const classes = useStyles();
 
+  const [categories, setCategories] = useState([]);
   const [productImage, setProductImage] = useState([]);
   const [productImageBestSelling, setProductImageBestSelling] = useState([]);
 
@@ -118,6 +119,13 @@ export default function HomePage() {
       .catch((err) => {
         console.log(err);
       });
+    fetchAllCategories()
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -132,48 +140,17 @@ export default function HomePage() {
           THỂ LOẠI
         </Typography>
         <ul className={classes.menuTopUl}>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              LỊCH SỬ - TRUYỀN THỐNG
-            </Link>
-          </li>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              KIẾN THỨC - KHOA HỌC
-            </Link>
-          </li>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              VĂN HỌC VIỆT NAM
-            </Link>
-          </li>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              VĂN HỌC NƯỚC NGOÀI
-            </Link>
-          </li>
-        </ul>
-        <ul className={classes.menuTopUl}>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              TRUYỆN TRANH
-            </Link>
-          </li>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              MANGA - COMIC
-            </Link>
-          </li>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              WINGS BOOKS
-            </Link>
-          </li>
-          <li className={classes.menuTopUlLi}>
-            <Link to="/" className={classes.menuTopUlLiLink}>
-              GIẢI MÃ BẢN THÂN
-            </Link>
-          </li>
+          {categories &&
+            categories.map((item) => (
+              <li className={classes.menuTopUlLi} key={item.id}>
+                <Link
+                  to={`/categories/${item.slug}`}
+                  className={classes.menuTopUlLiLink}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
         </ul>
       </Box>
       <Box
@@ -200,7 +177,10 @@ export default function HomePage() {
 
           <Box style={{ textAlign: "center", marginTop: "1em" }}>
             <Button variant="contained">
-              <Link to="" style={{ color: "black", textDecoration: "none" }}>
+              <Link
+                to="/categories/sach-moi"
+                style={{ color: "black", textDecoration: "none" }}
+              >
                 Xem thêm
               </Link>
             </Button>
@@ -320,81 +300,7 @@ export default function HomePage() {
           </div>
         </Box>
       </Box>
-
-      <Box marginTop={10} style={{ background: "#3F51B5" }}>
-        <Box paddingX={4} maxWidth="930px" style={{ margin: "0 auto" }}>
-          <div className={classes.footerContainer}>
-            <Grid style={{ width: "50%" }}>
-              <Box>
-                <ul className={classes.footerMenu}>
-                  <li>
-                    <Link to="" className={classes.footerMenuItem}>
-                      GIỚI THIỆU
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className={classes.footerMenuItem}>
-                      SÁCH
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className={classes.footerMenuItem}>
-                      TIN TỨC
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className={classes.footerMenuItem}>
-                      KHUYẾN MÃI
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="" className={classes.footerMenuItem}>
-                      LIÊN HỆ
-                    </Link>
-                  </li>
-                </ul>
-                <Box style={{ marginLeft: "2em" }}>
-                  <TwitterIcon
-                    fontSize="large"
-                    style={{ color: "white", margin: "0 0.2em" }}
-                  />
-                  <FacebookIcon
-                    fontSize="large"
-                    style={{ color: "white", margin: "0 0.2em" }}
-                  />
-                  <InstagramIcon
-                    fontSize="large"
-                    style={{ color: "white", margin: "0 0.2em" }}
-                  />
-                </Box>
-              </Box>
-            </Grid>
-            <Grid style={{ width: "50%" }}>
-              <Box style={{ textAlign: "center" }}>
-                <h1>BOOKSHOP</h1>
-                <Box style={{ marginTop: "5em" }}>
-                  <Button style={{ marginRight: "1em" }} variant="contained">
-                    <Link
-                      to="/login"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
-                      Đăng nhập
-                    </Link>
-                  </Button>
-                  <Button style={{ marginRight: "1em" }} variant="contained">
-                    <Link
-                      to="/signup"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
-                      Đăng ký
-                    </Link>
-                  </Button>
-                </Box>
-              </Box>
-            </Grid>
-          </div>
-        </Box>
-      </Box>
+      <Footer />
     </>
   );
 }
