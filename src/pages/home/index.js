@@ -7,7 +7,10 @@ import { Typography } from "@material-ui/core";
 
 import CartItem from "../../components/CartItem";
 
-import { fetchProductImages } from "../../api/productImageService";
+import {
+  fetchProductImages,
+  fetchProductImageBestSelling,
+} from "../../api/productImageService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,12 +27,20 @@ export default function HomePage() {
   const classes = useStyles();
 
   const [productImage, setProductImage] = useState([]);
+  const [productImageBestSelling, setProductImageBestSelling] = useState([]);
 
   useEffect(() => {
     fetchProductImages()
       .then((data) => {
         data.sort((a, b) => (a.id < b.id ? 1 : a.id > b.id ? -1 : 0));
         setProductImage(data.slice(0, 4));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    fetchProductImageBestSelling()
+      .then((data) => {
+        setProductImageBestSelling(data);
       })
       .catch((err) => {
         console.log(err);
@@ -68,8 +79,8 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {productImage &&
-                productImage.map((val, index) => (
+              {productImageBestSelling &&
+                productImageBestSelling.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
                     <CartItem item={val} />
                   </Grid>
