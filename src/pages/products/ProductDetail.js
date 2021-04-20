@@ -11,6 +11,7 @@ import {
   makeStyles,
   Typography,
   TextField,
+  Snackbar,
 } from "@material-ui/core";
 
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -18,12 +19,20 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import MuiImageSlider from "mui-image-slider";
 
+import MuiAlert from "@material-ui/lab/Alert";
+
 import CategoryHeader from "../../components/CategoryHeader";
 import CartItem from "../../components/CartItem";
+import Footer from "../../components/Footer";
 
+import { fetchPostCart } from "../../api/cartService";
 import { fetchProductBySlug } from "../../api/productService";
 import { fetchProductsBySlugOfCategory } from "../../api/categoryService";
-import Footer from "../../components/Footer";
+
+import { useRecoilState } from "recoil";
+
+import { userSeletor } from "../../recoil/userState";
+import { cartSeletor } from "../../recoil/cartState";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -32,13 +41,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default function ProductDetail() {
   const classes = useStyles();
 
   const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
   const [category, setCategory] = useState(null);
+  const [userState] = useRecoilState(userSeletor);
+  const [openAlert, setOpenAlert] = useState(false);
   const [bookOfCategory, setBookOfCategory] = useState([]);
+  const [setCartState] = useRecoilState(cartSeletor);
   const [productImages, setProductImages] = useState(["https"]);
+  const [alertRes, setAlertRes] = useState({
+    typeAlert: "error",
+    message: "",
+  });
 
   let { slug } = useParams();
 
@@ -52,7 +73,6 @@ export default function ProductDetail() {
         data.productImages.forEach((item) => {
           arrImages.push(item.link);
         });
-        console.log(data.productImages);
         setProductImages(arrImages);
 
         fetchProductsBySlugOfCategory(data.product.category.slug, 1)
@@ -65,6 +85,60 @@ export default function ProductDetail() {
         console.log(err);
       });
   }, [slug]);
+
+  const onQuantityChange = (ev) => {
+    setQuantity(ev.target.value);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
+
+  const onClickBtnBuy = (ev) => {
+    const regex = /^\d+$/;
+    if (quantity <= 0 || !regex.test(quantity)) {
+      setAlertRes({
+        typeAlert: "error",
+        message: "Số lượng không hợp lệ",
+      });
+      setOpenAlert(true);
+      return;
+    }
+    if (!userState.userId) {
+      setAlertRes({
+        typeAlert: "error",
+        message: "Bạn cần đăng nhập",
+      });
+      setOpenAlert(true);
+    }
+    const orderItem = {
+      userId: userState.userId,
+      productId: product.id,
+      quantity: parseInt(quantity),
+    };
+    fetchPostCart(orderItem)
+      .then((data) => {
+        setCartState({
+          numberOfProducts: data.length,
+        });
+        setAlertRes({
+          typeAlert: "success",
+          message: "Thêm vào giỏ hàng thành công",
+        });
+        setOpenAlert(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setAlertRes({
+          typeAlert: "error",
+          message: "Thêm vào giỏ hàng thất bại",
+        });
+      });
+  };
 
   return (
     <>
@@ -150,6 +224,7 @@ export default function ProductDetail() {
                 </Box>
                 <Box style={{ marginTop: "1em" }}>
                   <TextField
+                    onChange={onQuantityChange}
                     size="small"
                     id="outlined-number"
                     label="Số lượng"
@@ -170,6 +245,7 @@ export default function ProductDetail() {
                       marginTop: "0.5em",
                       marginBottom: "1em",
                     }}
+                    onClick={onClickBtnBuy}
                   >
                     Mua ngay
                   </Button>
@@ -217,6 +293,11 @@ export default function ProductDetail() {
         </Box>
       </Box>
       <Footer />
+      <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alertRes.typeAlert}>
+          {alertRes.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
