@@ -16,7 +16,6 @@ export function fetchProductImages() {
           if (res.status === 200) {
             resolve(res.json());
           } else {
-            // res.json().then((data) => reject(data));
             reject(res);
           }
         })

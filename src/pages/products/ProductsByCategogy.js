@@ -14,13 +14,11 @@ import { Pagination } from "@material-ui/lab";
 
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
-import Footer from "../../components/Footer";
+import { fetchProductsBySlugOfCategory } from "../../api/categoryService";
 
-import {
-  fetchAllCategories,
-  fetchProductsBySlugOfCategory,
-} from "../../api/categoryService";
+import Footer from "../../components/Footer";
 import CartItem from "../../components/CartItem";
+import CategoryHeader from "../../components/CategoryHeader";
 
 const useStyles = makeStyles((theme) => ({
   rootItem: {
@@ -58,20 +56,9 @@ function ProductsByCategogy() {
   let { slug } = useParams();
 
   const [category, setCategory] = useState(null);
-  const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalOfPage, setTotalOfPage] = useState(null);
   const [productImages, setProductImages] = useState([]);
-
-  useEffect(() => {
-    fetchAllCategories()
-      .then((data) => {
-        setCategories(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   useEffect(() => {
     if (slug !== "sach-moi") {
@@ -90,7 +77,7 @@ function ProductsByCategogy() {
         .then((data) => {
           setProductImages(data.data);
           setTotalOfPage(data.totalOfPage);
-          setCategory(data.data[0].product.category.name);
+          setCategory("Sách mới");
         })
         .catch((err) => {
           console.log(err);
@@ -110,27 +97,13 @@ function ProductsByCategogy() {
         maxWidth="930px"
         style={{ margin: "0 auto" }}
       >
-        <Typography variant="h6" gutterBottom align="center">
-          THỂ LOẠI
-        </Typography>
-        <ul className={classes.menuTopUl}>
-          {categories &&
-            categories.map((item) => (
-              <li className={classes.menuTopUlLi} key={item.id}>
-                <Link
-                  to={`/categories/${item.slug}`}
-                  className={classes.menuTopUlLiLink}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-        </ul>
+        <CategoryHeader />
       </Box>
       <Box paddingX={5.5} maxWidth="930px" style={{ margin: "0 auto" }}>
         <Breadcrumbs
           separator={<NavigateNextIcon fontSize="small" />}
           aria-label="breadcrumb"
+          style={{ background: "#EBE9E9", padding: "0.5em" }}
         >
           <Link color="inherit" to="/">
             Trang chủ

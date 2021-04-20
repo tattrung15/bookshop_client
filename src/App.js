@@ -2,20 +2,21 @@ import "./App.css";
 import React, { useEffect } from "react";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 
-import AppBar from "./components/AppBar";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import HomePage from "./pages/home";
 import User from "./pages/profile/User";
+import AppBar from "./components/AppBar";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
-import HomePage from "./pages/home";
+import ProductDetail from "./pages/products/ProductDetail";
+import ProductsByCategogy from "./pages/products/ProductsByCategogy";
 
 import { useSetRecoilState } from "recoil";
 import { userSeletor } from "./recoil/userState";
 
 import { auth } from "./utils/auth";
 import { validateToken } from "./api/authAPI";
-import ProductsByCategogy from "./pages/products/ProductsByCategogy";
 
 function App() {
   const setUserState = useSetRecoilState(userSeletor);
@@ -55,6 +56,10 @@ function App() {
           <Route path="/categories/:slug">
             <AppBar />
             <ProductsByCategogy />
+          </Route>
+          <Route path="/products/:slug">
+            <AppBar />
+            <ProductDetail />
           </Route>
           <Route path="/login" exact>
             <AppBar />
