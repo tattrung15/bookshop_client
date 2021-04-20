@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 import { fade, makeStyles } from "@material-ui/core/styles";
@@ -32,6 +32,10 @@ import MailIcon from "@material-ui/icons/Mail";
 
 import { useRecoilState } from "recoil";
 import { userSeletor } from "../../recoil/userState";
+import { cartSeletor } from "../../recoil/cartState";
+
+import { fetchOrderItemsByUserId } from "../../api/cartService";
+
 import { auth } from "../../utils/auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -116,12 +120,30 @@ const useStyles = makeStyles((theme) => ({
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
 
-  const [state, setState] = useState({ left: false });
   const [anchorEl, setAnchorEl] = useState(null);
+  const [state, setState] = useState({ left: false });
   const [userState, setUserState] = useRecoilState(userSeletor);
+  const [cartState, setCartState] = useRecoilState(cartSeletor);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const history = useHistory();
+
+  useEffect(() => {
+    if (userState.userId) {
+      fetchOrderItemsByUserId(userState.userId)
+        .then((data) => {
+          setCartState({
+            numberOfProducts: data.length,
+          });
+        })
+        .catch((err) => {
+          setCartState({
+            numberOfProducts: 0,
+          });
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userState]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -329,19 +351,24 @@ export default function PrimarySearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton
-              aria-label="show 4 new mails"
-              color="inherit"
-              disableRipple
-              disableFocusRipple
-            >
-              <Badge badgeContent={4} color="secondary">
-                <Icon
-                  style={{ overflow: "visible" }}
-                  className="fa fa-shopping-cart"
-                />
-              </Badge>
-            </IconButton>
+            {userState.userId && (
+              <IconButton
+                aria-label="show 4 new mails"
+                color="inherit"
+                disableRipple
+                disableFocusRipple
+              >
+                <Badge
+                  badgeContent={cartState.numberOfProducts}
+                  color="secondary"
+                >
+                  <Icon
+                    style={{ overflow: "visible" }}
+                    className="fa fa-shopping-cart"
+                  />
+                </Badge>
+              </IconButton>
+            )}
             <IconButton
               edge="end"
               aria-label="account of current user"
