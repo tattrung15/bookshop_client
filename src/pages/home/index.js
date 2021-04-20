@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Button, Typography, Box } from "@material-ui/core";
 
-import CartItem from "../../components/CartItem";
 import Footer from "../../components/Footer";
+import CartItem from "../../components/CartItem";
+import CategoryHeader from "../../components/CategoryHeader";
 
 import bannerDangKy from "../../img/banner_dangky_mail.jpg";
 import bannerDoremon from "../../img/doremon.png";
@@ -15,8 +16,6 @@ import {
   fetchProductImages,
   fetchProductImageBestSelling,
 } from "../../api/productImageService";
-
-import { fetchAllCategories } from "../../api/categoryService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,7 +98,6 @@ const useStyles = makeStyles((theme) => ({
 export default function HomePage() {
   const classes = useStyles();
 
-  const [categories, setCategories] = useState([]);
   const [productImage, setProductImage] = useState([]);
   const [productImageBestSelling, setProductImageBestSelling] = useState([]);
 
@@ -119,13 +117,6 @@ export default function HomePage() {
       .catch((err) => {
         console.log(err);
       });
-    fetchAllCategories()
-      .then((data) => {
-        setCategories(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }, []);
 
   return (
@@ -136,22 +127,7 @@ export default function HomePage() {
         maxWidth="930px"
         style={{ margin: "0 auto" }}
       >
-        <Typography variant="h6" gutterBottom align="center">
-          THỂ LOẠI
-        </Typography>
-        <ul className={classes.menuTopUl}>
-          {categories &&
-            categories.map((item) => (
-              <li className={classes.menuTopUlLi} key={item.id}>
-                <Link
-                  to={`/categories/${item.slug}`}
-                  className={classes.menuTopUlLiLink}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-        </ul>
+        <CategoryHeader />
       </Box>
       <Box
         marginTop={2}
