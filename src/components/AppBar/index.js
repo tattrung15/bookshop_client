@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import clsx from "clsx";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import {
@@ -21,8 +21,6 @@ import {
   Chip,
   Box,
 } from "@material-ui/core";
-
-import { Link } from "react-router-dom";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -97,6 +95,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     [theme.breakpoints.up("md")]: {
       width: "50ch",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "30ch",
     },
   },
   sectionDesktop: {
@@ -225,17 +226,29 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <Icon
-              style={{ overflow: "visible" }}
-              className="fa fa-shopping-cart"
-            />
-          </Badge>
-        </IconButton>
-        <p>Cart</p>
-      </MenuItem>
+      <Link to={"/cart"} style={{ color: "black", textDecoration: "none" }}>
+        <MenuItem>
+          {userState.userId && (
+            <IconButton
+              aria-label="show 4 new mails"
+              color="inherit"
+              disableRipple
+              disableFocusRipple
+            >
+              <Badge
+                badgeContent={cartState.numberOfProducts}
+                color="secondary"
+              >
+                <Icon
+                  style={{ overflow: "visible" }}
+                  className="fa fa-shopping-cart"
+                />
+              </Badge>
+            </IconButton>
+          )}
+          <p>Cart</p>
+        </MenuItem>
+      </Link>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -352,22 +365,31 @@ export default function PrimarySearchAppBar() {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {userState.userId && (
-              <IconButton
-                aria-label="show 4 new mails"
-                color="inherit"
-                disableRipple
-                disableFocusRipple
+              <Link
+                to={"/cart"}
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  marginTop: "5px",
+                }}
               >
-                <Badge
-                  badgeContent={cartState.numberOfProducts}
-                  color="secondary"
+                <IconButton
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                  disableRipple
+                  disableFocusRipple
                 >
-                  <Icon
-                    style={{ overflow: "visible" }}
-                    className="fa fa-shopping-cart"
-                  />
-                </Badge>
-              </IconButton>
+                  <Badge
+                    badgeContent={cartState.numberOfProducts}
+                    color="secondary"
+                  >
+                    <Icon
+                      style={{ overflow: "visible" }}
+                      className="fa fa-shopping-cart"
+                    />
+                  </Badge>
+                </IconButton>
+              </Link>
             )}
             <IconButton
               edge="end"

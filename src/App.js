@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useEffect } from "react";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 
+import Cart from "./pages/Cart";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HomePage from "./pages/home";
@@ -52,6 +53,10 @@ function App() {
           <Route path="/" exact>
             <AppBar />
             <HomePage />
+          </Route>
+          <Route path="/cart">
+            <AppBar />
+            <Cart />
           </Route>
           <Route path="/categories/:slug">
             <AppBar />

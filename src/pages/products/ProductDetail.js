@@ -54,7 +54,7 @@ export default function ProductDetail() {
   const [userState] = useRecoilState(userSeletor);
   const [openAlert, setOpenAlert] = useState(false);
   const [bookOfCategory, setBookOfCategory] = useState([]);
-  const [setCartState] = useRecoilState(cartSeletor);
+  const [, setCartState] = useRecoilState(cartSeletor);
   const [productImages, setProductImages] = useState(["https"]);
   const [alertRes, setAlertRes] = useState({
     typeAlert: "error",
