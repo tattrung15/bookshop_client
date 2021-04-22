@@ -19,6 +19,33 @@ export function fetchAllUsers() {
   });
 }
 
+export function fetchUserById(userId) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      fetch(`${BASE_API}/users/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "GET",
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            return resolve(res.json());
+          }
+          return reject(res);
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
 export function createNewUser(newUser) {
   return new Promise((resolve, reject) => {
     try {

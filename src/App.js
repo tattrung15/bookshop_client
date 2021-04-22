@@ -7,11 +7,13 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HomePage from "./pages/home";
 import User from "./pages/profile/User";
-import AppBar from "./components/AppBar";
+import Checkout from "./pages/Checkout";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
 import ProductDetail from "./pages/products/ProductDetail";
 import ProductsByCategogy from "./pages/products/ProductsByCategogy";
+
+import AppBar from "./components/AppBar";
 
 import { useSetRecoilState } from "recoil";
 import { userSeletor } from "./recoil/userState";
@@ -57,6 +59,10 @@ function App() {
           <Route path="/cart">
             <AppBar />
             <Cart />
+          </Route>
+          <Route path="/checkout">
+            <AppBar />
+            <Checkout />
           </Route>
           <Route path="/categories/:slug">
             <AppBar />

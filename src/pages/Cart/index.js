@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   Box,
@@ -48,6 +48,8 @@ function calculateTotalAmount(products) {
 
 function Cart() {
   const classes = useStyles();
+
+  const history = useHistory();
 
   const [openAlert, setOpenAlert] = useState(false);
   const [products, setProducts] = useState([]);
@@ -109,7 +111,7 @@ function Cart() {
   };
 
   const handleBuy = () => {
-    //
+    history.push("/checkout");
   };
 
   return (
