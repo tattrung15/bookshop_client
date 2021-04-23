@@ -45,8 +45,8 @@ function OrderItem(props) {
   const { item, onDeleteSuccess, onUpdateSuccess } = props;
 
   const [openAlert, setOpenAlert] = useState(false);
-  const [quantity, setQuantity] = useState(item.quantity);
   const [, setCartState] = useRecoilState(cartSeletor);
+  const [quantity, setQuantity] = useState(item.quantity);
   const [alertRes, setAlertRes] = useState({
     typeAlert: "success",
     message: "",

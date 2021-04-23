@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   Box,
@@ -8,7 +8,6 @@ import {
   Button,
   Grid,
   Typography,
-  makeStyles,
   Snackbar,
 } from "@material-ui/core";
 
@@ -19,22 +18,15 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 
 import { fetchUserById } from "../../api/usersService";
+import { fetchPostOrder } from "../../api/orderItemService";
 import { fetchOrderItemsByUserId } from "../../api/cartService";
 
 import { useRecoilState } from "recoil";
 
 import { userSeletor } from "../../recoil/userState";
+import { cartSeletor } from "../../recoil/cartState";
 
 import ProductItem from "./ProductItem";
-
-const useStyles = makeStyles((theme) => ({
-  gridItem: {
-    paddingLeft: "0.5em",
-    paddingRight: "0.5em",
-    display: "flex",
-    alignItems: "center",
-  },
-}));
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -48,12 +40,13 @@ function calculateTotalAmount(products) {
 }
 
 function Checkout() {
-  const classes = useStyles();
+  const history = useHistory();
 
   const [products, setProducts] = useState([]);
   const [userState] = useRecoilState(userSeletor);
   const [openAlert, setOpenAlert] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [, setCartState] = useRecoilState(cartSeletor);
   const [alertRes, setAlertRes] = useState({
     typeAlert: "success",
     message: "",
@@ -72,14 +65,12 @@ function Checkout() {
       fetchOrderItemsByUserId(userState.userId)
         .then((data) => {
           setProducts(data);
-          console.log(data);
         })
         .catch((err) => {
           setProducts([]);
         });
       fetchUserById(userState.userId)
         .then((data) => {
-          console.log(data);
           setCurrentUser(data);
         })
         .catch((err) => {
@@ -87,6 +78,39 @@ function Checkout() {
         });
     }
   }, [userState.userId]);
+
+  const onBuyClick = () => {
+    if (userState.userId) {
+      const saleOrder = {
+        userId: currentUser.id,
+        saleOrderId: products[0].saleOrder.id,
+        totalAmount: calculateTotalAmount(products),
+      };
+      fetchPostOrder(saleOrder)
+        .then((data) => {
+          setCartState({
+            numberOfProducts: 0,
+          });
+          history.push("/checkout/success");
+        })
+        .catch(async (err) => {
+          const resError = await err.json();
+          if (resError.message === "Not enough money") {
+            setAlertRes({
+              typeAlert: "error",
+              message: "Bạn không đủ tiền",
+            });
+            setOpenAlert(true);
+            return;
+          }
+          setAlertRes({
+            typeAlert: "error",
+            message: "Đặt mua thất bại",
+          });
+          setOpenAlert(true);
+        });
+    }
+  };
 
   return (
     <>
@@ -213,7 +237,12 @@ function Checkout() {
                   alignItems: "center",
                 }}
               >
-                <Button fullWidth variant="contained" color="primary">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={onBuyClick}
+                >
                   Đặt mua
                 </Button>
               </Box>
@@ -221,6 +250,11 @@ function Checkout() {
           </Grid>
         </Box>
       </Box>
+      <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alertRes.typeAlert}>
+          {alertRes.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import ProductDetail from "./pages/products/ProductDetail";
 import ProductsByCategogy from "./pages/products/ProductsByCategogy";
 
@@ -60,9 +61,13 @@ function App() {
             <AppBar />
             <Cart />
           </Route>
-          <Route path="/checkout">
+          <Route path="/checkout" exact>
             <AppBar />
             <Checkout />
+          </Route>
+          <Route path="/checkout/success">
+            <AppBar />
+            <CheckoutSuccess />
           </Route>
           <Route path="/categories/:slug">
             <AppBar />

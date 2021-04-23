@@ -1,36 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  Switch,
-  Route,
-  useHistory,
-  Redirect,
-  Link,
-  NavLink,
-} from "react-router-dom";
-
-import clsx from "clsx";
+import { Switch, Route, Link, NavLink } from "react-router-dom";
 
 import {
   Box,
   Breadcrumbs,
-  Container,
   makeStyles,
   Grid,
-  Paper,
   Typography,
 } from "@material-ui/core";
 
-import ListUserComponent from "../../components/ListUsers/ListUserComponent";
-
-import AppBar from "../../components/AppBar";
+import OrderClient from "../../components/OrderClient";
 import ProfileComponent from "../../components/Profile";
 
 import { useRecoilState } from "recoil";
 import { userSeletor } from "../../recoil/userState";
 
-import { auth } from "../../utils/auth";
-import { validateToken } from "../../api/authAPI";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { fetchUserById } from "../../api/usersService";
 
@@ -65,21 +50,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Profile() {
   const classes = useStyles();
-  const history = useHistory();
 
-  const [userState, setUserState] = useRecoilState(userSeletor);
-  const [currentUser, setCurrentUser] = useState({});
+  const [userState] = useRecoilState(userSeletor);
+  const [currentUser, setCurrentUser] = useState({
+    amount: 0,
+  });
 
   useEffect(() => {
-    if (userState.userId) {
-      fetchUserById(userState.userId)
-        .then((data) => {
-          setCurrentUser(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    fetchUserById(userState.userId)
+      .then((data) => {
+        setCurrentUser(data);
+      })
+      .catch((err) => {});
   }, [userState.userId]);
 
   const onUpdateSuccess = () => {
@@ -88,9 +70,7 @@ export default function Profile() {
         .then((data) => {
           setCurrentUser(data);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   };
 
@@ -118,8 +98,17 @@ export default function Profile() {
                     color="textPrimary"
                     style={{ fontWeight: "bolder" }}
                   >
-                    {currentUser &&
+                    {userState.userId &&
                       currentUser.firstName + " " + currentUser.lastName}
+                  </Typography>
+                  <Typography
+                    color="textPrimary"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    Tiền:{" "}
+                    {userState.userId &&
+                      currentUser.amount.toLocaleString("vn")}
+                    đ
                   </Typography>
                   <Box>
                     <ul style={{ listStyle: "none" }}>
@@ -137,7 +126,7 @@ export default function Profile() {
                             className="fa fa-edit"
                             style={{
                               fontSize: "larger",
-                              marginRight: "0.5em",
+                              marginRight: "0.3em",
                             }}
                           ></i>{" "}
                           Thông tin tài khoản
@@ -163,6 +152,26 @@ export default function Profile() {
                           Đơn hàng
                         </NavLink>
                       </li>
+                      <li style={{ marginTop: "1em" }}>
+                        <NavLink
+                          className={classes.linkA}
+                          to="/profile/recharge"
+                          activeStyle={{
+                            fontWeight: "bold",
+                            color: "red",
+                          }}
+                          exact
+                        >
+                          <i
+                            className="fa fa-money-bill"
+                            style={{
+                              fontSize: "larger",
+                              marginRight: "0.3em",
+                            }}
+                          ></i>{" "}
+                          Nap tiền
+                        </NavLink>
+                      </li>
                     </ul>
                   </Box>
                 </Box>
@@ -185,15 +194,33 @@ export default function Profile() {
                   </Box>
                 </Box>
               </Route>
-              <Route path="/profile/don-hang" exact>
+              <Route path="/profile/don-hang">
                 <Box style={{ padding: "1em 1em 1em 0" }}>
                   <Box
                     style={{
-                      boxShadow: "4px 0px 3px 1px #888888",
+                      boxShadow: "1px 0px 3px 1px #888888",
                       borderLeft: "1px solid black",
                     }}
                   >
-                    <Box style={{ padding: "0.5em" }}>b</Box>
+                    <Box style={{ padding: "0.5em" }}>
+                      <OrderClient />
+                    </Box>
+                  </Box>
+                </Box>
+              </Route>
+              <Route path="/profile/recharge">
+                <Box style={{ padding: "1em 1em 1em 0" }}>
+                  <Box
+                    style={{
+                      boxShadow: "1px 0px 3px 1px #888888",
+                      borderLeft: "1px solid black",
+                    }}
+                  >
+                    <Box style={{ padding: "0.5em" }}>
+                      <Typography variant="h4" component="h2" gutterBottom>
+                        Liên hệ số điện thoại: 0396 500 575
+                      </Typography>
+                    </Box>
                   </Box>
                 </Box>
               </Route>

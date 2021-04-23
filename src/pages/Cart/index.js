@@ -18,7 +18,6 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import MoneyIcon from "@material-ui/icons/Money";
 
 import OrderItem from "../../components/OrderItem";
-import Footer from "../../components/Footer";
 
 import { fetchOrderItemsByUserId } from "../../api/cartService";
 
@@ -267,7 +266,6 @@ function Cart() {
           )}
         </Box>
       </Box>
-      <Footer />
       <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={alertRes.typeAlert}>
           {alertRes.message}
