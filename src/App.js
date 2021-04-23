@@ -6,7 +6,7 @@ import Cart from "./pages/Cart";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HomePage from "./pages/home";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
 import Checkout from "./pages/Checkout";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
