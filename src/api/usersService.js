@@ -109,6 +109,37 @@ export function updateUser(userId, userBody) {
   });
 }
 
+export function updateProfileUser(userId, userBody) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      fetch(`${BASE_API}/users/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(userBody),
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            return resolve(res.json());
+          } else {
+            res.json().then((data) => {
+              return reject(data);
+            });
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
 export function deleteUser(userId) {
   return new Promise((resolve, reject) => {
     try {

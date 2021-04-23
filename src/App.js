@@ -6,7 +6,7 @@ import Cart from "./pages/Cart";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HomePage from "./pages/home";
-import User from "./pages/profile/User";
+import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
@@ -83,9 +83,9 @@ function App() {
           <Route path="/admin">
             <Dashboard />
           </Route>
-          <Route path="/profile" exact>
+          <Route path="/profile">
             <AppBar />
-            <User />
+            <Profile />
           </Route>
           <Route path="*">
             <NotFound />

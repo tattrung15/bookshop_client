@@ -157,6 +157,7 @@ function Checkout() {
                   </Grid>
                   <Grid>
                     <Link
+                      to="/profile"
                       style={{
                         display: "flex",
                         padding: "0.5em 0.5em",
@@ -193,10 +194,10 @@ function Checkout() {
                   alignItems: "center",
                 }}
               >
-                <Grid xs={6} md={6}>
+                <Grid item xs={6} md={6}>
                   Tổng thanh toán
                 </Grid>
-                <Grid xs={6} md={6}>
+                <Grid item xs={6} md={6}>
                   <Typography
                     color="secondary"
                     style={{ fontWeight: "bolder", fontSize: "1.5em" }}
