@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   Box,
@@ -18,7 +18,6 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import MoneyIcon from "@material-ui/icons/Money";
 
 import OrderItem from "../../components/OrderItem";
-import Footer from "../../components/Footer";
 
 import { fetchOrderItemsByUserId } from "../../api/cartService";
 
@@ -48,6 +47,8 @@ function calculateTotalAmount(products) {
 
 function Cart() {
   const classes = useStyles();
+
+  const history = useHistory();
 
   const [openAlert, setOpenAlert] = useState(false);
   const [products, setProducts] = useState([]);
@@ -109,7 +110,7 @@ function Cart() {
   };
 
   const handleBuy = () => {
-    //
+    history.push("/checkout");
   };
 
   return (
@@ -265,7 +266,6 @@ function Cart() {
           )}
         </Box>
       </Box>
-      <Footer />
       <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={alertRes.typeAlert}>
           {alertRes.message}

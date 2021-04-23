@@ -6,12 +6,15 @@ import Cart from "./pages/Cart";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import HomePage from "./pages/home";
-import User from "./pages/profile/User";
-import AppBar from "./components/AppBar";
+import Profile from "./pages/Profile";
+import Checkout from "./pages/Checkout";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/exception/NotFound";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import ProductDetail from "./pages/products/ProductDetail";
 import ProductsByCategogy from "./pages/products/ProductsByCategogy";
+
+import AppBar from "./components/AppBar";
 
 import { useSetRecoilState } from "recoil";
 import { userSeletor } from "./recoil/userState";
@@ -58,6 +61,14 @@ function App() {
             <AppBar />
             <Cart />
           </Route>
+          <Route path="/checkout" exact>
+            <AppBar />
+            <Checkout />
+          </Route>
+          <Route path="/checkout/success">
+            <AppBar />
+            <CheckoutSuccess />
+          </Route>
           <Route path="/categories/:slug">
             <AppBar />
             <ProductsByCategogy />
@@ -77,9 +88,9 @@ function App() {
           <Route path="/admin">
             <Dashboard />
           </Route>
-          <Route path="/profile" exact>
+          <Route path="/profile">
             <AppBar />
-            <User />
+            <Profile />
           </Route>
           <Route path="*">
             <NotFound />
