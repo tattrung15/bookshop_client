@@ -152,14 +152,12 @@ export default function HomePage() {
           </div>
 
           <Box style={{ textAlign: "center", marginTop: "1em" }}>
-            <Button variant="contained">
-              <Link
-                to="/categories/sach-moi"
-                style={{ color: "black", textDecoration: "none" }}
-              >
-                Xem thêm
-              </Link>
-            </Button>
+            <Link
+              to="/categories/sach-moi"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <Button variant="contained">Xem thêm</Button>
+            </Link>
           </Box>
         </Box>
 
