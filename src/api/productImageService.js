@@ -28,6 +28,32 @@ export function fetchProductImages() {
   });
 }
 
+export function fetchSearchProductImages(searchString) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+      fetch(`${BASE_API}/product-images?search=${searchString}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            resolve(res.json());
+          } else {
+            reject(res);
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
 export function fetchProductImageBestSelling() {
   return new Promise((resolve, reject) => {
     try {

@@ -68,9 +68,7 @@ function ProductsByCategogy() {
           setTotalOfPage(data.totalOfPage);
           setCategory(data.data[0].product.category.name);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     } else {
       setCategory("Sách mới");
       fetchProductsBySlugOfCategory("sach-moi", currentPage)
@@ -79,9 +77,7 @@ function ProductsByCategogy() {
           setTotalOfPage(data.totalOfPage);
           setCategory("Sách mới");
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   }, [currentPage, slug]);
 

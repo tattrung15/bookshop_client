@@ -129,7 +129,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="firstName"
-                label="First Name"
+                label="Tên"
                 value={user.firstName}
                 onChange={onValueChange}
               />
@@ -140,7 +140,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="lastName"
-                label="Last Name"
+                label="Họ đệm"
                 name="lastName"
                 value={user.lastName}
                 onChange={onValueChange}
@@ -202,7 +202,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="phone"
-                label="Phone"
+                label="Số điện thoại"
                 name="phone"
                 value={user.phone}
                 onChange={onValueChange}
@@ -214,7 +214,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 name="address"
-                label="Address"
+                label="Địa chỉ"
                 id="address"
                 value={user.address}
                 onChange={onValueChange}
