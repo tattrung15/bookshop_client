@@ -41,7 +41,7 @@ function SaleOrder(props) {
               </Link>
             </Box>
             <Box>
-              Đặt ngày: {moment(saleOrder.updateAt).format("DD/MM/yyyy")}
+              Đặt ngày: {moment(saleOrder.createAt).format("DD/MM/yyyy")}
             </Box>
           </Grid>
           <Grid item xs={4} md={4} style={{ textAlign: "center" }}>

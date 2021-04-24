@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+
 import { useHistory, Link } from "react-router-dom";
+
 import clsx from "clsx";
+
 import { fade, makeStyles } from "@material-ui/core/styles";
+
 import {
   Avatar,
   AppBar,
@@ -360,6 +364,16 @@ export default function PrimarySearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onKeyPress={(ev) => {
+                if (ev.which === 13 || ev.keyCode === 13) {
+                  const strSearch = ev.target.value;
+                  ev.target.value = "";
+                  history.push({
+                    pathname: "/search",
+                    search: `?keyword=${strSearch}`,
+                  });
+                }
+              }}
             />
           </div>
           <div className={classes.grow} />

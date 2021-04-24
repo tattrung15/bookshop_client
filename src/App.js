@@ -8,7 +8,9 @@ import SignUp from "./pages/SignUp";
 import HomePage from "./pages/home";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
+import OrderDetail from "./pages/OrderDetail";
 import Dashboard from "./pages/admin/Dashboard";
+import SearchProduct from "./pages/SearchProduct";
 import NotFound from "./pages/exception/NotFound";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import ProductDetail from "./pages/products/ProductDetail";
@@ -57,6 +59,10 @@ function App() {
             <AppBar />
             <HomePage />
           </Route>
+          <Route path="/search">
+            <AppBar />
+            <SearchProduct />
+          </Route>
           <Route path="/cart">
             <AppBar />
             <Cart />
@@ -91,6 +97,10 @@ function App() {
           <Route path="/profile">
             <AppBar />
             <Profile />
+          </Route>
+          <Route path="/chi-tiet-don-hang/:saleOrderId">
+            <AppBar />
+            <OrderDetail />
           </Route>
           <Route path="*">
             <NotFound />
