@@ -15,6 +15,7 @@ import bannerWingsbooks from "../../img/banner_wingsbooks.jpg";
 import {
   fetchProductImages,
   fetchProductImageBestSelling,
+  fetchProductImagesByCategory,
 } from "../../api/productImageService";
 
 const useStyles = makeStyles((theme) => ({
@@ -99,6 +100,9 @@ export default function HomePage() {
   const classes = useStyles();
 
   const [productImage, setProductImage] = useState([]);
+  const [productImageDoraemon, setProductImageDoraemon] = useState([]);
+  const [productImageWingsBooks, setProductImageWingsBooks] = useState([]);
+  const [productImageComicManga, setProductImageComicManga] = useState([]);
   const [productImageBestSelling, setProductImageBestSelling] = useState([]);
 
   useEffect(() => {
@@ -113,6 +117,27 @@ export default function HomePage() {
     fetchProductImageBestSelling()
       .then((data) => {
         setProductImageBestSelling(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    fetchProductImagesByCategory("comic-manga")
+      .then((data) => {
+        setProductImageComicManga(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    fetchProductImagesByCategory("doraemon")
+      .then((data) => {
+        setProductImageDoraemon(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    fetchProductImagesByCategory("wings-books")
+      .then((data) => {
+        setProductImageWingsBooks(data);
       })
       .catch((err) => {
         console.log(err);
@@ -204,8 +229,8 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {productImage &&
-                productImage.map((val, index) => (
+              {productImageComicManga &&
+                productImageComicManga.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
                     <CartItem item={val} />
                   </Grid>
@@ -232,8 +257,8 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {productImageBestSelling &&
-                productImageBestSelling.map((val, index) => (
+              {productImageDoraemon &&
+                productImageDoraemon.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
                     <CartItem item={val} />
                   </Grid>
@@ -264,8 +289,8 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {productImageBestSelling &&
-                productImageBestSelling.map((val, index) => (
+              {productImageWingsBooks &&
+                productImageWingsBooks.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
                     <CartItem item={val} />
                   </Grid>
