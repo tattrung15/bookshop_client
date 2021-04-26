@@ -68,7 +68,30 @@ export function fetchProductImageBestSelling() {
           if (res.status === 200) {
             resolve(res.json());
           } else {
-            // res.json().then((data) => reject(data));
+            reject(res);
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
+export function fetchProductImagesByCategory(slugCategory) {
+  return new Promise((resolve, reject) => {
+    try {
+      fetch(`${BASE_API}/product-images?category=${slugCategory}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            resolve(res.json());
+          } else {
             reject(res);
           }
         })
