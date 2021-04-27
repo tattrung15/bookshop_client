@@ -266,7 +266,7 @@ export default function Profile() {
                               marginRight: "0.3em",
                             }}
                           ></i>{" "}
-                          Nap tiền
+                          Nạp tiền
                         </NavLink>
                       </li>
                     </ul>
