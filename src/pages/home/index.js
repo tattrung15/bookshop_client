@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Button, Typography, Box } from "@material-ui/core";
 
 import Footer from "../../components/Footer";
-import CartItem from "../../components/CartItem";
+import CardItem from "../../components/CardItem";
 import CategoryHeader from "../../components/CategoryHeader";
 
 import bannerDangKy from "../../img/banner_dangky_mail.jpg";
@@ -170,7 +170,7 @@ export default function HomePage() {
               {productImage &&
                 productImage.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
             </Grid>
@@ -196,7 +196,7 @@ export default function HomePage() {
               {productImageBestSelling &&
                 productImageBestSelling.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
             </Grid>
@@ -232,7 +232,7 @@ export default function HomePage() {
               {productImageComicManga &&
                 productImageComicManga.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
             </Grid>
@@ -260,7 +260,7 @@ export default function HomePage() {
               {productImageDoraemon &&
                 productImageDoraemon.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
             </Grid>
@@ -292,7 +292,7 @@ export default function HomePage() {
               {productImageWingsBooks &&
                 productImageWingsBooks.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
             </Grid>

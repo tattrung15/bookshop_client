@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import "./style.css";
 
-export default function CartItem(props) {
+export default function CardItem(props) {
   const { item } = props;
 
   return (

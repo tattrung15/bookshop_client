@@ -22,7 +22,7 @@ import MuiImageSlider from "mui-image-slider";
 import MuiAlert from "@material-ui/lab/Alert";
 
 import CategoryHeader from "../../components/CategoryHeader";
-import CartItem from "../../components/CartItem";
+import CardItem from "../../components/CardItem";
 import Footer from "../../components/Footer";
 
 import { fetchPostCart } from "../../api/cartService";
@@ -285,7 +285,7 @@ export default function ProductDetail() {
               {bookOfCategory &&
                 bookOfCategory.slice(0, 4).map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
             </Grid>

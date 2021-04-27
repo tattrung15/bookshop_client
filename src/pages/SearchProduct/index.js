@@ -15,7 +15,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import { fetchSearchProductImages } from "../../api/productImageService";
 
-import CartItem from "../../components/CartItem";
+import CardItem from "../../components/CardItem";
 
 const useStyles = makeStyles((theme) => ({
   rootItem: {
@@ -113,7 +113,7 @@ function SearchProduct() {
               {productImages.length !== 0 &&
                 productImages.slice(0, 20).map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
 

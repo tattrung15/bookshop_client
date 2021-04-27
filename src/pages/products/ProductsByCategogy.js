@@ -17,7 +17,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { fetchProductsBySlugOfCategory } from "../../api/categoryService";
 
 import Footer from "../../components/Footer";
-import CartItem from "../../components/CartItem";
+import CardItem from "../../components/CardItem";
 import CategoryHeader from "../../components/CategoryHeader";
 
 const useStyles = makeStyles((theme) => ({
@@ -122,7 +122,7 @@ function ProductsByCategogy() {
               {productImages &&
                 productImages.map((val, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CartItem item={val} />
+                    <CardItem item={val} />
                   </Grid>
                 ))}
             </Grid>
