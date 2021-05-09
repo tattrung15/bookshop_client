@@ -30,6 +30,7 @@ import { userSeletor } from "../../recoil/userState";
 
 import {
   fetchAllUsers,
+  fetchUsersLikeUsername,
   createNewUser,
   updateUser,
   deleteUser,
@@ -56,6 +57,7 @@ function ListUserComponent() {
   const [openAlert, setOpenAlert] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchState, setSearchState] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [usersFilterAdd, setUsersFilterAdd] = useState(null);
@@ -76,9 +78,11 @@ function ListUserComponent() {
   };
 
   useEffect(() => {
-    fetchAllUsers().then((data) => {
-      setUsers(data);
-    });
+    fetchAllUsers()
+      .then((data) => {
+        setUsers(data);
+      })
+      .catch((err) => {});
   }, [usersFilterAdd]);
 
   const handleAddUser = () => {
@@ -225,6 +229,18 @@ function ListUserComponent() {
     setOpenPopup(true);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchState(event.target.value);
+  };
+
+  useEffect(() => {
+    fetchUsersLikeUsername(searchState)
+      .then((data) => {
+        setUsers(data);
+      })
+      .catch((err) => {});
+  }, [searchState]);
+
   return (
     <div>
       <Typography variant="h4" style={style}>
@@ -252,6 +268,7 @@ function ListUserComponent() {
           id="outlined-size-small"
           variant="outlined"
           size="small"
+          value={searchState}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -259,6 +276,7 @@ function ListUserComponent() {
               </InputAdornment>
             ),
           }}
+          onChange={handleSearchChange}
         />
       </Box>
       <Paper style={{ marginTop: 10 }}>
@@ -279,34 +297,35 @@ function ListUserComponent() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.firstName}</TableCell>
-                    <TableCell>{item.lastName}</TableCell>
-                    <TableCell>{item.username}</TableCell>
-                    <TableCell>{item.phone}</TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.address}</TableCell>
-                    <TableCell align="justify">
-                      <IconButton onClick={() => openViewDialog(item)}>
-                        <VisibilityIcon style={{ color: "black" }} />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="justify">
-                      <IconButton onClick={() => openInPopup(item)}>
-                        <CreateIcon style={{ color: "black" }} />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="justify">
-                      <IconButton onClick={() => openConfirmDialog(item)}>
-                        <DeleteIcon style={{ color: "red" }} />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {users.length !== 0 &&
+                users
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{item.firstName}</TableCell>
+                      <TableCell>{item.lastName}</TableCell>
+                      <TableCell>{item.username}</TableCell>
+                      <TableCell>{item.phone}</TableCell>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>{item.address}</TableCell>
+                      <TableCell align="justify">
+                        <IconButton onClick={() => openViewDialog(item)}>
+                          <VisibilityIcon style={{ color: "black" }} />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="justify">
+                        <IconButton onClick={() => openInPopup(item)}>
+                          <CreateIcon style={{ color: "black" }} />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="justify">
+                        <IconButton onClick={() => openConfirmDialog(item)}>
+                          <DeleteIcon style={{ color: "red" }} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </TableContainer>

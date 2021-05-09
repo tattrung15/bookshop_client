@@ -19,6 +19,25 @@ export function fetchAllUsers() {
   });
 }
 
+export function fetchUsersLikeUsername(usernameSearch) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = auth.getToken();
+      const fetchUserLogin = await axios.get(
+        `${BASE_API}/users?search=${usernameSearch}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return resolve(fetchUserLogin.data);
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
 export function fetchUserById(userId) {
   return new Promise((resolve, reject) => {
     try {
