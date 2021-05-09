@@ -1,4 +1,5 @@
 import { BASE_API } from "../config";
+
 import axios from "axios";
 
 import { auth } from "../utils/auth";
@@ -23,7 +24,7 @@ export function fetchUsersLikeUsername(usernameSearch) {
   return new Promise(async (resolve, reject) => {
     try {
       const token = auth.getToken();
-      const fetchUserLogin = await axios.get(
+      const fetchUsersLikeUsername = await axios.get(
         `${BASE_API}/users?search=${usernameSearch}`,
         {
           headers: {
@@ -31,7 +32,7 @@ export function fetchUsersLikeUsername(usernameSearch) {
           },
         }
       );
-      return resolve(fetchUserLogin.data);
+      return resolve(fetchUsersLikeUsername.data);
     } catch (err) {
       return reject(new Error(err.message));
     }

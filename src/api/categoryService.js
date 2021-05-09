@@ -1,4 +1,8 @@
+import axios from "axios";
+
 import { BASE_API } from "../config";
+
+import { auth } from "../utils/auth";
 
 export function fetchAllCategories() {
   return new Promise((resolve, reject) => {
@@ -24,6 +28,25 @@ export function fetchAllCategories() {
   });
 }
 
+export function fetchCategoriesLikeName(nameSearch) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = auth.getToken();
+      const fetchUsersLikeUsername = await axios.get(
+        `${BASE_API}/categories?search=${nameSearch}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return resolve(fetchUsersLikeUsername.data);
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
 export function fetchProductsBySlugOfCategory(slug, page) {
   return new Promise((resolve, reject) => {
     try {
@@ -37,6 +60,36 @@ export function fetchProductsBySlugOfCategory(slug, page) {
             resolve(res.json());
           } else {
             reject(res);
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
+export function deleteCategory(categoryId) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      fetch(`${BASE_API}/categories/${categoryId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "DELETE",
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            return resolve(res.json());
+          } else {
+            res.json().then((data) => {
+              return reject(data);
+            });
           }
         })
         .catch((err) => {

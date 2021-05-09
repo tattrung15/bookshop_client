@@ -205,6 +205,7 @@ function ListUserComponent() {
         setUsersFilterAdd(data);
       })
       .catch((err) => {
+        setOpenAlert(true);
         setUserRes({ typeAlert: "error", message: err.message });
       });
   };
@@ -234,7 +235,7 @@ function ListUserComponent() {
   };
 
   useEffect(() => {
-    fetchUsersLikeUsername(searchState)
+    fetchUsersLikeUsername(searchState.trim())
       .then((data) => {
         setUsers(data);
       })
@@ -339,7 +340,7 @@ function ListUserComponent() {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleClose}>
+      <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={userRes.typeAlert}>
           {userRes.message}
         </Alert>
@@ -350,7 +351,7 @@ function ListUserComponent() {
         setOpen={setConfirmOpen}
         onConfirm={handleDeleteUser}
       >
-        Are you sure you want to delete this user:{" "}
+        Are you sure you want to delete user:{" "}
         {recordForDelete && recordForDelete.username}?
       </ConfirmDialog>
     </div>

@@ -13,7 +13,9 @@ import Orders from "./Orders";
 import NotFound from "../exception/NotFound";
 
 import AppBarDrawer from "./AppBarDrawer";
+import CategoriesManagement from "./CategoriesManagement";
 import ListUserComponent from "../../components/ListUsers/ListUserComponent";
+
 import { userSeletor } from "../../recoil/userState";
 import { auth } from "../../utils/auth";
 import { validateToken } from "../../api/authAPI";
@@ -114,7 +116,7 @@ export default function Dashboard() {
           </Route>
           <Route path="/admin/categories" exact>
             <Container maxWidth="xl" className={classes.container}>
-              <h1>Category management</h1>
+              <CategoriesManagement />
             </Container>
           </Route>
           <Redirect from="/**/profile" to="/profile" />
