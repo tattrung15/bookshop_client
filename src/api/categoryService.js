@@ -71,6 +71,69 @@ export function fetchProductsBySlugOfCategory(slug, page) {
   });
 }
 
+export function createNewCategory(newCategory) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      fetch(`${BASE_API}/categories`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "POST",
+        body: JSON.stringify(newCategory),
+      })
+        .then((res) => {
+          if (res.status === 201) {
+            return resolve(res.json());
+          }
+          if (res.status === 400) {
+            res.json().then((data) => {
+              return reject(data);
+            });
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
+export function updateCategory(categoryId, categoryBody) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      fetch(`${BASE_API}/categories/${categoryId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PATCH",
+        body: JSON.stringify(categoryBody),
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            return resolve(res.json());
+          } else {
+            res.json().then((data) => {
+              return reject(data);
+            });
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
 export function deleteCategory(categoryId) {
   return new Promise((resolve, reject) => {
     try {

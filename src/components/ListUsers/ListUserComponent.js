@@ -36,7 +36,7 @@ import {
   deleteUser,
 } from "../../api/usersService";
 
-import PopupAddUser from "../Popup/AddUser";
+import PopupForm from "../Popup";
 import AddUserForm from "../Popup/AddUserForm";
 import ConfirmDialog from "../Dialog/ConfirmDialog";
 
@@ -251,7 +251,7 @@ function ListUserComponent() {
         <Button variant="contained" color="primary" onClick={handleAddUser}>
           Add User
         </Button>
-        <PopupAddUser
+        <PopupForm
           title="User Form"
           openPopup={openPopup}
           setOpenPopup={setOpenPopup}
@@ -262,7 +262,7 @@ function ListUserComponent() {
             recordForEdit={recordForEdit}
             addOrEdit={addOrEdit}
           />
-        </PopupAddUser>
+        </PopupForm>
         <TextField
           style={{ position: "absolute", right: 0 }}
           label="Search..."
