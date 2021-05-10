@@ -26,11 +26,15 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import SearchIcon from "@material-ui/icons/Search";
 
 import ConfirmDialog from "../../components/Dialog/ConfirmDialog";
+import PopupForm from "../../components/Popup";
+import AddCategoryForm from "../../components/Popup/AddCategoryForm";
 
 import {
   fetchAllCategories,
   fetchCategoriesLikeName,
   deleteCategory,
+  updateCategory,
+  createNewCategory,
 } from "../../api/categoryService";
 
 const style = {
@@ -44,12 +48,16 @@ function Alert(props) {
 
 export default function CategoriesManagement() {
   const [page, setPage] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isView, setIsView] = useState(false);
   const [categories, setCategories] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
   const [searchState, setSearchState] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [actionFilter, setActionFilter] = useState(null);
+  const [recordForEdit, setRecordForEdit] = useState(null);
   const [recordForDelete, setRecordForDelete] = useState(null);
   const [alertResponse, setAlertResponse] = useState({
     typeAlert: "success",
@@ -111,16 +119,111 @@ export default function CategoriesManagement() {
       .catch((err) => {});
   }, [searchState]);
 
+  const handleAddItem = () => {
+    setIsView(false);
+    setRecordForEdit(null);
+    setIsEdit(false);
+    setOpenPopup(true);
+  };
+
+  const openInPopup = (item) => {
+    setIsView(false);
+    const itemEdit = {
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      createAt: item.createAt,
+      updateAt: item.updateAt,
+    };
+    setIsEdit(true);
+    setRecordForEdit(itemEdit);
+    setOpenPopup(true);
+  };
+
+  const openViewDialog = (item) => {
+    const itemView = {
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      createAt: item.createAt,
+      updateAt: item.updateAt,
+    };
+    setIsView(true);
+    setIsEdit(false);
+    setRecordForEdit(itemView);
+    setOpenPopup(true);
+  };
+
+  const addOrEdit = (values, resetForm) => {
+    setRecordForEdit(null);
+    if (isEdit) {
+      const editItemId = values.id;
+      const editItemBody = {
+        name: values.name,
+        description: values.description,
+      };
+      Object.keys(editItemBody).forEach(
+        (key) => editItemBody[key] == null && delete editItemBody[key]
+      );
+      updateCategory(editItemId, editItemBody)
+        .then((data) => {
+          resetForm();
+          setOpenPopup(false);
+          setOpenAlert(true);
+          setAlertResponse({
+            typeAlert: "success",
+            message: "Edited category success",
+          });
+          setActionFilter(data);
+        })
+        .catch((err) => {
+          setOpenAlert(true);
+          setAlertResponse({ typeAlert: "error", message: err.message });
+        });
+      return;
+    }
+    const newItem = {
+      name: values.name,
+      description: values.description,
+    };
+    createNewCategory(newItem)
+      .then((data) => {
+        resetForm();
+        setOpenPopup(false);
+        setOpenAlert(true);
+        setAlertResponse({
+          typeAlert: "success",
+          message: "Created category",
+        });
+        setActionFilter(data);
+      })
+      .catch((err) => {
+        setOpenAlert(true);
+        setAlertResponse({ typeAlert: "error", message: err.message });
+      });
+  };
+
   return (
     <div>
       <Typography variant="h4" style={style}>
         Categories Details
       </Typography>
       <Box style={{ position: "relative" }}>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={handleAddItem}>
           Add Category
         </Button>
-
+        <PopupForm
+          title="Category Form"
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+        >
+          <AddCategoryForm
+            isEdit={isEdit}
+            isView={isView}
+            recordForEdit={recordForEdit}
+            addOrEdit={addOrEdit}
+          />
+        </PopupForm>
         <TextField
           style={{ position: "absolute", right: 0 }}
           label="Search..."
@@ -172,12 +275,12 @@ export default function CategoriesManagement() {
                         {item.description.length > 90 && "..."}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton>
+                        <IconButton onClick={() => openViewDialog(item)}>
                           <VisibilityIcon style={{ color: "black" }} />
                         </IconButton>
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton>
+                        <IconButton onClick={() => openInPopup(item)}>
                           <CreateIcon style={{ color: "black" }} />
                         </IconButton>
                       </TableCell>

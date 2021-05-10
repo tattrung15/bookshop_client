@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+
 import { Grid, IconButton, InputAdornment } from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 import Controls from "../../components/controls/Controls";
 import { useForm, Form } from "../../components/Popup/UseForm";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 const roleItems = () => [
   { id: "ADMIN", title: "Admin" },
@@ -27,7 +28,7 @@ const initialFValues = {
   updateAt: "",
 };
 
-export default function EmployeeForm(props) {
+export default function AddUserForm(props) {
   const { addOrEdit, recordForEdit, isEdit, isView } = props;
 
   const [showPassword, setShowPassword] = useState(false);
