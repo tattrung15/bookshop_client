@@ -112,14 +112,8 @@ export default function AddUserForm(props) {
       return Object.values(temp).every((x) => x === "");
   };
 
-  const {
-    values,
-    setValues,
-    errors,
-    setErrors,
-    handleInputChange,
-    resetForm,
-  } = useForm(initialFValues, true, validate);
+  const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
+    useForm(initialFValues, true, validate);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -159,7 +153,6 @@ export default function AddUserForm(props) {
               name="firstName"
               label="First Name"
               value={values.firstName}
-              onChange={handleInputChange}
               error={errors.firstName}
               InputProps={{
                 readOnly: true,
@@ -169,7 +162,6 @@ export default function AddUserForm(props) {
               name="lastName"
               label="Last Name"
               value={values.lastName}
-              onChange={handleInputChange}
               error={errors.lastName}
               InputProps={{
                 readOnly: true,
@@ -179,7 +171,6 @@ export default function AddUserForm(props) {
               label="Email"
               name="email"
               value={values.email}
-              onChange={handleInputChange}
               error={errors.email}
               InputProps={{
                 readOnly: true,
@@ -189,7 +180,6 @@ export default function AddUserForm(props) {
               label="Mobile"
               name="mobile"
               value={values.mobile}
-              onChange={handleInputChange}
               error={errors.mobile}
               InputProps={{
                 readOnly: true,
@@ -199,7 +189,6 @@ export default function AddUserForm(props) {
               label="Address"
               name="address"
               value={values.address}
-              onChange={handleInputChange}
               error={errors.address}
               InputProps={{
                 readOnly: true,
