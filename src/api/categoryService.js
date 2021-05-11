@@ -32,7 +32,7 @@ export function fetchCategoriesLikeName(nameSearch) {
   return new Promise(async (resolve, reject) => {
     try {
       const token = auth.getToken();
-      const fetchUsersLikeUsername = await axios.get(
+      const fetchCategoriesLikeName = await axios.get(
         `${BASE_API}/categories?search=${nameSearch}`,
         {
           headers: {
@@ -40,7 +40,7 @@ export function fetchCategoriesLikeName(nameSearch) {
           },
         }
       );
-      return resolve(fetchUsersLikeUsername.data);
+      return resolve(fetchCategoriesLikeName.data);
     } catch (err) {
       return reject(new Error(err.message));
     }

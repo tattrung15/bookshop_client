@@ -59,6 +59,19 @@ export const mainListItems = (
         </ListItem>
       </Tooltip>
     </Link>
+    <Link
+      to="/admin/products"
+      style={{ color: "black", textDecoration: "none" }}
+    >
+      <Tooltip title="Book management" placement="right" arrow>
+        <ListItem button>
+          <ListItemIcon>
+            <Icon className="fa fa-book" />
+          </ListItemIcon>
+          <ListItemText primary="Products" />
+        </ListItem>
+      </Tooltip>
+    </Link>
   </div>
 );
 
