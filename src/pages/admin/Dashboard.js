@@ -15,6 +15,7 @@ import NotFound from "../exception/NotFound";
 import AppBarDrawer from "./AppBarDrawer";
 import CategoriesManagement from "./CategoriesManagement";
 import ProductManagement from "./ProductManagement";
+import ProductImageManagement from "./ProductImageManagement";
 import ListUserComponent from "../../components/ListUsers/ListUserComponent";
 
 import { userSeletor } from "../../recoil/userState";
@@ -123,6 +124,11 @@ export default function Dashboard() {
           <Route path="/admin/products" exact>
             <Container maxWidth="xl" className={classes.container}>
               <ProductManagement />
+            </Container>
+          </Route>
+          <Route path="/admin/product-images" exact>
+            <Container maxWidth="xl" className={classes.container}>
+              <ProductImageManagement />
             </Container>
           </Route>
           <Redirect from="/**/profile" to="/profile" />
