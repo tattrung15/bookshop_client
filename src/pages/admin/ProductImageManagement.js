@@ -27,17 +27,14 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import ConfirmDialog from "../../components/Dialog/ConfirmDialog";
 import PopupForm from "../../components/Popup";
-import AddProductForm from "../../components/Popup/AddProductForm";
+import AddProductImageForm from "../../components/Popup/AddProductImageForm";
 
 import {
-  fetchAllProducts,
-  fetchProductsLikeTitle,
-  createNewProduct,
-  updateProduct,
-  deleteProduct,
-} from "../../api/productService";
-
-import { fetchAllCategories } from "../../api/categoryService";
+  fetchAllProductsHaveImage,
+  fetchAllProductsNoImage,
+  fetchProductHaveImageLikeTitle,
+  deleteProductImages,
+} from "../../api/productImageService";
 
 const style = {
   display: "flex",
@@ -52,15 +49,15 @@ export default function CategoriesManagement() {
   const [page, setPage] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
   const [isView, setIsView] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [searchState, setSearchState] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [productImages, setProductImages] = useState([]);
   const [actionFilter, setActionFilter] = useState(null);
   const [recordForEdit, setRecordForEdit] = useState(null);
+  const [productsNoImage, setProductsNoImage] = useState([]);
   const [recordForDelete, setRecordForDelete] = useState(null);
   const [alertResponse, setAlertResponse] = useState({
     typeAlert: "success",
@@ -90,32 +87,32 @@ export default function CategoriesManagement() {
   };
 
   useEffect(() => {
-    fetchAllProducts()
+    fetchAllProductsHaveImage()
       .then((data) => {
-        setProducts(data);
+        setProductImages(data);
+      })
+      .catch((err) => {});
+    fetchAllProductsNoImage()
+      .then((data) => {
+        const productsNoImageList = data.map((item) => {
+          let productImage = {};
+          productImage.id = item.product.id;
+          productImage.title = item.product.title;
+          return productImage;
+        });
+        setProductsNoImage(productsNoImageList);
       })
       .catch((err) => {});
   }, [actionFilter]);
 
-  useEffect(() => {
-    fetchAllCategories()
-      .then((data) => {
-        const listCategories = data.map((item) => {
-          let category = {};
-          category.id = item.id;
-          category.title = item.name;
-          return category;
-        });
-        setCategories(listCategories);
-      })
-      .catch((err) => {});
-  }, []);
-
   const handleDelete = () => {
-    deleteProduct(recordForDelete.id)
+    deleteProductImages(recordForDelete.product.id)
       .then((data) => {
         setOpenAlert(true);
-        setAlertResponse({ typeAlert: "success", message: "Deleted product" });
+        setAlertResponse({
+          typeAlert: "success",
+          message: "Deleted product images",
+        });
         setActionFilter(data);
       })
       .catch((err) => {
@@ -129,9 +126,9 @@ export default function CategoriesManagement() {
   };
 
   useEffect(() => {
-    fetchProductsLikeTitle(searchState)
+    fetchProductHaveImageLikeTitle(searchState)
       .then((data) => {
-        setProducts(data);
+        setProductImages(data);
       })
       .catch((err) => {});
   }, [searchState]);
@@ -144,37 +141,30 @@ export default function CategoriesManagement() {
   };
 
   const openInPopup = (item) => {
-    setIsView(false);
-    const itemEdit = {
-      id: item.id,
-      title: item.title,
-      longDescription: item.longDescription,
-      price: item.price,
-      author: item.author,
-      currentNumber: item.currentNumber,
-      numberOfPage: item.numberOfPage,
-      categoryId: item.category.id,
-      createAt: item.createAt,
-      updateAt: item.updateAt,
-    };
-    setIsEdit(true);
-    setRecordForEdit(itemEdit);
-    setOpenPopup(true);
+    // setIsView(false);
+    // const itemEdit = {
+    //   id: item.id,
+    //   title: item.title,
+    //   longDescription: item.longDescription,
+    //   price: item.price,
+    //   author: item.author,
+    //   currentNumber: item.currentNumber,
+    //   numberOfPage: item.numberOfPage,
+    //   categoryId: item.category.id,
+    //   createAt: item.createAt,
+    //   updateAt: item.updateAt,
+    // };
+    // setIsEdit(true);
+    // setRecordForEdit(itemEdit);
+    // setOpenPopup(true);
   };
 
   const openViewDialog = (item) => {
     const itemView = {
-      id: item.id,
-      title: item.title,
-      longDescription: item.longDescription,
-      price: item.price,
-      author: item.author,
-      currentNumber: item.currentNumber,
-      numberOfPage: item.numberOfPage,
-      quantityPurchased: item.quantityPurchased,
-      createAt: item.createAt,
-      updateAt: item.updateAt,
-      categoryId: item.category.id,
+      id: item.product.id,
+      title: item.product.title,
+      longDescription: item.product.longDescription,
+      productImages: item.productImages,
     };
     setIsView(true);
     setIsEdit(false);
@@ -183,84 +173,84 @@ export default function CategoriesManagement() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    setRecordForEdit(null);
-    if (isEdit) {
-      const editItemId = values.id;
-      const editItemBody = {
-        title: values.title,
-        longDescription: values.longDescription,
-        price: values.price,
-        author: values.author,
-        currentNumber: values.currentNumber,
-        numberOfPage: values.numberOfPage,
-        categoryId: values.categoryId,
-      };
-      Object.keys(editItemBody).forEach(
-        (key) => editItemBody[key] == null && delete editItemBody[key]
-      );
-      updateProduct(editItemId, editItemBody)
-        .then((data) => {
-          resetForm();
-          setOpenPopup(false);
-          setOpenAlert(true);
-          setAlertResponse({
-            typeAlert: "success",
-            message: "Edited product success",
-          });
-          setActionFilter(data);
-        })
-        .catch((err) => {
-          setOpenAlert(true);
-          setAlertResponse({ typeAlert: "error", message: err.message });
-        });
-      return;
-    }
-    const newItem = {
-      title: values.title,
-      longDescription: values.longDescription,
-      price: values.price,
-      author: values.author,
-      currentNumber: values.currentNumber,
-      numberOfPage: values.numberOfPage,
-      categoryId: values.categoryId,
-    };
-    createNewProduct(newItem)
-      .then((data) => {
-        resetForm();
-        setOpenPopup(false);
-        setAlertResponse({
-          typeAlert: "success",
-          message: "Created product",
-        });
-        setOpenAlert(true);
-        setActionFilter(data);
-      })
-      .catch((err) => {
-        setAlertResponse({ typeAlert: "error", message: err.message });
-        setOpenAlert(true);
-      });
+    // setRecordForEdit(null);
+    // if (isEdit) {
+    //   const editItemId = values.id;
+    //   const editItemBody = {
+    //     title: values.title,
+    //     longDescription: values.longDescription,
+    //     price: values.price,
+    //     author: values.author,
+    //     currentNumber: values.currentNumber,
+    //     numberOfPage: values.numberOfPage,
+    //     categoryId: values.categoryId,
+    //   };
+    //   Object.keys(editItemBody).forEach(
+    //     (key) => editItemBody[key] == null && delete editItemBody[key]
+    //   );
+    //   updateProduct(editItemId, editItemBody)
+    //     .then((data) => {
+    //       resetForm();
+    //       setOpenPopup(false);
+    //       setOpenAlert(true);
+    //       setAlertResponse({
+    //         typeAlert: "success",
+    //         message: "Edited product success",
+    //       });
+    //       setActionFilter(data);
+    //     })
+    //     .catch((err) => {
+    //       setOpenAlert(true);
+    //       setAlertResponse({ typeAlert: "error", message: err.message });
+    //     });
+    //   return;
+    // }
+    // const newItem = {
+    //   title: values.title,
+    //   longDescription: values.longDescription,
+    //   price: values.price,
+    //   author: values.author,
+    //   currentNumber: values.currentNumber,
+    //   numberOfPage: values.numberOfPage,
+    //   categoryId: values.categoryId,
+    // };
+    // createNewProduct(newItem)
+    //   .then((data) => {
+    //     resetForm();
+    //     setOpenPopup(false);
+    //     setAlertResponse({
+    //       typeAlert: "success",
+    //       message: "Created product",
+    //     });
+    //     setOpenAlert(true);
+    //     setActionFilter(data);
+    //   })
+    //   .catch((err) => {
+    //     setAlertResponse({ typeAlert: "error", message: err.message });
+    //     setOpenAlert(true);
+    //   });
   };
 
   return (
     <div>
       <Typography variant="h4" style={style}>
-        Products Details
+        Products Images Details
       </Typography>
       <Box style={{ position: "relative" }}>
         <Button variant="contained" color="primary" onClick={handleAddItem}>
-          Add Product
+          Add Product Images
         </Button>
         <PopupForm
-          title="Product Form"
+          title="Product Image Form"
           openPopup={openPopup}
           setOpenPopup={setOpenPopup}
         >
-          <AddProductForm
+          <AddProductImageForm
             isEdit={isEdit}
             isView={isView}
             recordForEdit={recordForEdit}
             addOrEdit={addOrEdit}
-            categories={categories}
+            productsNoImage={productsNoImage}
           />
         </PopupForm>
         <TextField
@@ -286,9 +276,8 @@ export default function CategoriesManagement() {
             <TableHead>
               <TableRow>
                 <TableCell width="7%">STT</TableCell>
-                <TableCell width="37%">Title</TableCell>
-                <TableCell width="15%">Price</TableCell>
-                <TableCell width="20%">Author</TableCell>
+                <TableCell width="42%">Title</TableCell>
+                <TableCell width="30%">Number Of Images</TableCell>
                 <TableCell width="7%" align="center">
                   View
                 </TableCell>
@@ -301,15 +290,14 @@ export default function CategoriesManagement() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.length !== 0 &&
-                products
+              {productImages.length !== 0 &&
+                productImages
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                    <TableRow key={item.id}>
+                    <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{item.title}</TableCell>
-                      <TableCell>{item.price.toLocaleString("vn")} đ</TableCell>
-                      <TableCell>{item.author}</TableCell>
+                      <TableCell>{item.product.title}</TableCell>
+                      <TableCell>{item.productImages.length}</TableCell>
                       <TableCell align="center">
                         <IconButton onClick={() => openViewDialog(item)}>
                           <VisibilityIcon style={{ color: "black" }} />
@@ -333,7 +321,7 @@ export default function CategoriesManagement() {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={products.length}
+          count={productImages.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
@@ -346,13 +334,13 @@ export default function CategoriesManagement() {
         </Alert>
       </Snackbar>
       <ConfirmDialog
-        title="Delete Product?"
+        title="Delete Product Image?"
         open={confirmOpen}
         setOpen={setConfirmOpen}
         onConfirm={handleDelete}
       >
-        Are you sure you want to delete product:{" "}
-        {recordForDelete && recordForDelete.title}?
+        Are you sure you want to delete image:{" "}
+        {recordForDelete && recordForDelete.product.title}?
       </ConfirmDialog>
     </div>
   );
