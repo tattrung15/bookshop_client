@@ -16,6 +16,9 @@ import {
   TextField,
   InputAdornment,
   Snackbar,
+  Backdrop,
+  makeStyles,
+  CircularProgress,
 } from "@material-ui/core";
 
 import MuiAlert from "@material-ui/lab/Alert";
@@ -33,6 +36,8 @@ import {
   fetchAllProductsHaveImage,
   fetchAllProductsNoImage,
   fetchProductHaveImageLikeTitle,
+  createNewProductImages,
+  updateProductImages,
   deleteProductImages,
 } from "../../api/productImageService";
 
@@ -45,7 +50,16 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+}));
+
 export default function CategoriesManagement() {
+  const classes = useStyles();
+
   const [page, setPage] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
   const [isView, setIsView] = useState(false);
@@ -56,9 +70,13 @@ export default function CategoriesManagement() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [productImages, setProductImages] = useState([]);
   const [actionFilter, setActionFilter] = useState(null);
+  const [openBackdrop, setOpenBackdrop] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [productsNoImage, setProductsNoImage] = useState([]);
   const [recordForDelete, setRecordForDelete] = useState(null);
+  const handleCloseBackDrop = () => {
+    setOpenBackdrop(false);
+  };
   const [alertResponse, setAlertResponse] = useState({
     typeAlert: "success",
     message: "",
@@ -102,7 +120,9 @@ export default function CategoriesManagement() {
         });
         setProductsNoImage(productsNoImageList);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        setProductsNoImage([]);
+      });
   }, [actionFilter]);
 
   const handleDelete = () => {
@@ -141,22 +161,15 @@ export default function CategoriesManagement() {
   };
 
   const openInPopup = (item) => {
-    // setIsView(false);
-    // const itemEdit = {
-    //   id: item.id,
-    //   title: item.title,
-    //   longDescription: item.longDescription,
-    //   price: item.price,
-    //   author: item.author,
-    //   currentNumber: item.currentNumber,
-    //   numberOfPage: item.numberOfPage,
-    //   categoryId: item.category.id,
-    //   createAt: item.createAt,
-    //   updateAt: item.updateAt,
-    // };
-    // setIsEdit(true);
-    // setRecordForEdit(itemEdit);
-    // setOpenPopup(true);
+    setIsView(false);
+    const itemEdit = {
+      productId: item.product.id,
+      title: item.product.title,
+      longDescription: item.product.longDescription,
+    };
+    setIsEdit(true);
+    setRecordForEdit(itemEdit);
+    setOpenPopup(true);
   };
 
   const openViewDialog = (item) => {
@@ -173,62 +186,56 @@ export default function CategoriesManagement() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    // setRecordForEdit(null);
-    // if (isEdit) {
-    //   const editItemId = values.id;
-    //   const editItemBody = {
-    //     title: values.title,
-    //     longDescription: values.longDescription,
-    //     price: values.price,
-    //     author: values.author,
-    //     currentNumber: values.currentNumber,
-    //     numberOfPage: values.numberOfPage,
-    //     categoryId: values.categoryId,
-    //   };
-    //   Object.keys(editItemBody).forEach(
-    //     (key) => editItemBody[key] == null && delete editItemBody[key]
-    //   );
-    //   updateProduct(editItemId, editItemBody)
-    //     .then((data) => {
-    //       resetForm();
-    //       setOpenPopup(false);
-    //       setOpenAlert(true);
-    //       setAlertResponse({
-    //         typeAlert: "success",
-    //         message: "Edited product success",
-    //       });
-    //       setActionFilter(data);
-    //     })
-    //     .catch((err) => {
-    //       setOpenAlert(true);
-    //       setAlertResponse({ typeAlert: "error", message: err.message });
-    //     });
-    //   return;
-    // }
-    // const newItem = {
-    //   title: values.title,
-    //   longDescription: values.longDescription,
-    //   price: values.price,
-    //   author: values.author,
-    //   currentNumber: values.currentNumber,
-    //   numberOfPage: values.numberOfPage,
-    //   categoryId: values.categoryId,
-    // };
-    // createNewProduct(newItem)
-    //   .then((data) => {
-    //     resetForm();
-    //     setOpenPopup(false);
-    //     setAlertResponse({
-    //       typeAlert: "success",
-    //       message: "Created product",
-    //     });
-    //     setOpenAlert(true);
-    //     setActionFilter(data);
-    //   })
-    //   .catch((err) => {
-    //     setAlertResponse({ typeAlert: "error", message: err.message });
-    //     setOpenAlert(true);
-    //   });
+    if (values.productImages.length === 0) {
+      setAlertResponse({
+        typeAlert: "error",
+        message: "Please select image",
+      });
+      setOpenAlert(true);
+      return;
+    }
+    setRecordForEdit(null);
+    if (isEdit) {
+      setOpenBackdrop(!openBackdrop);
+      const editItemId = values.productId;
+      const editItemBody = values.productImages;
+      updateProductImages(editItemId, editItemBody)
+        .then((data) => {
+          resetForm();
+          setOpenPopup(false);
+          setOpenAlert(true);
+          setAlertResponse({
+            typeAlert: "success",
+            message: "Edited product images success",
+          });
+          setActionFilter(data);
+          setOpenBackdrop(false);
+        })
+        .catch((err) => {
+          setOpenAlert(true);
+          setAlertResponse({ typeAlert: "error", message: err.message });
+          setOpenBackdrop(false);
+        });
+      return;
+    }
+    setOpenBackdrop(!openBackdrop);
+    createNewProductImages(values)
+      .then((data) => {
+        resetForm();
+        setOpenPopup(false);
+        setAlertResponse({
+          typeAlert: "success",
+          message: "Created product images",
+        });
+        setOpenAlert(true);
+        setActionFilter(data);
+        setOpenBackdrop(false);
+      })
+      .catch((err) => {
+        setAlertResponse({ typeAlert: "error", message: err.message });
+        setOpenAlert(true);
+        setOpenBackdrop(false);
+      });
   };
 
   return (
@@ -252,6 +259,13 @@ export default function CategoriesManagement() {
             addOrEdit={addOrEdit}
             productsNoImage={productsNoImage}
           />
+          <Backdrop
+            className={classes.backdrop}
+            open={openBackdrop}
+            onClick={handleCloseBackDrop}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
         </PopupForm>
         <TextField
           style={{ position: "absolute", right: 0 }}
@@ -339,7 +353,7 @@ export default function CategoriesManagement() {
         setOpen={setConfirmOpen}
         onConfirm={handleDelete}
       >
-        Are you sure you want to delete image:{" "}
+        Are you sure you want to delete product images:{" "}
         {recordForDelete && recordForDelete.product.title}?
       </ConfirmDialog>
     </div>

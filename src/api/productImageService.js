@@ -161,6 +161,79 @@ export function fetchProductImagesByCategory(slugCategory) {
   });
 }
 
+export function createNewProductImages(newProductImage) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      let formData = new FormData();
+      formData.append("productId", newProductImage.productId);
+      for (let i = 0; i < newProductImage.productImages.length; i++) {
+        formData.append("files", newProductImage.productImages[i]);
+      }
+
+      fetch(`${BASE_API}/product-images`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => {
+          if (res.status === 201) {
+            return resolve(res.json());
+          } else {
+            res.json().then((data) => {
+              return reject(data);
+            });
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
+export function updateProductImages(productId, productImagesBody) {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = auth.getToken();
+
+      let formData = new FormData();
+      for (let i = 0; i < productImagesBody.length; i++) {
+        formData.append("files", productImagesBody[i]);
+      }
+
+      fetch(`${BASE_API}/product-images?productId=${productId}`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PATCH",
+        body: formData,
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            return resolve(res.json());
+          } else {
+            res.json().then((data) => {
+              return reject(data);
+            });
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
 export function deleteProductImages(productId) {
   return new Promise((resolve, reject) => {
     try {

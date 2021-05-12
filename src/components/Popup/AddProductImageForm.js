@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 
-import { Grid } from "@material-ui/core";
+import { useDropzone } from "react-dropzone";
+
+import { Grid, makeStyles } from "@material-ui/core";
 
 import Controls from "../../components/controls/Controls";
 import { useForm, Form } from "../../components/Popup/UseForm";
@@ -14,11 +16,87 @@ const initialFValues = {
   productImages: [],
 };
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    fontFamily: "sans-serif",
+  },
+  dropzone: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "20px",
+    borderWidth: "2px",
+    borderRadius: "2px",
+    borderColor: "#eeeeee",
+    borderStyle: "dashed",
+    backgroundColor: "#fafafa",
+    color: "#bdbdbd",
+    outline: "none",
+    transition: "border .24s ease-in-out",
+  },
+}));
+
+function BasicDropZone() {
+  const classes = useStyles();
+
+  const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
+    useDropzone({
+      accept: "image/jpeg, image/png",
+    });
+
+  if (acceptedFiles.length !== 0) {
+    initialFValues.productImages = acceptedFiles;
+  }
+
+  const acceptedFileItems = acceptedFiles.map((file) => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
+
+  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+      <ul>
+        {errors.map((e) => (
+          <li key={e.code}>{e.message}</li>
+        ))}
+      </ul>
+    </li>
+  ));
+
+  return (
+    <section className={classes.container}>
+      <div {...getRootProps({ className: classes.dropzone })}>
+        <input {...getInputProps()} />
+        <p>Drag 'n' drop some files here, or click to select files</p>
+        <em>(Only *.jpeg and *.png images will be accepted)</em>
+      </div>
+      <aside>
+        <h4>Accepted files</h4>
+        <ul>{acceptedFileItems}</ul>
+        <h4>Rejected files</h4>
+        <ul>{fileRejectionItems}</ul>
+      </aside>
+    </section>
+  );
+}
+
 export default function AddProductForm(props) {
   const { addOrEdit, recordForEdit, isEdit, isView, productsNoImage } = props;
 
   if (productsNoImage.length !== 0) {
     initialFValues.productId = productsNoImage[0].id;
+  } else {
+    initialFValues.productId = 0;
+    initialFValues.productImages = [];
+  }
+
+  if (isEdit) {
+    initialFValues.productImages = [];
   }
 
   const validate = (fieldValues = values) => {
@@ -38,14 +116,18 @@ export default function AddProductForm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isEdit) {
-      if (validate()) {
-        addOrEdit(values, resetForm);
-      }
+      const newProductImage = {
+        productId: values.productId,
+        productImages: initialFValues.productImages,
+      };
+      addOrEdit(newProductImage, resetForm);
       return;
     }
-    if (validate()) {
-      addOrEdit(values, resetForm);
-    }
+    const newProductImage = {
+      productId: values.productId,
+      productImages: initialFValues.productImages,
+    };
+    addOrEdit(newProductImage, resetForm);
   };
 
   useEffect(() => {
@@ -82,6 +164,17 @@ export default function AddProductForm(props) {
               }}
             />
           </Grid>
+        ) : isEdit ? (
+          <Grid item xs={6}>
+            <Controls.Input
+              name="title"
+              label="Title"
+              value={values.title}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
         ) : (
           <Grid item xs={6}>
             {productsNoImage.length !== 0 && (
@@ -99,26 +192,7 @@ export default function AddProductForm(props) {
         <Grid item xs={6}>
           {isEdit ? (
             <>
-              <Controls.Input
-                name="title"
-                label="Title"
-                value={values.title}
-                error={errors.title}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              <Controls.Input
-                name="longDescription"
-                label="Long Description"
-                multiline
-                rowsMax={8.5}
-                value={values.longDescription}
-                error={errors.longDescription}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
+              <BasicDropZone />
             </>
           ) : isView ? (
             <>
@@ -126,7 +200,7 @@ export default function AddProductForm(props) {
             </>
           ) : (
             <>
-              <h1>a</h1>
+              <BasicDropZone />
             </>
           )}
         </Grid>
@@ -134,11 +208,6 @@ export default function AddProductForm(props) {
           <Grid item xs={12}>
             <div style={{ textAlign: "center" }}>
               <Controls.Button type="submit" text="Submit" />
-              <Controls.Button
-                text="Reset"
-                color="default"
-                onClick={resetForm}
-              />
             </div>
           </Grid>
         )}
