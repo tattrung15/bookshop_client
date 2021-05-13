@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
-import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Switch, Route, useHistory, Redirect } from "react-router-dom";
 
 import { Container, Grid, Paper } from "@material-ui/core";
 
-import Chart from "./Chart";
-import Deposits from "./Deposits";
 import Orders from "./Orders";
 import NotFound from "../exception/NotFound";
 
@@ -54,8 +51,6 @@ export default function Dashboard() {
 
   const setUserState = useSetRecoilState(userSeletor);
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
   useEffect(() => {
     const token = auth.getToken();
     if (token) {
@@ -91,18 +86,6 @@ export default function Dashboard() {
           <Route path="/admin" exact>
             <Container maxWidth="lg" className={classes.container}>
               <Grid container spacing={3}>
-                {/* Chart */}
-                <Grid item xs={12} md={8} lg={9}>
-                  <Paper className={fixedHeightPaper}>
-                    <Chart />
-                  </Paper>
-                </Grid>
-                {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
-                  <Paper className={fixedHeightPaper}>
-                    <Deposits />
-                  </Paper>
-                </Grid>
                 {/* Recent Orders */}
                 <Grid item xs={12}>
                   <Paper className={classes.paper}>
