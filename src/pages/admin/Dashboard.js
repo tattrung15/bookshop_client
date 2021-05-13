@@ -16,6 +16,7 @@ import AppBarDrawer from "./AppBarDrawer";
 import CategoriesManagement from "./CategoriesManagement";
 import ProductManagement from "./ProductManagement";
 import ProductImageManagement from "./ProductImageManagement";
+import SaleOrderManagement from "./SaleOrderManagement";
 import ListUserComponent from "../../components/ListUsers/ListUserComponent";
 
 import { userSeletor } from "../../recoil/userState";
@@ -129,6 +130,11 @@ export default function Dashboard() {
           <Route path="/admin/product-images" exact>
             <Container maxWidth="xl" className={classes.container}>
               <ProductImageManagement />
+            </Container>
+          </Route>
+          <Route path="/admin/sale-orders" exact>
+            <Container maxWidth="xl" className={classes.container}>
+              <SaleOrderManagement />
             </Container>
           </Route>
           <Redirect from="/**/profile" to="/profile" />

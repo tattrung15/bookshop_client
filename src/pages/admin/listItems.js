@@ -13,6 +13,7 @@ import {
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import ReceiptIcon from "@material-ui/icons/Receipt";
 
 export const mainListItems = (
   <div>
@@ -82,6 +83,19 @@ export const mainListItems = (
             <Icon className="fa fa-image" />
           </ListItemIcon>
           <ListItemText primary="Products Images" />
+        </ListItem>
+      </Tooltip>
+    </Link>
+    <Link
+      to="/admin/sale-orders"
+      style={{ color: "black", textDecoration: "none" }}
+    >
+      <Tooltip title="Sale orders management" placement="right" arrow>
+        <ListItem button>
+          <ListItemIcon>
+            <ReceiptIcon />
+          </ListItemIcon>
+          <ListItemText primary="Sale orders" />
         </ListItem>
       </Tooltip>
     </Link>

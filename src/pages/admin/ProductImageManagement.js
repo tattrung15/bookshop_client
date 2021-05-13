@@ -206,7 +206,7 @@ export default function CategoriesManagement() {
           setOpenAlert(true);
           setAlertResponse({
             typeAlert: "success",
-            message: "Edited product images success",
+            message: "Updated product images",
           });
           setActionFilter(data);
           setOpenBackdrop(false);

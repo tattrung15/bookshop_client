@@ -20,6 +20,7 @@ import { userSeletor } from "../../recoil/userState";
 
 import { fetchUserById } from "../../api/usersService";
 import { fetchSaleOrderById } from "../../api/saleOrderService";
+
 import CustomizedSteppers from "../../components/CustomizedSteppers";
 
 const useStyles = makeStyles((theme) => ({
@@ -137,7 +138,7 @@ function ProductDetail(props) {
   );
 }
 
-export default function Profile() {
+export default function OrderDetail() {
   const classes = useStyles();
 
   const { saleOrderId } = useParams();

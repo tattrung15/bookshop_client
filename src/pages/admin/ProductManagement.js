@@ -205,7 +205,7 @@ export default function CategoriesManagement() {
           setOpenAlert(true);
           setAlertResponse({
             typeAlert: "success",
-            message: "Edited product success",
+            message: "Updated product",
           });
           setActionFilter(data);
         })

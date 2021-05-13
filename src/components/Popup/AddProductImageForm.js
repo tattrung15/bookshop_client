@@ -85,7 +85,7 @@ function BasicDropZone() {
   );
 }
 
-export default function AddProductForm(props) {
+export default function AddProductImageForm(props) {
   const { addOrEdit, recordForEdit, isEdit, isView, productsNoImage } = props;
 
   if (productsNoImage.length !== 0) {

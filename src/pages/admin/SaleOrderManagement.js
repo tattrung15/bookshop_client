@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import {
-  Button,
   TableRow,
   TableHead,
   TableCell,
@@ -21,21 +20,20 @@ import {
 import MuiAlert from "@material-ui/lab/Alert";
 
 import CreateIcon from "@material-ui/icons/Create";
-import DeleteIcon from "@material-ui/icons/Delete";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import SearchIcon from "@material-ui/icons/Search";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
-import ConfirmDialog from "../../components/Dialog/ConfirmDialog";
 import PopupForm from "../../components/Popup";
-import AddCategoryForm from "../../components/Popup/AddCategoryForm";
+import ViewSaleOrder from "../../components/Popup/ViewSaleOrder";
+import EditSaleOrder from "../../components/Popup/EditSaleOrder";
 
 import {
-  fetchAllCategories,
-  fetchCategoriesLikeName,
-  deleteCategory,
-  updateCategory,
-  createNewCategory,
-} from "../../api/categoryService";
+  fetchAllSaleOrders,
+  fetchSearchSaleOrderById,
+  updateSaleOrderById,
+} from "../../api/saleOrderService";
+
+import { fetchAllDeliveries } from "../../api/deliveryService";
 
 const style = {
   display: "flex",
@@ -48,17 +46,16 @@ function Alert(props) {
 
 export default function CategoriesManagement() {
   const [page, setPage] = useState(0);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isView, setIsView] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [deliveries, setDeliveries] = useState([]);
+  const [saleOrders, setSaleOrders] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
-  const [openPopup, setOpenPopup] = useState(false);
+  const [openPopupView, setOpenPopupView] = useState(false);
+  const [openPopupEdit, setOpenPopupEdit] = useState(false);
   const [searchState, setSearchState] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const [actionFilter, setActionFilter] = useState(null);
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [recordForDelete, setRecordForDelete] = useState(null);
+  const [recordForView, setRecordForView] = useState(null);
   const [alertResponse, setAlertResponse] = useState({
     typeAlert: "success",
     message: "",
@@ -72,11 +69,6 @@ export default function CategoriesManagement() {
     setOpenAlert(false);
   };
 
-  const openConfirmDialog = (item) => {
-    setConfirmOpen(true);
-    setRecordForDelete(item);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -87,113 +79,62 @@ export default function CategoriesManagement() {
   };
 
   useEffect(() => {
-    fetchAllCategories()
+    fetchAllSaleOrders()
       .then((data) => {
-        setCategories(data);
+        setSaleOrders(data);
       })
       .catch((err) => {});
   }, [actionFilter]);
 
-  const handleDeleteCategory = () => {
-    deleteCategory(recordForDelete.id)
+  useEffect(() => {
+    fetchAllDeliveries()
       .then((data) => {
-        setOpenAlert(true);
-        setAlertResponse({ typeAlert: "success", message: "Deleted category" });
-        setActionFilter(data);
+        setDeliveries(data);
       })
-      .catch((err) => {
-        setOpenAlert(true);
-        setAlertResponse({ typeAlert: "error", message: err.message });
-      });
-  };
+      .catch((err) => {});
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchState(event.target.value);
   };
 
   useEffect(() => {
-    fetchCategoriesLikeName(searchState)
+    fetchSearchSaleOrderById(searchState)
       .then((data) => {
-        setCategories(data);
+        setSaleOrders(data);
       })
       .catch((err) => {});
   }, [searchState]);
 
-  const handleAddItem = () => {
-    setIsView(false);
-    setRecordForEdit(null);
-    setIsEdit(false);
-    setOpenPopup(true);
-  };
-
   const openInPopup = (item) => {
-    setIsView(false);
     const itemEdit = {
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      createAt: item.createAt,
-      updateAt: item.updateAt,
+      saleOrderId: item.id,
+      delivery: item.delivery,
     };
-    setIsEdit(true);
     setRecordForEdit(itemEdit);
-    setOpenPopup(true);
+    setOpenPopupEdit(true);
   };
 
   const openViewDialog = (item) => {
     const itemView = {
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      createAt: item.createAt,
-      updateAt: item.updateAt,
+      saleOrderId: item.id,
     };
-    setIsView(true);
-    setIsEdit(false);
-    setRecordForEdit(itemView);
-    setOpenPopup(true);
+    setRecordForView(itemView);
+    setOpenPopupView(true);
   };
 
-  const addOrEdit = (values, resetForm) => {
-    setRecordForEdit(null);
-    if (isEdit) {
-      const editItemId = values.id;
-      const editItemBody = {
-        name: values.name,
-        description: values.description,
-      };
-      Object.keys(editItemBody).forEach(
-        (key) => editItemBody[key] == null && delete editItemBody[key]
-      );
-      updateCategory(editItemId, editItemBody)
-        .then((data) => {
-          resetForm();
-          setOpenPopup(false);
-          setOpenAlert(true);
-          setAlertResponse({
-            typeAlert: "success",
-            message: "Updated category",
-          });
-          setActionFilter(data);
-        })
-        .catch((err) => {
-          setOpenAlert(true);
-          setAlertResponse({ typeAlert: "error", message: err.message });
-        });
-      return;
-    }
-    const newItem = {
-      name: values.name,
-      description: values.description,
+  const handleEditItem = (values) => {
+    const editItemId = values.saleOrderId;
+    const editItemBody = {
+      deliveryId: values.deliveryId,
     };
-    createNewCategory(newItem)
+    updateSaleOrderById(editItemId, editItemBody)
       .then((data) => {
-        resetForm();
-        setOpenPopup(false);
+        setOpenPopupEdit(false);
         setOpenAlert(true);
         setAlertResponse({
           typeAlert: "success",
-          message: "Created category",
+          message: "Updated sale order",
         });
         setActionFilter(data);
       })
@@ -206,31 +147,34 @@ export default function CategoriesManagement() {
   return (
     <div>
       <Typography variant="h4" style={style}>
-        Categories Details
+        Sale Orders Details
       </Typography>
       <Box style={{ position: "relative" }}>
-        <Button variant="contained" color="primary" onClick={handleAddItem}>
-          Add Category
-        </Button>
         <PopupForm
-          title="Category Form"
-          openPopup={openPopup}
-          setOpenPopup={setOpenPopup}
+          title="View Sale Order"
+          openPopup={openPopupView}
+          setOpenPopup={setOpenPopupView}
         >
-          <AddCategoryForm
-            isEdit={isEdit}
-            isView={isView}
+          <ViewSaleOrder recordForView={recordForView} />
+        </PopupForm>
+        <PopupForm
+          title="Update Sale Order"
+          openPopup={openPopupEdit}
+          setOpenPopup={setOpenPopupEdit}
+        >
+          <EditSaleOrder
             recordForEdit={recordForEdit}
-            addOrEdit={addOrEdit}
+            deliveries={deliveries}
+            handleEditItem={handleEditItem}
           />
         </PopupForm>
         <TextField
-          style={{ position: "absolute", right: 0 }}
-          label="Search..."
+          label="Search by Sale Order Id:"
           id="outlined-size-small"
           variant="outlined"
           size="small"
           value={searchState}
+          type="number"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -246,34 +190,32 @@ export default function CategoriesManagement() {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                <TableCell width="10%">STT</TableCell>
-                <TableCell width="20%">Category Name</TableCell>
-                <TableCell width="49%" align="center">
-                  Description
-                </TableCell>
+                <TableCell>STT</TableCell>
+                <TableCell>Sale Order ID</TableCell>
+                <TableCell>Customer Name</TableCell>
+                <TableCell>Customer Phone</TableCell>
+                <TableCell>Delivery</TableCell>
                 <TableCell width="7%" align="center">
                   View
                 </TableCell>
                 <TableCell width="7%" align="center">
                   Edit
                 </TableCell>
-                <TableCell width="7%" align="center">
-                  Delete
-                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {categories.length !== 0 &&
-                categories
+              {saleOrders.length !== 0 &&
+                saleOrders
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
                     <TableRow key={item.id}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{item.name}</TableCell>
+                      <TableCell>{item.id}</TableCell>
                       <TableCell>
-                        {item.description.substring(0, 90)}
-                        {item.description.length > 90 && "..."}
+                        {item.user.firstName + " " + item.user.lastName}
                       </TableCell>
+                      <TableCell>{item.user.phone}</TableCell>
+                      <TableCell>{item.delivery.value}</TableCell>
                       <TableCell align="center">
                         <IconButton onClick={() => openViewDialog(item)}>
                           <VisibilityIcon style={{ color: "black" }} />
@@ -284,11 +226,6 @@ export default function CategoriesManagement() {
                           <CreateIcon style={{ color: "black" }} />
                         </IconButton>
                       </TableCell>
-                      <TableCell align="center">
-                        <IconButton onClick={() => openConfirmDialog(item)}>
-                          <DeleteIcon style={{ color: "red" }} />
-                        </IconButton>
-                      </TableCell>
                     </TableRow>
                   ))}
             </TableBody>
@@ -297,7 +234,7 @@ export default function CategoriesManagement() {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={categories.length}
+          count={saleOrders.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
@@ -309,15 +246,6 @@ export default function CategoriesManagement() {
           {alertResponse.message}
         </Alert>
       </Snackbar>
-      <ConfirmDialog
-        title="Delete Category?"
-        open={confirmOpen}
-        setOpen={setConfirmOpen}
-        onConfirm={handleDeleteCategory}
-      >
-        Are you sure you want to delete category:{" "}
-        {recordForDelete && recordForDelete.name}?
-      </ConfirmDialog>
     </div>
   );
 }
