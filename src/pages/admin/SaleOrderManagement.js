@@ -15,6 +15,7 @@ import {
   TextField,
   InputAdornment,
   Snackbar,
+  Grid,
 } from "@material-ui/core";
 
 import MuiAlert from "@material-ui/lab/Alert";
@@ -23,13 +24,17 @@ import CreateIcon from "@material-ui/icons/Create";
 import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 
+import Controls from "../../components/controls/Controls";
+
+import { Form } from "../../components/Popup/UseForm";
+
 import PopupForm from "../../components/Popup";
 import ViewSaleOrder from "../../components/Popup/ViewSaleOrder";
 import EditSaleOrder from "../../components/Popup/EditSaleOrder";
 
 import {
-  fetchAllSaleOrders,
   fetchSearchSaleOrderById,
+  fetchSaleOrderByDeliveryId,
   updateSaleOrderById,
 } from "../../api/saleOrderService";
 
@@ -49,13 +54,15 @@ export default function CategoriesManagement() {
   const [deliveries, setDeliveries] = useState([]);
   const [saleOrders, setSaleOrders] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
-  const [openPopupView, setOpenPopupView] = useState(false);
-  const [openPopupEdit, setOpenPopupEdit] = useState(false);
   const [searchState, setSearchState] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [actionFilter, setActionFilter] = useState(null);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [recordForView, setRecordForView] = useState(null);
+  const [openPopupEdit, setOpenPopupEdit] = useState(false);
+  const [openPopupView, setOpenPopupView] = useState(false);
+  const [deliverySelected, setDeliverySelected] = useState(0);
+  const [deliveriesSelect, setDeliveriesSelect] = useState([]);
   const [alertResponse, setAlertResponse] = useState({
     typeAlert: "success",
     message: "",
@@ -79,17 +86,17 @@ export default function CategoriesManagement() {
   };
 
   useEffect(() => {
-    fetchAllSaleOrders()
-      .then((data) => {
-        setSaleOrders(data);
-      })
-      .catch((err) => {});
-  }, [actionFilter]);
-
-  useEffect(() => {
     fetchAllDeliveries()
       .then((data) => {
         setDeliveries(data);
+        const listItemDeliveries = data.map((item) => {
+          let delivery = {};
+          delivery.id = item.id;
+          delivery.title = item.value;
+          return delivery;
+        });
+        setDeliveriesSelect(listItemDeliveries);
+        setDeliverySelected(listItemDeliveries[1].id);
       })
       .catch((err) => {});
   }, []);
@@ -99,12 +106,32 @@ export default function CategoriesManagement() {
   };
 
   useEffect(() => {
-    fetchSearchSaleOrderById(searchState)
+    if (searchState) {
+      fetchSearchSaleOrderById(searchState)
+        .then((data) => {
+          setSaleOrders(data);
+        })
+        .catch((err) => {});
+    } else {
+      fetchSaleOrderByDeliveryId(deliverySelected)
+        .then((data) => {
+          setSaleOrders(data);
+        })
+        .catch((err) => {
+          setSaleOrders([]);
+        });
+    }
+  }, [searchState, deliverySelected]);
+
+  useEffect(() => {
+    fetchSaleOrderByDeliveryId(deliverySelected)
       .then((data) => {
         setSaleOrders(data);
       })
-      .catch((err) => {});
-  }, [searchState]);
+      .catch((err) => {
+        setSaleOrders([]);
+      });
+  }, [deliverySelected, actionFilter]);
 
   const openInPopup = (item) => {
     const itemEdit = {
@@ -144,6 +171,10 @@ export default function CategoriesManagement() {
       });
   };
 
+  const handleSelectedDeliveryChange = (e) => {
+    setDeliverySelected(e.target.value);
+  };
+
   return (
     <div>
       <Typography variant="h4" style={style}>
@@ -168,22 +199,47 @@ export default function CategoriesManagement() {
             handleEditItem={handleEditItem}
           />
         </PopupForm>
-        <TextField
-          label="Search by Sale Order Id:"
-          id="outlined-size-small"
-          variant="outlined"
-          size="small"
-          value={searchState}
-          type="number"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
-          }}
-          onChange={handleSearchChange}
-        />
+        <Box style={{ display: "flex" }}>
+          <Box style={{ marginTop: "1em" }}>
+            <TextField
+              label="Search by Sale Order Id:"
+              id="outlined-size-small"
+              variant="outlined"
+              size="small"
+              value={searchState}
+              type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={handleSearchChange}
+            />
+          </Box>
+          <Box style={{ marginLeft: "2em" }}>
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Grid container>
+                <Grid item style={{ width: "20em" }}>
+                  {deliverySelected && (
+                    <Controls.Select
+                      name="deliveryId"
+                      label="Filter by delivery"
+                      value={deliverySelected}
+                      options={deliveriesSelect}
+                      onChange={handleSelectedDeliveryChange}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            </Form>
+          </Box>
+        </Box>
       </Box>
       <Paper style={{ marginTop: 10 }}>
         <TableContainer style={{ maxHeight: 450 }}>
