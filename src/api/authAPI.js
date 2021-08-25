@@ -27,6 +27,33 @@ export function signin(username, password) {
   });
 }
 
+export function signup(user) {
+  return new Promise(async (resoleve, reject) => {
+    try {
+      const fetchUserLogin = await fetch(`${BASE_API}/auth/signup`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(user),
+      });
+      if (fetchUserLogin.status === 200) {
+        const { userId, username, jwt, role } = await fetchUserLogin.json();
+        resoleve({
+          userId: userId,
+          username: username,
+          token: jwt,
+          role: role,
+        });
+      } else {
+        return reject(await fetchUserLogin.json());
+      }
+    } catch (error) {
+      return reject(new Error(error));
+    }
+  });
+}
+
 export function validateToken(jwt) {
   return new Promise(async (resoleve, reject) => {
     try {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -7,7 +7,6 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Link,
   Grid,
   Typography,
   Container,
@@ -91,7 +90,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Đăng nhập
         </Typography>
         <form className={classes.form}>
           <TextField
@@ -121,7 +120,7 @@ export default function SignIn() {
             control={
               <Checkbox name="rememberMe" value="remember" color="primary" />
             }
-            label="Remember me"
+            label="Ghi nhớ đăng nhập"
           />
           <br />
           <span style={{ color: "red" }}>{account.loginError}</span>
@@ -134,17 +133,17 @@ export default function SignIn() {
             className={classes.submit}
             onClick={handleLogin}
           >
-            Sign In
+            Đăng nhập
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
+              <Link to="#" variant="body2">
+                Quên mật khẩu?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link to="/signup" variant="body2">
+                {"Bạn chưa có tài khoản? Đăng ký"}
               </Link>
             </Grid>
           </Grid>

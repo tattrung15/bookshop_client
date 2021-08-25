@@ -23,7 +23,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 import { Link, useHistory } from "react-router-dom";
 
-import { mainListItems, secondaryListItems } from "./listItems";
+import { mainListItems } from "./listItems";
 
 import { userSeletor } from "../../recoil/userState";
 import { auth } from "../../utils/auth";
@@ -229,8 +229,8 @@ export default function AppBarDrawer() {
         </div>
         <Divider />
         <List>{mainListItems}</List>
-        <Divider />
-        <List>{secondaryListItems}</List>
+        {/* <Divider />
+        <List>{secondaryListItems}</List> */}
       </Drawer>
     </>
   );

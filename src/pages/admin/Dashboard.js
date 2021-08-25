@@ -1,19 +1,21 @@
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
-import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Switch, Route, useHistory, Redirect } from "react-router-dom";
 
 import { Container, Grid, Paper } from "@material-ui/core";
 
-import Chart from "./Chart";
-import Deposits from "./Deposits";
 import Orders from "./Orders";
 import NotFound from "../exception/NotFound";
 
 import AppBarDrawer from "./AppBarDrawer";
+import CategoriesManagement from "./CategoriesManagement";
+import ProductManagement from "./ProductManagement";
+import ProductImageManagement from "./ProductImageManagement";
+import SaleOrderManagement from "./SaleOrderManagement";
 import ListUserComponent from "../../components/ListUsers/ListUserComponent";
+
 import { userSeletor } from "../../recoil/userState";
 import { auth } from "../../utils/auth";
 import { validateToken } from "../../api/authAPI";
@@ -49,8 +51,6 @@ export default function Dashboard() {
 
   const setUserState = useSetRecoilState(userSeletor);
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
   useEffect(() => {
     const token = auth.getToken();
     if (token) {
@@ -74,6 +74,7 @@ export default function Dashboard() {
     } else {
       history.push("/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -85,18 +86,6 @@ export default function Dashboard() {
           <Route path="/admin" exact>
             <Container maxWidth="lg" className={classes.container}>
               <Grid container spacing={3}>
-                {/* Chart */}
-                <Grid item xs={12} md={8} lg={9}>
-                  <Paper className={fixedHeightPaper}>
-                    <Chart />
-                  </Paper>
-                </Grid>
-                {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
-                  <Paper className={fixedHeightPaper}>
-                    <Deposits />
-                  </Paper>
-                </Grid>
                 {/* Recent Orders */}
                 <Grid item xs={12}>
                   <Paper className={classes.paper}>
@@ -113,7 +102,22 @@ export default function Dashboard() {
           </Route>
           <Route path="/admin/categories" exact>
             <Container maxWidth="xl" className={classes.container}>
-              <h1>Category management</h1>
+              <CategoriesManagement />
+            </Container>
+          </Route>
+          <Route path="/admin/products" exact>
+            <Container maxWidth="xl" className={classes.container}>
+              <ProductManagement />
+            </Container>
+          </Route>
+          <Route path="/admin/product-images" exact>
+            <Container maxWidth="xl" className={classes.container}>
+              <ProductImageManagement />
+            </Container>
+          </Route>
+          <Route path="/admin/sale-orders" exact>
+            <Container maxWidth="xl" className={classes.container}>
+              <SaleOrderManagement />
             </Container>
           </Route>
           <Redirect from="/**/profile" to="/profile" />

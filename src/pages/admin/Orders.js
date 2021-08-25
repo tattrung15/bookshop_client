@@ -1,107 +1,111 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import moment from "moment";
 
 import {
-  Link,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableRow,
+  TableHead,
+  TableCell,
+  TableBody,
+  Table,
+  TablePagination,
+  TableContainer,
+  Paper,
+  Typography,
 } from "@material-ui/core";
 
-import Title from "./Title";
+import { fetchSaleOrdersRecentOrders } from "../../api/saleOrderService";
 
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
+function calculateTotalAmount(orderItems) {
+  const totalAmount = orderItems.reduce((acc, currentValue) => {
+    return acc + currentValue.product.price * currentValue.quantity;
+  }, 0);
+  return totalAmount;
 }
-
-const rows = [
-  createData(
-    0,
-    "16 Mar, 2019",
-    "Elvis Presley",
-    "Tupelo, MS",
-    "VISA ⠀•••• 3719",
-    312.44
-  ),
-  createData(
-    1,
-    "16 Mar, 2019",
-    "Paul McCartney",
-    "London, UK",
-    "VISA ⠀•••• 2574",
-    866.99
-  ),
-  createData(
-    2,
-    "16 Mar, 2019",
-    "Tom Scholz",
-    "Boston, MA",
-    "MC ⠀•••• 1253",
-    100.81
-  ),
-  createData(
-    3,
-    "16 Mar, 2019",
-    "Michael Jackson",
-    "Gary, IN",
-    "AMEX ⠀•••• 2000",
-    654.39
-  ),
-  createData(
-    4,
-    "15 Mar, 2019",
-    "Bruce Springsteen",
-    "Long Branch, NJ",
-    "VISA ⠀•••• 5919",
-    212.79
-  ),
-];
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
 
 export default function Orders() {
-  const classes = useStyles();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [saleOrdersRecent, setSaleOrdersRecent] = useState([]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  useEffect(() => {
+    fetchSaleOrdersRecentOrders()
+      .then((data) => {
+        setSaleOrdersRecent(data);
+      })
+      .catch((err) => {
+        setSaleOrdersRecent([]);
+      });
+  }, []);
+
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
-        </Link>
-      </div>
+      <Typography
+        variant="h4"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        Recent Orders
+      </Typography>
+      <Paper style={{ marginTop: 10 }}>
+        <TableContainer style={{ maxHeight: 450 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <TableCell width="10%">Date</TableCell>
+                <TableCell width="20%">Customer Name</TableCell>
+                <TableCell width="15%">Customer Phone</TableCell>
+                <TableCell width="40%">Ship To</TableCell>
+                <TableCell width="15%" align="right">
+                  Sale Amout
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {saleOrdersRecent.length !== 0 &&
+                saleOrdersRecent
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        {moment(item.createAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell>
+                        {item.user.firstName + " " + item.user.lastName}
+                      </TableCell>
+                      <TableCell>{item.phone}</TableCell>
+                      <TableCell>{item.customerAddress}</TableCell>
+                      <TableCell align="right">
+                        {calculateTotalAmount(item.orderItems).toLocaleString(
+                          "vn"
+                        )}
+                        đ
+                      </TableCell>
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={saleOrdersRecent.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+      </Paper>
     </React.Fragment>
   );
 }

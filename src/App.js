@@ -2,11 +2,21 @@ import "./App.css";
 import React, { useEffect } from "react";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 
-import AppBar from "./components/AppBar";
+import Cart from "./pages/Cart";
 import SignIn from "./pages/SignIn";
-import User from "./pages/profile/User";
+import SignUp from "./pages/SignUp";
+import HomePage from "./pages/home";
+import Profile from "./pages/Profile";
+import Checkout from "./pages/Checkout";
+import OrderDetail from "./pages/OrderDetail";
 import Dashboard from "./pages/admin/Dashboard";
+import SearchProduct from "./pages/SearchProduct";
 import NotFound from "./pages/exception/NotFound";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
+import ProductDetail from "./pages/products/ProductDetail";
+import ProductsByCategogy from "./pages/products/ProductsByCategogy";
+
+import AppBar from "./components/AppBar";
 
 import { useSetRecoilState } from "recoil";
 import { userSeletor } from "./recoil/userState";
@@ -38,6 +48,7 @@ function App() {
           });
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -46,17 +57,50 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <AppBar />
+            <HomePage />
+          </Route>
+          <Route path="/search">
+            <AppBar />
+            <SearchProduct />
+          </Route>
+          <Route path="/cart">
+            <AppBar />
+            <Cart />
+          </Route>
+          <Route path="/checkout" exact>
+            <AppBar />
+            <Checkout />
+          </Route>
+          <Route path="/checkout/success">
+            <AppBar />
+            <CheckoutSuccess />
+          </Route>
+          <Route path="/categories/:slug">
+            <AppBar />
+            <ProductsByCategogy />
+          </Route>
+          <Route path="/products/:slug">
+            <AppBar />
+            <ProductDetail />
           </Route>
           <Route path="/login" exact>
             <AppBar />
             <SignIn />
           </Route>
+          <Route path="/signup" exact>
+            <AppBar />
+            <SignUp />
+          </Route>
           <Route path="/admin">
             <Dashboard />
           </Route>
-          <Route path="/profile" exact>
+          <Route path="/profile">
             <AppBar />
-            <User />
+            <Profile />
+          </Route>
+          <Route path="/chi-tiet-don-hang/:saleOrderId">
+            <AppBar />
+            <OrderDetail />
           </Route>
           <Route path="*">
             <NotFound />

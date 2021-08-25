@@ -1,61 +1,23 @@
-import { BASE_API } from "../config";
-
 import axios from "axios";
+
+import { BASE_API } from "../config";
 
 import { auth } from "../utils/auth";
 
-export function fetchAllUsers() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const token = auth.getToken();
-      const fetchUserLogin = await axios.get(`${BASE_API}/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return resolve(fetchUserLogin.data);
-    } catch (err) {
-      return reject(new Error(err.message));
-    }
-  });
-}
-
-export function fetchUsersLikeUsername(usernameSearch) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const token = auth.getToken();
-      const fetchUsersLikeUsername = await axios.get(
-        `${BASE_API}/users?search=${usernameSearch}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return resolve(fetchUsersLikeUsername.data);
-    } catch (err) {
-      return reject(new Error(err.message));
-    }
-  });
-}
-
-export function fetchUserById(userId) {
+export function fetchAllCategories() {
   return new Promise((resolve, reject) => {
     try {
-      const token = auth.getToken();
-
-      fetch(`${BASE_API}/users/${userId}`, {
+      fetch(`${BASE_API}/categories`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
-        method: "GET",
       })
         .then((res) => {
           if (res.status === 200) {
-            return resolve(res.json());
+            resolve(res.json());
+          } else {
+            reject(res);
           }
-          return reject(res);
         })
         .catch((err) => {
           return reject(new Error(err.message));
@@ -66,18 +28,61 @@ export function fetchUserById(userId) {
   });
 }
 
-export function createNewUser(newUser) {
+export function fetchCategoriesLikeName(nameSearch) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = auth.getToken();
+      const fetchCategoriesLikeName = await axios.get(
+        `${BASE_API}/categories?search=${nameSearch}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return resolve(fetchCategoriesLikeName.data);
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
+export function fetchProductsBySlugOfCategory(slug, page) {
+  return new Promise((resolve, reject) => {
+    try {
+      fetch(`${BASE_API}/categories/${slug}/products?page=${page - 1}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            resolve(res.json());
+          } else {
+            reject(res);
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    } catch (err) {
+      return reject(new Error(err.message));
+    }
+  });
+}
+
+export function createNewCategory(newCategory) {
   return new Promise((resolve, reject) => {
     try {
       const token = auth.getToken();
 
-      fetch(`${BASE_API}/users`, {
+      fetch(`${BASE_API}/categories`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         method: "POST",
-        body: JSON.stringify(newUser),
+        body: JSON.stringify(newCategory),
       })
         .then((res) => {
           if (res.status === 201) {
@@ -98,18 +103,18 @@ export function createNewUser(newUser) {
   });
 }
 
-export function updateUser(userId, userBody) {
+export function updateCategory(categoryId, categoryBody) {
   return new Promise((resolve, reject) => {
     try {
       const token = auth.getToken();
 
-      fetch(`${BASE_API}/users/${userId}`, {
+      fetch(`${BASE_API}/categories/${categoryId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         method: "PATCH",
-        body: JSON.stringify(userBody),
+        body: JSON.stringify(categoryBody),
       })
         .then((res) => {
           if (res.status === 200) {
@@ -129,43 +134,12 @@ export function updateUser(userId, userBody) {
   });
 }
 
-export function updateProfileUser(userId, userBody) {
+export function deleteCategory(categoryId) {
   return new Promise((resolve, reject) => {
     try {
       const token = auth.getToken();
 
-      fetch(`${BASE_API}/users/${userId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        method: "PUT",
-        body: JSON.stringify(userBody),
-      })
-        .then((res) => {
-          if (res.status === 200) {
-            return resolve(res.json());
-          } else {
-            res.json().then((data) => {
-              return reject(data);
-            });
-          }
-        })
-        .catch((err) => {
-          return reject(new Error(err.message));
-        });
-    } catch (err) {
-      return reject(new Error(err.message));
-    }
-  });
-}
-
-export function deleteUser(userId) {
-  return new Promise((resolve, reject) => {
-    try {
-      const token = auth.getToken();
-
-      fetch(`${BASE_API}/users/${userId}`, {
+      fetch(`${BASE_API}/categories/${categoryId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

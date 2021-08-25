@@ -1,7 +1,11 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+
+import { useHistory, Link } from "react-router-dom";
+
 import clsx from "clsx";
+
 import { fade, makeStyles } from "@material-ui/core/styles";
+
 import {
   Avatar,
   AppBar,
@@ -22,8 +26,6 @@ import {
   Box,
 } from "@material-ui/core";
 
-import { Link } from "react-router-dom";
-
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import MoreIcon from "@material-ui/icons/MoreVert";
@@ -32,6 +34,10 @@ import MailIcon from "@material-ui/icons/Mail";
 
 import { useRecoilState } from "recoil";
 import { userSeletor } from "../../recoil/userState";
+import { cartSeletor } from "../../recoil/cartState";
+
+import { fetchOrderItemsByUserId } from "../../api/cartService";
+
 import { auth } from "../../utils/auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,6 +49,11 @@ const useStyles = makeStyles((theme) => ({
   },
   grow: {
     flexGrow: 1,
+    position: "sticky",
+    top: 0,
+    left: 0,
+    zIndex: 999,
+    width: "100%",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -89,6 +100,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       width: "50ch",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "30ch",
+    },
   },
   sectionDesktop: {
     display: "none",
@@ -111,12 +125,30 @@ const useStyles = makeStyles((theme) => ({
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
 
-  const [state, setState] = useState({ left: false });
   const [anchorEl, setAnchorEl] = useState(null);
+  const [state, setState] = useState({ left: false });
   const [userState, setUserState] = useRecoilState(userSeletor);
+  const [cartState, setCartState] = useRecoilState(cartSeletor);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const history = useHistory();
+
+  useEffect(() => {
+    if (userState.userId) {
+      fetchOrderItemsByUserId(userState.userId)
+        .then((data) => {
+          setCartState({
+            numberOfProducts: data.length,
+          });
+        })
+        .catch((err) => {
+          setCartState({
+            numberOfProducts: 0,
+          });
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userState]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -181,7 +213,7 @@ export default function PrimarySearchAppBar() {
       )}
       {!userState.username && (
         <Link to="/login" style={{ color: "black", textDecoration: "none" }}>
-          <MenuItem onClick={handleMenuClose}>Log in</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Đăng nhập</MenuItem>
         </Link>
       )}
     </Menu>
@@ -198,17 +230,29 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <Icon
-              style={{ overflow: "visible" }}
-              className="fa fa-shopping-cart"
-            />
-          </Badge>
-        </IconButton>
-        <p>Cart</p>
-      </MenuItem>
+      <Link to={"/cart"} style={{ color: "black", textDecoration: "none" }}>
+        <MenuItem>
+          {userState.userId && (
+            <IconButton
+              aria-label="show 4 new mails"
+              color="inherit"
+              disableRipple
+              disableFocusRipple
+            >
+              <Badge
+                badgeContent={cartState.numberOfProducts}
+                color="secondary"
+              >
+                <Icon
+                  style={{ overflow: "visible" }}
+                  className="fa fa-shopping-cart"
+                />
+              </Badge>
+            </IconButton>
+          )}
+          <p>Cart</p>
+        </MenuItem>
+      </Link>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -228,7 +272,7 @@ export default function PrimarySearchAppBar() {
           {!userState.username && <Icon className="fa fa-user" />}
         </IconButton>
         {userState.username && <p>{userState.username}</p>}
-        {!userState.username && <p>Log in</p>}
+        {!userState.username && <p>Đăng nhập</p>}
       </MenuItem>
     </Menu>
   );
@@ -320,18 +364,47 @@ export default function PrimarySearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onKeyPress={(ev) => {
+                if (ev.which === 13 || ev.keyCode === 13) {
+                  const strSearch = ev.target.value;
+                  ev.target.value = "";
+                  history.push({
+                    pathname: "/search",
+                    search: `?keyword=${strSearch}`,
+                  });
+                }
+              }}
             />
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <Icon
-                  style={{ overflow: "visible" }}
-                  className="fa fa-shopping-cart"
-                />
-              </Badge>
-            </IconButton>
+            {userState.userId && (
+              <Link
+                to={"/cart"}
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  marginTop: "5px",
+                }}
+              >
+                <IconButton
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                  disableRipple
+                  disableFocusRipple
+                >
+                  <Badge
+                    badgeContent={cartState.numberOfProducts}
+                    color="secondary"
+                  >
+                    <Icon
+                      style={{ overflow: "visible" }}
+                      className="fa fa-shopping-cart"
+                    />
+                  </Badge>
+                </IconButton>
+              </Link>
+            )}
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -340,6 +413,7 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
               disableRipple
+              disableFocusRipple
             >
               {userState.username && (
                 <Chip
