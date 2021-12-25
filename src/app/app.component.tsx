@@ -38,14 +38,18 @@ function App() {
   }, [destroy$]);
 
   return (
-    <div className="App">
-      <h1>asdasd</h1>
+    <div>
+      <h1 className="text-3xl font-bold underline bg-red-400">Hello world!</h1>
+
+      {/* Show if network requesting */}
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={openBackdop}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+
+      {/* Show if network request has errors */}
       <Dialog
         open={openDialog}
         onClose={handleClose}
@@ -54,8 +58,7 @@ function App() {
       >
         <DialogContent>
           {dialogContent}
-          <br />
-          <div className="app-dialog-btn-close">
+          <div className="app-dialog-btn-close text-center mt-4 mb-0">
             <Button variant="contained" onClick={handleClose}>
               Close
             </Button>
