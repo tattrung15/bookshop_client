@@ -36,7 +36,7 @@ export interface PaginateOption {
   total?: number;
   equal?: { [key: string]: PaginateSearchValue };
   like?: { [key: string]: PaginateSearchValue };
-  sort?: { [key: string]: PaginateSearchValue };
+  sort?: string;
   in?: { [key: string]: PaginateSearchValue[] };
 }
 
