@@ -1,0 +1,12 @@
+button.bs-btn {
+  &.bs-btn-primary {
+    background-color: $color-primary;
+
+    &:hover,
+    &:focus,
+    &:disabled,
+    &:disabled:hover {
+      background-color: $color-primary;
+    }
+  }
+}

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HttpService from "@core/services/http/http.service";
 import { takeUntil } from "rxjs";
 import {
@@ -8,9 +9,15 @@ import {
   DialogContent,
   Dialog,
 } from "@mui/material";
-import { useLayoutEffect } from "react";
+
 import useDestroy from "@core/hooks/use-destroy.hook";
+
+import "./styles/app.scss";
 import "./app.component.scss";
+
+import AppBar from "./components/app-bar";
+
+import SignIn from "./pages/sign-in";
 
 function App() {
   const { destroy$ } = useDestroy();
@@ -39,7 +46,12 @@ function App() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold underline bg-red-400">Hello world!</h1>
+      <Router>
+        <AppBar />
+        <Routes>
+          <Route path="/" element={<SignIn />} />
+        </Routes>
+      </Router>
 
       {/* Show if network requesting */}
       <Backdrop
