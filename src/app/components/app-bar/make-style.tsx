@@ -33,8 +33,12 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
+    [theme.breakpoints.up("md")]: {
+      width: "auto",
+    },
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
+      width: "150%",
     },
   },
   searchIcon: {

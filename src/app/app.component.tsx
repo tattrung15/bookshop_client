@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes } from "react-router-dom";
 import HttpService from "@core/services/http/http.service";
 import { takeUntil } from "rxjs";
 import {
@@ -10,14 +10,16 @@ import {
   Dialog,
 } from "@mui/material";
 
-import useDestroy from "@core/hooks/use-destroy.hook";
-
 import "./styles/app.scss";
 import "./app.component.scss";
 
+import useDestroy from "@core/hooks/use-destroy.hook";
+
 import AppBar from "./components/app-bar";
 
-import SignIn from "./pages/sign-in";
+import { routes } from "./app.routing";
+import { guardRoutes } from "@core/helpers/components.helper";
+import { Role } from "./shared/types/user.type";
 
 function App() {
   const { destroy$ } = useDestroy();
@@ -49,7 +51,10 @@ function App() {
       <Router>
         <AppBar />
         <Routes>
-          <Route path="/" element={<SignIn />} />
+          {guardRoutes(routes, Role.MEMBER, {
+            roles: [Role.MEMBER],
+            redirect: "/auth/login",
+          })}
         </Routes>
       </Router>
 
