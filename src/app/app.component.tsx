@@ -9,6 +9,7 @@ import {
   DialogContent,
   Dialog,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./styles/app.scss";
 import "./app.component.scss";
@@ -21,11 +22,17 @@ import { routes } from "./app.routing";
 import { guardRoutes } from "@core/helpers/components.helper";
 import { Role } from "./shared/types/user.type";
 
+import { DeliveryEpic } from "./store/delivery";
+import { GlobalState } from "./store";
+
 function App() {
+  const dispatch = useDispatch();
   const { destroy$ } = useDestroy();
   const [openBackdop, setOpenBackdrop] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [dialogContent, setDialogContent] = useState<string>("");
+
+  const { isDeliveryLoading, isDeliveryError } = useSelector(selectDelivery);
 
   const handleClose = () => {
     setOpenDialog(false);
@@ -44,7 +51,23 @@ function App() {
         setOpenBackdrop(false);
       }
     });
-  }, [destroy$]);
+
+    if (isDeliveryLoading) {
+      setOpenBackdrop(true);
+    } else {
+      setOpenBackdrop(false);
+    }
+
+    if (isDeliveryError) {
+      setOpenDialog(true);
+      setDialogContent("Cannot fetch data, please try again...");
+    }
+  }, [destroy$, isDeliveryError, isDeliveryLoading]);
+
+  useLayoutEffect(() => {
+    dispatch(DeliveryEpic.fetchDelivery({ destroy$ }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
@@ -85,5 +108,7 @@ function App() {
     </div>
   );
 }
+
+const selectDelivery = (state: GlobalState) => state.delivery;
 
 export default App;

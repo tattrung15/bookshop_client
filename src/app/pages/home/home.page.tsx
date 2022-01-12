@@ -14,44 +14,7 @@ export default function HomePage() {
   const [productImageComicManga, setProductImageComicManga] = useState([]);
   const [productImageBestSelling, setProductImageBestSelling] = useState([]);
 
-  useEffect(() => {
-    // fetchProductImages()
-    //   .then((data) => {
-    //     data.sort((a, b) => (a.id < b.id ? 1 : a.id > b.id ? -1 : 0));
-    //     setProductImage(data.slice(0, 4));
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // fetchProductImageBestSelling()
-    //   .then((data) => {
-    //     setProductImageBestSelling(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // fetchProductImagesByCategory("comic-manga")
-    //   .then((data) => {
-    //     setProductImageComicManga(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // fetchProductImagesByCategory("doraemon")
-    //   .then((data) => {
-    //     setProductImageDoraemon(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // fetchProductImagesByCategory("wings-books")
-    //   .then((data) => {
-    //     setProductImageWingsBooks(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>

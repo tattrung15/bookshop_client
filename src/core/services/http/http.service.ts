@@ -45,6 +45,12 @@ export interface ResponseResult {
   pagination?: ResponsePagination;
 }
 
+export interface CoreResponse {
+  status: number;
+  message: string;
+  result?: ResponseResult;
+}
+
 export class _HttpService {
   public isRequesting$ = new Subject<boolean>();
   public onError$ = new Subject<any>();
