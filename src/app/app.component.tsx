@@ -98,7 +98,7 @@ function App() {
       >
         <DialogContent>
           {dialogContent}
-          <div className="app-dialog-btn-close text-center mt-4 mb-0">
+          <div className="app-dialog-btn-close">
             <Button variant="contained" onClick={handleClose}>
               Close
             </Button>

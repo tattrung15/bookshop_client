@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 
-import { useStyles } from "./make-style";
-
 import { bannerDoremon, bannerWingsbooks } from "@app/shared/constants/common";
+
+import Footer from "@app/components/footer";
+
+import { useStyles } from "./make-style";
 
 export default function HomePage() {
   const classes = useStyles();
@@ -171,7 +173,7 @@ export default function HomePage() {
           </div>
         </Box>
       </Box>
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }
