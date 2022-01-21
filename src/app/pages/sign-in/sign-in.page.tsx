@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -15,17 +15,60 @@ import { LockOutlined as LockOutlinedIcon } from "@mui/icons-material";
 import clsx from "clsx";
 
 import { useStyles } from "./make-style";
+import AuthService from "@app/services/http/auth.service";
+import useObservable from "@core/hooks/use-observable.hook";
+import StorageService from "@core/services/storage";
+import { User } from "@app/models/user.model";
+import { useDispatch } from "react-redux";
+import { storeUser } from "@app/store/auth/auth.action";
 
 export default function SignIn() {
   const classes = useStyles();
 
-  const [account] = useState({
+  const { subscribeOnce } = useObservable();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [accountState, setAccountState] = useState({
     username: "",
     password: "",
-    loginError: "",
+    isRemembered: false,
   });
 
-  const handleLogin = async () => {};
+  const handleLogin = () => {
+    subscribeOnce(
+      AuthService.login(accountState.username, accountState.password),
+      (data) => {
+        dispatch(storeUser(new User(data.result.data.user)));
+        if (accountState.isRemembered) {
+          StorageService.set("access_token", data.result.data.jwt);
+        } else {
+          StorageService.setSession("access_token", data.result.data.jwt);
+        }
+        navigate("/", { replace: true });
+      }
+    );
+  };
+
+  const handleInputUsername = (event) => {
+    setAccountState(
+      Object.assign(accountState, { username: event.target.value })
+    );
+  };
+
+  const handleInputPassword = (event) => {
+    setAccountState(
+      Object.assign(accountState, { password: event.target.value })
+    );
+  };
+
+  const handleRememberMe = () => {
+    setAccountState({
+      ...accountState,
+      isRemembered: !accountState.isRemembered,
+    });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -47,6 +90,7 @@ export default function SignIn() {
             label="Username"
             name="username"
             autoComplete="email"
+            onChange={handleInputUsername}
           />
           <TextField
             variant="outlined"
@@ -58,6 +102,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleInputPassword}
           />
           <FormControlLabel
             control={
@@ -65,12 +110,13 @@ export default function SignIn() {
                 name="rememberMe"
                 value="remember"
                 className="bs-checkbox"
+                onChange={handleRememberMe}
+                checked={accountState.isRemembered}
               />
             }
             label="Ghi nhớ đăng nhập"
           />
           <br />
-          <span style={{ color: "red" }}>{account.loginError}</span>
           <Button
             id="btnSubmit"
             type="button"

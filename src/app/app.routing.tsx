@@ -8,7 +8,7 @@ export const routes: RouteGuardShape[] = [
     component: HomePage,
   },
   {
-    path: "/auth/login",
+    path: "/login",
     component: SignIn,
   },
 ];

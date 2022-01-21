@@ -7,6 +7,10 @@ export const useStyles = makeStyles((theme: Theme) => ({
   fullList: {
     width: "auto",
   },
+  chip: {
+    backgroundColor: "#E0E0E0 !important",
+    cursor: "pointer !important",
+  },
   grow: {
     flexGrow: 1,
     position: "sticky",

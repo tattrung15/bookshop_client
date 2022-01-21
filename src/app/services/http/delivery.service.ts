@@ -1,10 +1,10 @@
 import { Delivery } from "@app/models/delivery.model";
-import { _HttpService } from "@core/services/http/http.service";
+import HttpService from "@core/services/http/http.service";
 import { Observable } from "rxjs";
 
-class _DeliveryService extends _HttpService {
+class _DeliveryService {
   public getAll(): Observable<Delivery[] | undefined> {
-    return this.get<Delivery[]>("/deliveries");
+    return HttpService.get<Delivery[]>("/deliveries");
   }
 }
 

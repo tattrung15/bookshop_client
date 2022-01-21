@@ -10,8 +10,8 @@ export class User extends Model {
   role: string;
   email: string;
   phone: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 
   constructor(data: any) {
     super();

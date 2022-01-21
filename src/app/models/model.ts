@@ -1,6 +1,6 @@
 export class Model {
   id: number;
-  fillable: string[];
+  fillable?: string[];
 
   fill(input: any): this {
     if (this.fillable && this.fillable.length) {

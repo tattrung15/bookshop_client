@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import {
   AppBar as AppBarMui,
+  Avatar,
+  Badge,
+  Box,
+  Chip,
+  Icon,
   IconButton,
   InputBase,
   List,
@@ -24,6 +29,11 @@ import clsx from "clsx";
 
 import { useStyles } from "./make-style";
 import { Link } from "react-router-dom";
+import { GlobalState } from "@app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { Role } from "@app/shared/types/user.type";
+import { clearUser } from "@app/store/auth/auth.action";
+import StorageService from "@core/services/storage";
 
 function AppBar() {
   const classes = useStyles();
@@ -34,6 +44,9 @@ function AppBar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const authState = useSelector(selectAuth);
+  const dispatch = useDispatch();
 
   const handleProfileMenuOpen = (event: React.SyntheticEvent<any>) => {
     setAnchorEl(event.currentTarget);
@@ -52,6 +65,14 @@ function AppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleMenuLogout = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    dispatch(clearUser());
+    StorageService.set("access_token", "");
+    StorageService.setSession("access_token", "");
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -63,12 +84,12 @@ function AppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {/* {userState.isAdmin && (
+      {authState.role === Role.ADMIN && (
         <Link to="/admin" style={{ color: "black", textDecoration: "none" }}>
           <MenuItem onClick={handleMenuClose}>Dashboard</MenuItem>
         </Link>
-      )} */}
-      {/* {userState.username && (
+      )}
+      {authState.username && (
         <Box>
           <Link
             to="/profile"
@@ -80,11 +101,11 @@ function AppBar() {
           <MenuItem onClick={handleMenuLogout}>Log out</MenuItem>
         </Box>
       )}
-      {!userState.username && (
+      {!authState.username && (
         <Link to="/login" style={{ color: "black", textDecoration: "none" }}>
           <MenuItem onClick={handleMenuClose}>Đăng nhập</MenuItem>
         </Link>
-      )} */}
+      )}
     </Menu>
   );
 
@@ -99,9 +120,9 @@ function AppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {/* <Link to={"/cart"} style={{ color: "black", textDecoration: "none" }}>
+      <Link to={"/cart"} style={{ color: "black", textDecoration: "none" }}>
         <MenuItem>
-          {userState.userId && (
+          {/* {!!authState.username && (
             <IconButton
               aria-label="show 4 new mails"
               color="inherit"
@@ -118,10 +139,10 @@ function AppBar() {
                 />
               </Badge>
             </IconButton>
-          )}
+          )} */}
           <p>Cart</p>
         </MenuItem>
-      </Link> */}
+      </Link>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -131,17 +152,17 @@ function AppBar() {
           disableRipple
           disableTouchRipple
         >
-          {/* {userState.username && (
+          {authState.username && (
             <Box>
               <Avatar className={classes.small}>
-                {userState.username.substring(0, 1).toUpperCase()}
+                {authState.username.substring(0, 1).toUpperCase()}
               </Avatar>
             </Box>
           )}
-          {!userState.username && <Icon className="fa fa-user" />} */}
+          {!authState.username && <Icon className="fa fa-user" />}
         </IconButton>
-        {/* {userState.username && <p>{userState.username}</p>}
-        {!userState.username && <p>Đăng nhập</p>} */}
+        {!authState.username && <p>{authState.username}</p>}
+        {!authState.username && <p>Đăng nhập</p>}
       </MenuItem>
     </Menu>
   );
@@ -244,7 +265,7 @@ function AppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            {/* {userState.userId && (
+            {!!authState.id && (
               <Link
                 to={"/cart"}
                 style={{
@@ -270,7 +291,7 @@ function AppBar() {
                   </Badge>
                 </IconButton>
               </Link>
-            )} */}
+            )}
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -281,18 +302,19 @@ function AppBar() {
               disableRipple
               disableFocusRipple
             >
-              {/* {userState.username && (
+              {!!authState.username ? (
                 <Chip
-                  style={{ cursor: "pointer" }}
-                  label={userState.username}
+                  className={classes.chip}
+                  label={authState.username}
                   avatar={
                     <Avatar>
-                      {userState.username.substring(0, 1).toUpperCase()}
+                      {authState.username.substring(0, 1).toUpperCase()}
                     </Avatar>
                   }
                 />
+              ) : (
+                <Icon className="fa fa-user" />
               )}
-              {!userState.username && <Icon className="fa fa-user" />} */}
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
@@ -313,5 +335,7 @@ function AppBar() {
     </div>
   );
 }
+
+const selectAuth = (state: GlobalState) => state.auth;
 
 export default AppBar;
