@@ -48,7 +48,7 @@ export interface ResponseResult {
 export interface CoreResponse {
   status: number;
   message: string;
-  result?: ResponseResult;
+  result?: ResponseResult | DataSet;
 }
 
 export class _HttpService {
@@ -59,32 +59,23 @@ export class _HttpService {
     "Content-Type": "application/json",
   };
 
-  public get<T>(uri: string, options?: HttpOptions): Observable<T | undefined> {
+  public get<T>(uri: string, options?: HttpOptions): Observable<T> {
     return this.request(uri, HttpMethod.GET, options);
   }
 
-  public post<T>(
-    uri: string,
-    options?: HttpOptions
-  ): Observable<T | undefined> {
+  public post<T>(uri: string, options?: HttpOptions): Observable<T> {
     return this.request(uri, HttpMethod.POST, options);
   }
 
-  public put<T>(uri: string, options?: HttpOptions): Observable<T | undefined> {
+  public put<T>(uri: string, options?: HttpOptions): Observable<T> {
     return this.request(uri, HttpMethod.PUT, options);
   }
 
-  public patch<T>(
-    uri: string,
-    options?: HttpOptions
-  ): Observable<T | undefined> {
+  public patch<T>(uri: string, options?: HttpOptions): Observable<T> {
     return this.request(uri, HttpMethod.PATCH, options);
   }
 
-  public delete<T>(
-    uri: string,
-    options?: HttpOptions
-  ): Observable<T | undefined> {
+  public delete<T>(uri: string, options?: HttpOptions): Observable<T> {
     return this.request(uri, HttpMethod.DELETE, options);
   }
 
@@ -92,8 +83,8 @@ export class _HttpService {
     uri: string,
     method: string,
     options?: HttpOptions
-  ): Observable<T | undefined> {
-    const token = StorageService.get("token");
+  ): Observable<T> {
+    const token = this.getAccessToken();
     let url = this.resolveUri(uri);
 
     if (options?.queryParams) {
@@ -146,7 +137,7 @@ export class _HttpService {
     return formData;
   }
 
-  public handleResponse<T>(ajaxResponse: AjaxResponse<any>): T | undefined {
+  public handleResponse<T>(ajaxResponse: AjaxResponse<any>): T {
     return ajaxResponse.response;
   }
 
@@ -177,6 +168,13 @@ export class _HttpService {
 
     objectToQueryString(params);
     return encodeURI(httpParams.join("&"));
+  }
+
+  private getAccessToken(): string | null {
+    return (
+      StorageService.get("access_token") ||
+      StorageService.getSession("access_token")
+    );
   }
 }
 
