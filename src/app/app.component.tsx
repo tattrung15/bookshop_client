@@ -1,5 +1,5 @@
-import { useState, useLayoutEffect } from "react";
-import { BrowserRouter as Router, Routes } from "react-router-dom";
+import { useState, useLayoutEffect, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HttpService from "@core/services/http/http.service";
 import { takeUntil } from "rxjs";
 import {
@@ -24,6 +24,8 @@ import { Role } from "./shared/types/user.type";
 
 import { DeliveryEpic } from "./store/delivery";
 import { GlobalState } from "./store";
+import SignIn from "./pages/sign-in";
+import NotFound from "./pages/not-found/not-found.page";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,10 +35,16 @@ function App() {
   const [dialogContent, setDialogContent] = useState<string>("");
 
   const { isDeliveryLoading, isDeliveryError } = useSelector(selectDelivery);
+  const { role } = useSelector(selectAuth);
 
   const handleClose = () => {
     setOpenDialog(false);
   };
+
+  useEffect(() => {
+    dispatch(DeliveryEpic.fetchDelivery({ destroy$ }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useLayoutEffect(() => {
     HttpService.onError$.subscribe((ajaxResponse) => {
@@ -64,20 +72,17 @@ function App() {
     }
   }, [destroy$, isDeliveryError, isDeliveryLoading]);
 
-  useLayoutEffect(() => {
-    dispatch(DeliveryEpic.fetchDelivery({ destroy$ }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div>
       <Router>
         <AppBar />
         <Routes>
-          {guardRoutes(routes, Role.MEMBER, {
+          <Route path="/login" element={<SignIn />} />
+          {guardRoutes(routes, role, {
             roles: [Role.MEMBER],
-            redirect: "/auth/login",
+            redirect: "/login",
           })}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
 
@@ -110,5 +115,6 @@ function App() {
 }
 
 const selectDelivery = (state: GlobalState) => state.delivery;
+const selectAuth = (state: GlobalState) => state.auth;
 
 export default App;
