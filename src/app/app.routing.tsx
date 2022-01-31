@@ -13,7 +13,7 @@ export const routes: RouteGuardShape[] = [
     },
   },
   {
-    path: "/profile",
+    path: "/profile/*",
     component: Profile,
     config: {
       roles: [Role.ADMIN, Role.MEMBER],

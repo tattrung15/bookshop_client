@@ -51,15 +51,9 @@ export default function SignIn() {
     );
   };
 
-  const handleInputUsername = (event) => {
+  const handleInputChange = (event) => {
     setAccountState(
-      Object.assign(accountState, { username: event.target.value })
-    );
-  };
-
-  const handleInputPassword = (event) => {
-    setAccountState(
-      Object.assign(accountState, { password: event.target.value })
+      Object.assign(accountState, { [event.target.name]: event.target.value })
     );
   };
 
@@ -90,7 +84,7 @@ export default function SignIn() {
             label="Username"
             name="username"
             autoComplete="email"
-            onChange={handleInputUsername}
+            onChange={handleInputChange}
           />
           <TextField
             variant="outlined"
@@ -102,7 +96,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={handleInputPassword}
+            onChange={handleInputChange}
           />
           <FormControlLabel
             control={

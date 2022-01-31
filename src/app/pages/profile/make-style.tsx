@@ -1,30 +1,29 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: "100vh",
-    overflow: "auto",
-  },
+export const useStyles = makeStyles(() => ({
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    margin: "0 auto",
+    maxWidth: "1200px",
   },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
+  wrapBreadcrumb: {
+    margin: "0 auto",
+    maxWidth: "930px",
   },
-  fixedHeight: {
-    height: 240,
+  breadcrumb: {
+    background: "#EBE9E9",
+    padding: "0.5em",
   },
   navLink: {
     textDecoration: "none",
     color: "black",
+  },
+  menuLeft: {
+    marginTop: "1em",
+    padding: "1em 0 1em 1em",
+    boxShadow: "-1px 0px 3px 1px #888888",
+  },
+  menuIcon: {
+    fontSize: "larger",
+    marginRight: "0.5em",
   },
 }));
