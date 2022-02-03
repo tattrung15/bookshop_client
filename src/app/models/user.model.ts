@@ -18,3 +18,11 @@ export class User extends Model {
     this.fill(data);
   }
 }
+
+export interface UpdateUserDto {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+  phone: string;
+}

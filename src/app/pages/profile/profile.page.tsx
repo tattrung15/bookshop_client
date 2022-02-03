@@ -79,6 +79,7 @@ function Profile() {
                       className={classes.navLink}
                       to="/profile"
                       style={handleLinkActiving}
+                      end
                     >
                       <i className={clsx("fa fa-edit", classes.menuIcon)}></i>{" "}
                       Thông tin tài khoản
@@ -128,23 +129,26 @@ function Profile() {
                     </Box>
                   </Box>
                 </Box>
-              </Route>
-              <Route path="recharge">
-                <Box style={{ padding: "1em 1em 1em 0" }}>
-                  <Box
-                    style={{
-                      boxShadow: "1px 0px 3px 1px #888888",
-                      borderLeft: "1px solid black",
-                    }}
-                  >
-                    <Box style={{ padding: "0.5em" }}>
-                      <Typography variant="h4" component="h2" gutterBottom>
-                        Liên hệ số điện thoại: 0396 500 575
-                      </Typography>
+              </Route> */}
+              <Route
+                path="recharge"
+                element={
+                  <Box style={{ padding: "1em 1em 1em 0" }}>
+                    <Box
+                      style={{
+                        boxShadow: "1px 0px 3px 1px #888888",
+                        borderLeft: "1px solid black",
+                      }}
+                    >
+                      <Box style={{ padding: "0.5em" }}>
+                        <Typography variant="h4" component="h2" gutterBottom>
+                          Liên hệ số điện thoại: 0396 500 ***
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              </Route> */}
+                }
+              ></Route>
             </Routes>
           </Grid>
         </Box>

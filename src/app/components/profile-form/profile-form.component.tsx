@@ -5,12 +5,13 @@ import { GlobalState } from "@app/store";
 import { useSelector } from "react-redux";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
+import { UpdateUserDto } from "@app/models/user.model";
 
 function ProfileForm() {
   const { subscribeOnce } = useObservable();
 
   const { id: userId } = useSelector(selectAuth);
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState<UpdateUserDto>({
     firstName: "",
     lastName: "",
     address: "",
@@ -36,7 +37,15 @@ function ProfileForm() {
   };
 
   const onUpdateButtonClick = () => {
-    console.log(userInfo);
+    subscribeOnce(UserService.updateUser(userId, userInfo), (data) => {
+      setUserInfo({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        address: data.address,
+        email: data.email,
+        phone: data.phone,
+      });
+    });
   };
 
   return (
@@ -115,7 +124,7 @@ function ProfileForm() {
                 />
               </Box>
               <Box style={{ marginTop: "1.5em" }}>
-                <Link to="/">Thay đổi mật khẩu</Link>
+                <Link to="#">Thay đổi mật khẩu</Link>
               </Box>
               <Box style={{ marginTop: "1.5em" }}>
                 <Button
