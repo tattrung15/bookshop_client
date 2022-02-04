@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import { LockOutlined as LockOutlinedIcon } from "@mui/icons-material";
 import clsx from "clsx";
-
 import { useStyles } from "./make-style";
 import AuthService from "@app/services/http/auth.service";
 import useObservable from "@core/hooks/use-observable.hook";

@@ -170,7 +170,7 @@ export class _HttpService {
     return encodeURI(httpParams.join("&"));
   }
 
-  private getAccessToken(): string | null {
+  public getAccessToken(): string | null {
     return (
       StorageService.get("access_token") ||
       StorageService.getSession("access_token")

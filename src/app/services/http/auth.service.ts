@@ -10,6 +10,14 @@ class _AuthService {
       },
     });
   }
+
+  public validate(token: string): Observable<any> {
+    return HttpService.post("/auth/validate", {
+      body: {
+        jwt: token,
+      },
+    });
+  }
 }
 
 const AuthService = new _AuthService();

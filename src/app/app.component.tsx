@@ -10,26 +10,27 @@ import {
   Dialog,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-
 import "./styles/app.scss";
 import "./app.component.scss";
-
 import useDestroy from "@core/hooks/use-destroy.hook";
-
 import AppBar from "./components/app-bar";
-
 import { routes } from "./app.routing";
 import { guardRoutes } from "@core/helpers/components.helper";
 import { Role } from "./shared/types/user.type";
-
 import { DeliveryEpic } from "./store/delivery";
 import { GlobalState } from "./store";
 import SignIn from "./pages/sign-in";
 import NotFound from "./pages/not-found/not-found.page";
+import AuthService from "./services/http/auth.service";
+import useObservable from "@core/hooks/use-observable.hook";
+import StorageService from "@core/services/storage";
+import { storeUser } from "./store/auth/auth.action";
+import { User } from "./models/user.model";
 
 function App() {
   const dispatch = useDispatch();
   const { destroy$ } = useDestroy();
+  const { subscribeOnce } = useObservable();
   const [openBackdop, setOpenBackdrop] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [dialogContent, setDialogContent] = useState<string>("");
@@ -43,6 +44,14 @@ function App() {
 
   useEffect(() => {
     dispatch(DeliveryEpic.fetchDelivery({ destroy$ }));
+
+    const token = HttpService.getAccessToken() || "";
+
+    subscribeOnce(AuthService.validate(token), (data) => {
+      dispatch(storeUser(new User(data.result.data.user)));
+      StorageService.set("access_token", data.result.data.jwt);
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
