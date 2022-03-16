@@ -8,12 +8,11 @@ import {
   Button,
   DialogContent,
   Dialog,
-} from "@mui/material";
+} from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import "./styles/app.scss";
 import "./app.component.scss";
 import useDestroy from "@core/hooks/use-destroy.hook";
-import AppBar from "./components/app-bar";
 import { routes } from "./app.routing";
 import { guardRoutes } from "@core/helpers/components.helper";
 import { Role } from "./shared/types/user.type";
@@ -26,8 +25,11 @@ import useObservable from "@core/hooks/use-observable.hook";
 import StorageService from "@core/services/storage";
 import { storeUser } from "./store/auth/auth.action";
 import { User } from "./models/user.model";
+import { useStyles } from "./app.make-style";
 
 function App() {
+  const classes = useStyles();
+
   const dispatch = useDispatch();
   const { destroy$ } = useDestroy();
   const { subscribeOnce } = useObservable();
@@ -84,7 +86,6 @@ function App() {
   return (
     <div>
       <Router>
-        <AppBar />
         <Routes>
           <Route path="/login" element={<SignIn />} />
           {guardRoutes(routes, role, {
@@ -96,10 +97,7 @@ function App() {
       </Router>
 
       {/* Show if network requesting */}
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openBackdop}
-      >
+      <Backdrop className={classes.backdrop} open={openBackdop}>
         <CircularProgress color="inherit" />
       </Backdrop>
 

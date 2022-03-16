@@ -1,4 +1,4 @@
-import { Button, Icon } from "@mui/material";
+import { Button, Icon } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 

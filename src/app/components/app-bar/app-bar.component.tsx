@@ -17,23 +17,22 @@ import {
   SwipeableDrawer,
   Toolbar,
   Typography,
-} from "@mui/material";
+} from "@material-ui/core";
 import {
   MoveToInbox as InboxIcon,
   Mail as MailIcon,
   Menu as MenuIcon,
   Search as SearchIcon,
   MoreVert as MoreIcon,
-} from "@mui/icons-material";
+} from "@material-ui/icons";
 import clsx from "clsx";
-
-import { useStyles } from "./make-style";
 import { Link } from "react-router-dom";
 import { GlobalState } from "@app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Role } from "@app/shared/types/user.type";
 import { clearUser } from "@app/store/auth/auth.action";
 import StorageService from "@core/services/storage";
+import { useStyles } from "./make-style";
 
 function AppBar() {
   const classes = useStyles();

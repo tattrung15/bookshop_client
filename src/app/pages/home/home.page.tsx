@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
-
+import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { bannerDoremon, bannerWingsbooks } from "@app/shared/constants/common";
-
 import Footer from "@app/components/footer";
-
 import { useStyles } from "./make-style";
+import AppBar from "@app/components/app-bar";
 
 export default function HomePage() {
   const classes = useStyles();
@@ -20,6 +18,7 @@ export default function HomePage() {
 
   return (
     <>
+      <AppBar />
       <Box
         paddingTop={2}
         paddingX={5.5}

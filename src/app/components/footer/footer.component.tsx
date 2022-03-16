@@ -6,7 +6,7 @@ import {
   Twitter as TwitterIcon,
   Facebook as FacebookIcon,
   Instagram as InstagramIcon,
-} from "@mui/icons-material";
+} from "@material-ui/icons";
 
 import { useStyles } from "./make-style";
 

@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, TextField, Typography } from "@material-ui/core";
 import { GlobalState } from "@app/store";
 import { useSelector } from "react-redux";
 import UserService from "@app/services/http/user.service";

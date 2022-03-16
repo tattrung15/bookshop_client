@@ -1,5 +1,5 @@
-import { Box, Breadcrumbs, Grid, Typography } from "@mui/material";
-import { NavigateNext as NavigateNextIcon } from "@mui/icons-material";
+import { Box, Breadcrumbs, Grid, Typography } from "@material-ui/core";
+import { NavigateNext as NavigateNextIcon } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import { Link, NavLink, Route, Routes } from "react-router-dom";
 import clsx from "clsx";
@@ -11,6 +11,7 @@ import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import { User } from "@app/models/user.model";
 import ProfileForm from "@app/components/profile-form/profile-form.component";
+import AppBar from "@app/components/app-bar";
 
 const handleLinkActiving = ({ isActive }) => {
   return isActive
@@ -48,6 +49,7 @@ function Profile() {
 
   return (
     <>
+      <AppBar />
       <Box paddingTop={2} className={classes.container}>
         <Box paddingX={5.5} className={classes.wrapBreadcrumb}>
           <Breadcrumbs

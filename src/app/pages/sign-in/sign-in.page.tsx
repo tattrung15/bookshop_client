@@ -11,7 +11,7 @@ import {
   Typography,
   Container,
 } from "@material-ui/core";
-import { LockOutlined as LockOutlinedIcon } from "@mui/icons-material";
+import { LockOutlined as LockOutlinedIcon } from "@material-ui/icons";
 import clsx from "clsx";
 import { useStyles } from "./make-style";
 import AuthService from "@app/services/http/auth.service";
