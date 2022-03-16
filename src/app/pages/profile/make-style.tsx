@@ -20,7 +20,6 @@ export const useStyles = makeStyles(() => ({
   menuLeft: {
     marginTop: "1em",
     padding: "1em 0 1em 1em",
-    boxShadow: "-1px 0px 3px 1px #888888",
   },
   menuIcon: {
     fontSize: "larger",
