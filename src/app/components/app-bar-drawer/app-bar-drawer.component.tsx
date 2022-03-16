@@ -17,13 +17,22 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
 } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
+import { useDispatch, useSelector } from "react-redux";
 import { useStyles } from "./make-style";
 import { mainListItems } from "./app-bar-drawer.list-item";
+import { GlobalState } from "@app/store";
+import StorageService from "@core/services/storage";
+import { clearUser } from "@app/store/auth/auth.action";
 
 function AppBarDrawer() {
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { username } = useSelector(selectAuth);
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -47,14 +56,10 @@ function AppBarDrawer() {
 
   const handleLogout = () => {
     setAnchorEl(null);
-    // auth.logout();
-    // setUserState({
-    //   userId: null,
-    //   username: null,
-    //   token: null,
-    //   isAdmin: null,
-    // });
-    // history.push("/");
+    dispatch(clearUser());
+    StorageService.set("access_token", "");
+    StorageService.setSession("access_token", "");
+    navigate("/", { replace: true });
   };
 
   const menuId = "primary-search-account-menu";
@@ -68,7 +73,7 @@ function AppBarDrawer() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <Link to="profile" style={{ textDecoration: "none", color: "black" }}>
+      <Link to="/profile" style={{ textDecoration: "none", color: "black" }}>
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       </Link>
       <MenuItem onClick={handleLogout}>Log out</MenuItem>
@@ -109,16 +114,15 @@ function AppBarDrawer() {
             disableRipple
             onClick={handleProfileMenuOpen}
           >
-            {/* <Chip
+            <Chip
               style={{ cursor: "pointer" }}
-              label={userState.username}
+              label={username}
               avatar={
                 <Avatar>
-                  {userState.username &&
-                    userState.username.substring(0, 1).toUpperCase()}
+                  {username && username.substring(0, 1).toUpperCase()}
                 </Avatar>
               }
-            /> */}
+            />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -143,5 +147,7 @@ function AppBarDrawer() {
     </>
   );
 }
+
+const selectAuth = (state: GlobalState) => state.auth;
 
 export default AppBarDrawer;

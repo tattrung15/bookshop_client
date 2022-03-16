@@ -33,6 +33,7 @@ function Profile() {
     subscribeOnce(UserService.getUserById(userId), (data) => {
       setCurrentUser(data);
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
@@ -63,7 +64,7 @@ function Profile() {
           </Breadcrumbs>
         </Box>
         <Box paddingTop={2} style={{ display: "flex" }}>
-          <Grid item xs={3} md={3}>
+          <Grid item xs={3} md={3} style={{ marginRight: "1em" }}>
             <Paper>
               <Box className={classes.menuLeft}>
                 <Typography

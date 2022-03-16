@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Avatar,
@@ -20,7 +20,6 @@ import StorageService from "@core/services/storage";
 import { User } from "@app/models/user.model";
 import { useDispatch } from "react-redux";
 import { storeUser } from "@app/store/auth/auth.action";
-import HttpService from "@core/services/http/http.service";
 
 export default function SignIn() {
   const classes = useStyles();
@@ -63,18 +62,6 @@ export default function SignIn() {
       isRemembered: !accountState.isRemembered,
     });
   };
-
-  useEffect(() => {
-    const token = HttpService.getAccessToken() || "";
-
-    subscribeOnce(AuthService.validate(token), (data) => {
-      dispatch(storeUser(new User(data.result.data.user)));
-      StorageService.set("access_token", data.result.data.jwt);
-    });
-
-    navigate("/", { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Container component="main" maxWidth="xs">
