@@ -20,9 +20,9 @@ function Dashboard() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Routes>
-            {guardRoutes(routes, role, {
+            {guardRoutes(routes, Role.ADMIN, {
               roles: [Role.ADMIN],
-              redirect: "/login",
+              redirect: "/",
             })}
             <Route path="*" element={<NotFound />} />
           </Routes>

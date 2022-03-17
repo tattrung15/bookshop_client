@@ -13,4 +13,9 @@ export interface HttpOptions {
   multipart?: boolean;
 }
 
-type ParamTypes = string | string[] | undefined | { [key: string]: any };
+type ParamTypes =
+  | number
+  | string
+  | string[]
+  | undefined
+  | { [key: string]: any };

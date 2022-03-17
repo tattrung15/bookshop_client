@@ -30,9 +30,9 @@ export interface ResponsePagination {
 
 export type PaginateSearchValue = string | number | boolean | any[];
 
-export interface PaginateOption {
-  page?: number;
-  perPage?: number;
+export interface PaginationOption {
+  page: number;
+  perPage: number;
   total?: number;
   equal?: { [key: string]: PaginateSearchValue };
   like?: { [key: string]: PaginateSearchValue };
@@ -40,12 +40,12 @@ export interface PaginateOption {
   in?: { [key: string]: PaginateSearchValue[] };
 }
 
-export interface ResponseResult {
+export class ResponseResult {
   data: DataSet | DataSet[];
   pagination?: ResponsePagination;
 }
 
-export interface CoreResponse {
+export class CoreResponse {
   status: number;
   message: string;
   result?: ResponseResult | DataSet;

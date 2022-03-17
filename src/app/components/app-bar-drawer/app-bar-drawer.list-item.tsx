@@ -36,7 +36,10 @@ export const mainListItems = (
         </ListItem>
       </Tooltip>
     </Link>
-    <Link to="/admin/users" style={{ color: "black", textDecoration: "none" }}>
+    <Link
+      to="/admin/user-management"
+      style={{ color: "black", textDecoration: "none" }}
+    >
       <Tooltip title="User management" placement="right" arrow>
         <ListItem button>
           <ListItemIcon>
@@ -47,7 +50,7 @@ export const mainListItems = (
       </Tooltip>
     </Link>
     <Link
-      to="/admin/categories"
+      to="/admin/category-management"
       style={{ color: "black", textDecoration: "none" }}
     >
       <Tooltip title="Category management" placement="right" arrow>
@@ -60,7 +63,7 @@ export const mainListItems = (
       </Tooltip>
     </Link>
     <Link
-      to="/admin/products"
+      to="/admin/product-management"
       style={{ color: "black", textDecoration: "none" }}
     >
       <Tooltip title="Book management" placement="right" arrow>
@@ -73,7 +76,7 @@ export const mainListItems = (
       </Tooltip>
     </Link>
     <Link
-      to="/admin/product-images"
+      to="/admin/product-image-management"
       style={{ color: "black", textDecoration: "none" }}
     >
       <Tooltip title="Images management" placement="right" arrow>
@@ -86,7 +89,7 @@ export const mainListItems = (
       </Tooltip>
     </Link>
     <Link
-      to="/admin/sale-orders"
+      to="/admin/sale-order-management"
       style={{ color: "black", textDecoration: "none" }}
     >
       <Tooltip title="Sale orders management" placement="right" arrow>

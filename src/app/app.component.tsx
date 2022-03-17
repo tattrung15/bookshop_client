@@ -31,6 +31,7 @@ function App() {
   const classes = useStyles();
 
   const dispatch = useDispatch();
+
   const { destroy$ } = useDestroy();
   const { subscribeOnce } = useObservable();
   const [openBackdop, setOpenBackdrop] = useState<boolean>(false);
@@ -52,6 +53,7 @@ function App() {
     subscribeOnce(AuthService.validate(token), (data) => {
       dispatch(storeUser(new User(data.result.data.user)));
       StorageService.set("access_token", data.result.data.jwt);
+      StorageService.set("role", data.result.data.user.role);
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,8 +61,14 @@ function App() {
 
   useLayoutEffect(() => {
     HttpService.onError$.subscribe((ajaxResponse) => {
-      setOpenDialog(true);
-      setDialogContent(ajaxResponse?.response?.message);
+      if (
+        ajaxResponse?.response?.message !==
+          "JWT String argument cannot be null or empty." ||
+        !["/", "/login", "/signup"].includes(window.location.pathname)
+      ) {
+        setOpenDialog(true);
+        setDialogContent(ajaxResponse?.response?.message);
+      }
     });
 
     HttpService.isRequesting$.pipe(takeUntil(destroy$)).subscribe((value) => {
@@ -88,7 +96,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<SignIn />} />
-          {guardRoutes(routes, role, {
+          {guardRoutes(routes, Role.ADMIN, {
             roles: [Role.MEMBER],
             redirect: "/login",
           })}

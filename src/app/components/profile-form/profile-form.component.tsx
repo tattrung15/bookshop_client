@@ -13,7 +13,7 @@ import { GlobalState } from "@app/store";
 import { useSelector } from "react-redux";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
-import { UpdateUserDto } from "@app/models/user.model";
+import { UpdateUserDto, User } from "@app/models/user.model";
 import { useStyles } from "./make-style";
 
 type PropTypes = {
@@ -36,7 +36,7 @@ function ProfileForm(props: PropTypes) {
   });
 
   useEffect(() => {
-    subscribeOnce(UserService.getUserById(userId), (data) => {
+    subscribeOnce(UserService.getUserById(userId), (data: User) => {
       setUserInfo({
         firstName: data.firstName,
         lastName: data.lastName,
@@ -53,7 +53,7 @@ function ProfileForm(props: PropTypes) {
   };
 
   const onUpdateButtonClick = () => {
-    subscribeOnce(UserService.updateUser(userId, userInfo), (data) => {
+    subscribeOnce(UserService.updateUser(userId, userInfo), (data: User) => {
       setUserInfo({
         firstName: data.firstName,
         lastName: data.lastName,

@@ -18,7 +18,7 @@ export const routes: RouteGuardShape[] = [
     component: Profile,
     config: {
       roles: [Role.ADMIN, Role.MEMBER],
-      redirect: "/login",
+      redirect: "/",
     },
   },
   {
@@ -26,7 +26,7 @@ export const routes: RouteGuardShape[] = [
     component: Dashboard,
     config: {
       roles: [Role.ADMIN],
-      redirect: "/login",
+      redirect: "/",
     },
   },
 ];

@@ -1,7 +1,7 @@
 class StorageService {
   private prefix = "app";
-  private localStorage;
-  private sessionStorage;
+  private localStorage: Storage;
+  private sessionStorage: Storage;
 
   constructor() {
     this.localStorage = window.localStorage;

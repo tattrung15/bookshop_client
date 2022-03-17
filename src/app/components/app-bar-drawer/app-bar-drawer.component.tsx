@@ -58,7 +58,9 @@ function AppBarDrawer() {
     setAnchorEl(null);
     dispatch(clearUser());
     StorageService.set("access_token", "");
+    StorageService.set("role", "");
     StorageService.setSession("access_token", "");
+    StorageService.setSession("role", "");
     navigate("/", { replace: true });
   };
 
