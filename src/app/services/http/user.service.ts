@@ -4,17 +4,13 @@ import HttpService, {
 } from "@core/services/http/http.service";
 import { HttpOptions } from "@core/services/http/http.type";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, pluck } from "rxjs/operators";
 
 class _UserService {
-  public getList(options?: PaginationOption): Observable<User[]> {
+  public getList(options?: PaginationOption): Observable<any> {
     return HttpService.get(`/users`, {
       queryParams: options,
-    } as HttpOptions).pipe(
-      map((response: any) =>
-        response.result.data.map((user: User) => new User(user))
-      )
-    );
+    } as HttpOptions).pipe(pluck("result"));
   }
 
   public getUserById(userId: number): Observable<User> {

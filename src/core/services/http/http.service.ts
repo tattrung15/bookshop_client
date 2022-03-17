@@ -15,7 +15,7 @@ import {
 import StorageService from "../storage";
 import { HttpOptions, HttpMethod } from "./http.type";
 
-type JsonType = string | number | boolean | object | Array<any> | null;
+type JsonType = string | number | boolean | object | Array<any> | null | any;
 
 export interface DataSet {
   [key: string]: JsonType;

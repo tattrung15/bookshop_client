@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { User } from "@app/models/user.model";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
@@ -24,7 +24,10 @@ import {
 import MuiAlert from "@material-ui/lab/Alert";
 import { useStyles } from "./make-style";
 import ConfirmDialog from "@app/components/confirm-dialog";
-import { PaginationOption } from "@core/services/http/http.service";
+import {
+  PaginationOption,
+  ResponseResult,
+} from "@core/services/http/http.service";
 import { DEFAULT_PAGINATION_OPTION } from "@app/shared/constants/common";
 
 function Alert(props) {
@@ -37,6 +40,7 @@ function UserManagement() {
   const { subscribeUntilDestroy } = useObservable();
 
   const [users, setUsers] = useState<User[]>([]);
+  const [total, setTotal] = useState<number>(0);
   const [openAlert, setOpenAlert] = useState(false);
   const [pagination, setPagination] = useState<PaginationOption>(() => {
     return DEFAULT_PAGINATION_OPTION;
@@ -56,12 +60,16 @@ function UserManagement() {
   };
 
   useEffect(() => {
-    subscribeUntilDestroy(UserService.getList(), (data: User[]) => {
-      setUsers(data);
-    });
+    subscribeUntilDestroy(
+      UserService.getList(pagination),
+      (response: ResponseResult) => {
+        setUsers(response.data as User[]);
+        setTotal(response?.pagination?.total || 0);
+      }
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pagination]);
 
   const openViewDialog = (item) => {
     // const itemView = {
@@ -129,13 +137,26 @@ function UserManagement() {
     //   });
   };
 
-  const handlePageChange = (event, newPage) => {
-    // setPage(newPage);
+  const handlePageChange = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    newPage: number
+  ) => {
+    const newPagination: PaginationOption = {
+      ...pagination,
+      page: newPage + 1,
+    };
+    setPagination(newPagination);
   };
 
-  const handleRowsPerPageChange = (event) => {
-    // setRowsPerPage(+event.target.value);
-    // setPage(0);
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const newPagination: PaginationOption = {
+      ...pagination,
+      page: 1,
+      perPage: +event.target.value,
+    };
+    setPagination(newPagination);
   };
 
   return (
@@ -162,44 +183,38 @@ function UserManagement() {
             </TableHead>
             <TableBody>
               {!!users.length &&
-                users
-                  .slice(
-                    (pagination.page - 1) * pagination.perPage,
-                    (pagination.page - 1) * pagination.perPage +
-                      pagination.perPage
-                  )
-                  .map((item, index) => (
-                    <TableRow key={item.id}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{item.firstName}</TableCell>
-                      <TableCell>{item.lastName}</TableCell>
-                      <TableCell>{item.username}</TableCell>
-                      <TableCell>{item.phone}</TableCell>
-                      <TableCell>{item.email}</TableCell>
-                      <TableCell>{item.address}</TableCell>
-                      <TableCell align="justify">
-                        <IconButton onClick={() => openViewDialog(item)}>
-                          <VisibilityIcon style={{ color: "black" }} />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="justify">
-                        <IconButton onClick={() => openInPopup(item)}>
-                          <CreateIcon style={{ color: "black" }} />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="justify">
-                        <IconButton onClick={() => openConfirmDialog(item)}>
-                          <DeleteIcon style={{ color: "red" }} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                users.map((item, index) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.firstName}</TableCell>
+                    <TableCell>{item.lastName}</TableCell>
+                    <TableCell>{item.username}</TableCell>
+                    <TableCell>{item.phone}</TableCell>
+                    <TableCell>{item.email}</TableCell>
+                    <TableCell>{item.address}</TableCell>
+                    <TableCell align="justify">
+                      <IconButton onClick={() => openViewDialog(item)}>
+                        <VisibilityIcon style={{ color: "black" }} />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="justify">
+                      <IconButton onClick={() => openInPopup(item)}>
+                        <CreateIcon style={{ color: "black" }} />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="justify">
+                      <IconButton onClick={() => openConfirmDialog(item)}>
+                        <DeleteIcon style={{ color: "red" }} />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           component="div"
-          count={users.length}
+          count={total}
           page={pagination.page - 1}
           rowsPerPage={pagination.perPage}
           onPageChange={handlePageChange}
