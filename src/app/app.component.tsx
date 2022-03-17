@@ -19,7 +19,7 @@ import { Role } from "./shared/types/user.type";
 import { DeliveryEpic } from "./store/delivery";
 import { GlobalState } from "./store";
 import SignIn from "./pages/sign-in";
-import NotFound from "./pages/not-found/not-found.page";
+import NotFound from "./pages/not-found";
 import AuthService from "./services/http/auth.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import StorageService from "@core/services/storage";

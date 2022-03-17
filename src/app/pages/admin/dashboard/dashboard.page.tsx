@@ -1,10 +1,18 @@
-import { Container, Grid, Paper } from "@material-ui/core";
 import { Route, Routes } from "react-router-dom";
 import AppBarDrawer from "@app/components/app-bar-drawer";
 import { useStyles } from "./make-style";
+import NotFound from "@app/pages/not-found";
+import { GlobalState } from "@app/store";
+import { useSelector } from "react-redux";
+import { guardRoutes } from "@core/helpers/components.helper";
+import { Role } from "@app/shared/types/user.type";
+import { routes } from "../admin.routing";
 
 function Dashboard() {
   const classes = useStyles();
+
+  const { role } = useSelector(selectAuth);
+
   return (
     <>
       <div className={classes.root}>
@@ -12,55 +20,18 @@ function Dashboard() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Routes>
-            <Route
-              index
-              element={
-                <Container maxWidth="lg" className={classes.container}>
-                  <Grid container spacing={3}>
-                    {/* Recent Orders */}
-                    <Grid item xs={12}>
-                      <Paper className={classes.paper}>
-                        {/* <Orders /> */}
-                        <h1>Test</h1>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Container>
-              }
-            />
-            {/* <Route path="/admin/users" exact>
-              <Container maxWidth="xl" className={classes.container}>
-                <ListUserComponent />
-              </Container>
-            </Route>
-            <Route path="/admin/categories" exact>
-              <Container maxWidth="xl" className={classes.container}>
-                <CategoriesManagement />
-              </Container>
-            </Route>
-            <Route path="/admin/products" exact>
-              <Container maxWidth="xl" className={classes.container}>
-                <ProductManagement />
-              </Container>
-            </Route>
-            <Route path="/admin/product-images" exact>
-              <Container maxWidth="xl" className={classes.container}>
-                <ProductImageManagement />
-              </Container>
-            </Route>
-            <Route path="/admin/sale-orders" exact>
-              <Container maxWidth="xl" className={classes.container}>
-                <SaleOrderManagement />
-              </Container>
-            </Route> */}
-            {/* <Route path="*">
-              <NotFound />
-            </Route> */}
+            {guardRoutes(routes, role, {
+              roles: [Role.ADMIN],
+              redirect: "/login",
+            })}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
       </div>
     </>
   );
 }
+
+const selectAuth = (state: GlobalState) => state.auth;
 
 export default Dashboard;

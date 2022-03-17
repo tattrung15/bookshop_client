@@ -144,6 +144,7 @@ function ProfileForm(props: PropTypes) {
               )}
             >
               <Button
+                className="bs-btn bs-btn-primary"
                 fullWidth
                 variant="contained"
                 color="primary"

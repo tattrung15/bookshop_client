@@ -1,6 +1,7 @@
 button.bs-btn {
   &.bs-btn-primary {
     background-color: $color-primary;
+    color: $color-white;
 
     &:hover,
     &:focus,
