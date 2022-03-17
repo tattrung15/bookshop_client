@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Avatar,
@@ -50,7 +50,7 @@ export default function SignIn() {
     );
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAccountState(
       Object.assign(accountState, { [event.target.name]: event.target.value })
     );

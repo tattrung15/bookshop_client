@@ -16,4 +16,7 @@ export const useStyles = makeStyles(() => ({
   fieldMarginTop: {
     marginTop: "1.5em",
   },
+  fieldMarginBottom: {
+    marginBottom: "1.5em",
+  },
 }));

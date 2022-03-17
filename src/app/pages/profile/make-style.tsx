@@ -13,16 +13,25 @@ export const useStyles = makeStyles(() => ({
     background: "#EBE9E9",
     padding: "0.5em",
   },
+  itemNavLink: {
+    marginTop: "1em",
+  },
   navLink: {
     textDecoration: "none",
     color: "black",
   },
   menuLeft: {
     marginTop: "1em",
-    padding: "1em 0 1em 1em",
+    padding: "1em 1em 1em 1em",
   },
   menuIcon: {
     fontSize: "larger",
     marginRight: "0.5em",
+  },
+  typographyBolder: {
+    fontWeight: "bolder",
+  },
+  customWidth: {
+    maxWidth: 250,
   },
 }));

@@ -1,6 +1,13 @@
-import { Box, Breadcrumbs, Grid, Paper, Typography } from "@material-ui/core";
+import {
+  Box,
+  Breadcrumbs,
+  Grid,
+  Paper,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import { NavigateNext as NavigateNextIcon } from "@material-ui/icons";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, Route, Routes } from "react-router-dom";
 import clsx from "clsx";
 import { useStyles } from "./make-style";
@@ -12,7 +19,7 @@ import { User } from "@app/models/user.model";
 import ProfileForm from "@app/components/profile-form";
 import AppBar from "@app/components/app-bar";
 
-const handleLinkActiving = ({ isActive }) => {
+const handleLinkActiving = ({ isActive }: { isActive: boolean }) => {
   return isActive
     ? {
         fontWeight: "bold",
@@ -37,15 +44,24 @@ function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  // const onUpdateSuccess = () => {
-  //   if (userState.userId) {
-  //     fetchUserById(userState.userId)
-  //       .then((data) => {
-  //         setCurrentUser(data);
-  //       })
-  //       .catch((err) => {});
-  //   }
-  // };
+  const onUpdateSuccess = () => {
+    if (userId) {
+      subscribeOnce(UserService.getUserById(userId), (data) => {
+        setCurrentUser(data);
+      });
+    }
+  };
+
+  const TypographyPrimary: React.FC<{
+    children: React.ReactNode;
+    className?: string;
+  }> = (props) => {
+    return (
+      <Typography noWrap color="textPrimary" {...props}>
+        {props.children}
+      </Typography>
+    );
+  };
 
   return (
     <>
@@ -60,30 +76,36 @@ function Profile() {
             <Link color="inherit" to="/">
               Trang chủ
             </Link>
-            <Typography color="textPrimary">Thông tin tài khoản</Typography>
+            <TypographyPrimary>Thông tin tài khoản</TypographyPrimary>
           </Breadcrumbs>
         </Box>
         <Box paddingTop={2} style={{ display: "flex" }}>
           <Grid item xs={3} md={3} style={{ marginRight: "1em" }}>
             <Paper>
               <Box className={classes.menuLeft}>
-                <Typography
-                  color="textPrimary"
-                  style={{ fontWeight: "bolder" }}
+                <Tooltip
+                  title={
+                    !!currentUser &&
+                    currentUser?.firstName + " " + currentUser?.lastName
+                  }
+                  placement="top-start"
+                  arrow
+                  classes={{ tooltip: classes.customWidth }}
                 >
-                  {!!currentUser &&
-                    currentUser?.firstName + " " + currentUser?.lastName}
-                </Typography>
-                <Typography
-                  color="textPrimary"
-                  style={{ fontWeight: "bolder" }}
-                >
+                  <span>
+                    <TypographyPrimary className={classes.typographyBolder}>
+                      {!!currentUser &&
+                        currentUser?.firstName + " " + currentUser?.lastName}
+                    </TypographyPrimary>
+                  </span>
+                </Tooltip>
+                <TypographyPrimary className={classes.typographyBolder}>
                   Tiền:{" "}
                   {!!currentUser && currentUser?.amount?.toLocaleString("vn")}đ
-                </Typography>
+                </TypographyPrimary>
                 <Box>
                   <ul style={{ listStyle: "none" }}>
-                    <li style={{ marginTop: "1em" }}>
+                    <li className={classes.itemNavLink}>
                       <NavLink
                         className={classes.navLink}
                         to="/profile"
@@ -94,10 +116,10 @@ function Profile() {
                         Thông tin tài khoản
                       </NavLink>
                     </li>
-                    <li style={{ marginTop: "1em" }}>
+                    <li className={classes.itemNavLink}>
                       <NavLink
                         className={classes.navLink}
-                        to="/profile/don-hang"
+                        to="/profile/order"
                         style={handleLinkActiving}
                       >
                         <i
@@ -106,7 +128,7 @@ function Profile() {
                         Đơn hàng
                       </NavLink>
                     </li>
-                    <li style={{ marginTop: "1em" }}>
+                    <li className={classes.itemNavLink}>
                       <NavLink
                         className={classes.navLink}
                         to="/profile/recharge"
@@ -125,7 +147,10 @@ function Profile() {
           </Grid>
           <Grid item xs={9} md={9}>
             <Routes>
-              <Route path="" element={<ProfileForm />} />
+              <Route
+                path=""
+                element={<ProfileForm onUpdateSuccess={onUpdateSuccess} />}
+              />
               {/* <Route path="don-hang">
                 <Box style={{ padding: "1em 1em 1em 0" }}>
                   <Box

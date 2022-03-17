@@ -1,4 +1,5 @@
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
+import clsx from "clsx";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -15,7 +16,13 @@ import useObservable from "@core/hooks/use-observable.hook";
 import { UpdateUserDto } from "@app/models/user.model";
 import { useStyles } from "./make-style";
 
-function ProfileForm() {
+type PropTypes = {
+  onUpdateSuccess: () => void;
+};
+
+function ProfileForm(props: PropTypes) {
+  const { onUpdateSuccess } = props;
+
   const classes = useStyles();
   const { subscribeOnce } = useObservable();
 
@@ -41,7 +48,7 @@ function ProfileForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  const onValueChange = (event) => {
+  const onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
   };
 
@@ -54,6 +61,7 @@ function ProfileForm() {
         email: data.email,
         phone: data.phone,
       });
+      onUpdateSuccess();
     });
   };
 
@@ -66,7 +74,7 @@ function ProfileForm() {
           </Typography>
           <Divider style={{ margin: "0.5em auto" }} />
           <Box maxWidth={"50%"} className={classes.wrapFields}>
-            <Box>
+            <Box className={classes.fieldMarginTop}>
               <TextField
                 id="email"
                 name="email"
@@ -129,7 +137,12 @@ function ProfileForm() {
             <Box className={classes.fieldMarginTop}>
               <Link to="#">Thay đổi mật khẩu</Link>
             </Box>
-            <Box className={classes.fieldMarginTop}>
+            <Box
+              className={clsx(
+                classes.fieldMarginTop,
+                classes.fieldMarginBottom
+              )}
+            >
               <Button
                 fullWidth
                 variant="contained"
