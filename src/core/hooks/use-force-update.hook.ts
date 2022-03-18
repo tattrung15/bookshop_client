@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
-export default function useForceUpdate(): () => void {
-  const [, setValue] = useState(0);
-  return () => setValue((value) => value + 1);
+export default function useForceUpdate(): [number, () => void] {
+  const [value, setValue] = useState(0);
+  const update = useCallback(() => setValue((value) => value + 1), []);
+  return [value, update];
 }

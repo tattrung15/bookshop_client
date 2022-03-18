@@ -6,8 +6,6 @@ import {
   Container,
   IconButton,
   Paper,
-  Snackbar,
-  SnackbarCloseReason,
   Table,
   TableBody,
   TableCell,
@@ -22,7 +20,6 @@ import {
   Create as CreateIcon,
   Delete as DeleteIcon,
 } from "@material-ui/icons";
-import MuiAlert from "@material-ui/lab/Alert";
 import { useStyles } from "./make-style";
 import ConfirmDialog from "@app/components/confirm-dialog";
 import {
@@ -35,41 +32,25 @@ import {
 } from "@app/shared/constants/common";
 import { GlobalState } from "@app/store";
 import { useSelector } from "react-redux";
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import useForceUpdate from "@core/hooks/use-force-update.hook";
+import { useSnackbar } from "notistack";
 
 function UserManagement() {
   const classes = useStyles();
 
-  const { subscribeUntilDestroy } = useObservable();
-
+  const { enqueueSnackbar } = useSnackbar();
   const { id: userId } = useSelector(selectAuth);
+
+  const [forceUpdate, setForceUpdate] = useForceUpdate();
+  const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
   const [recordForAction, setRecordForAction] = useState<User>(new User(null));
-  const [responseAlert, setResponseAlert] = useState({
-    typeAlert: TYPE_ALERT.SUCCESS,
-    message: "",
-  });
   const [pagination, setPagination] = useState<PaginationOption>(() => {
     return DEFAULT_PAGINATION_OPTION;
   });
-
-  const handleClose = (
-    event: React.SyntheticEvent<any, Event>,
-    reason: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenAlert(false);
-  };
 
   useEffect(() => {
     subscribeUntilDestroy(
@@ -81,7 +62,7 @@ function UserManagement() {
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination]);
+  }, [pagination, forceUpdate]);
 
   const openViewDialog = (item) => {
     // const itemView = {
@@ -130,23 +111,18 @@ function UserManagement() {
 
   const handleDeleteUser = () => {
     if (userId === recordForAction.id) {
-      setOpenAlert(true);
-      setResponseAlert({
-        typeAlert: TYPE_ALERT.ERROR,
-        message: "Cannot delete your account",
+      enqueueSnackbar("Cannot delete your account", {
+        variant: TYPE_ALERT.ERROR,
       });
       return;
     }
-    // deleteUser(recordForDelete.id)
-    //   .then((data) => {
-    //     setOpenAlert(true);
-    //     setUserRes({ typeAlert: "success", message: "Deleted user" });
-    //     setUsersFilterAdd(data);
-    //   })
-    //   .catch((err) => {
-    //     setOpenAlert(true);
-    //     setUserRes({ typeAlert: "error", message: err.message });
-    //   });
+
+    subscribeOnce(UserService.deleteUser(recordForAction.id), () => {
+      enqueueSnackbar("Delete user successfully", {
+        variant: TYPE_ALERT.SUCCESS,
+      });
+      setForceUpdate();
+    });
   };
 
   const handlePageChange = (
@@ -233,11 +209,6 @@ function UserManagement() {
           onRowsPerPageChange={handleRowsPerPageChange}
         />
       </Paper>
-      <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={responseAlert.typeAlert}>
-          {responseAlert.message}
-        </Alert>
-      </Snackbar>
       <ConfirmDialog
         title="Delete User?"
         open={confirmDialogOpen}

@@ -27,6 +27,12 @@ class _UserService {
       body: { ...editUserDto },
     }).pipe(map((response: any) => new User(response.result.data)));
   }
+
+  public deleteUser(userId: number): Observable<User> {
+    return HttpService.delete(`/users/${userId}`).pipe(
+      map((response: any) => new User(response.result.data))
+    );
+  }
 }
 
 const UserService = new _UserService();

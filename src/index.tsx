@@ -3,9 +3,9 @@ import ReactDOM from "react-dom";
 import App from "./app";
 import reportWebVitals from "./reportWebVitals";
 import "./core/styles/index.scss";
-
 import { Provider } from "react-redux";
 import store from "@app/store";
+import { SnackbarProvider } from "notistack";
 
 // import { ThemeProvider } from "@material-ui/core";
 // import { unstable_createMuiStrictModeTheme } from "@material-ui/core/styles";
@@ -16,7 +16,15 @@ ReactDOM.render(
   <React.StrictMode>
     {/* <ThemeProvider theme={theme}> */}
     <Provider store={store}>
-      <App />
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+      >
+        <App />
+      </SnackbarProvider>
     </Provider>
     {/* </ThemeProvider> */}
   </React.StrictMode>,
