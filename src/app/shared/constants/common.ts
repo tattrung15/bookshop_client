@@ -17,7 +17,8 @@ export { bannerDangKy, bannerDoremon, bannerWingsbooks };
 
 export const PAGING_DEFAULT_LIMIT = 10;
 export const STRING_LENGTH_LIMIT = 255;
-export const DEFAULT_DATE_FORMAT = "YYYY-MM-DD";
+export const DEFAULT_DATE_FORMAT = "YYYY/MM/DD";
+export const DEFAULT_DATETIME_FORMAT = "YYYY/MM/DD HH:mm:ss";
 
 export const mainMenuItems: MenuItem[] = [
   {

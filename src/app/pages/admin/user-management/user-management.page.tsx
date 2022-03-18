@@ -40,6 +40,8 @@ import { useSelector } from "react-redux";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import { useSnackbar } from "notistack";
 import PopupDialog from "@app/components/popup-dialog";
+import UserForm from "@app/components/user-form";
+import { UpdateUserType } from "./dto/update-user-dto";
 
 function UserManagement() {
   const classes = useStyles();
@@ -121,6 +123,8 @@ function UserManagement() {
     // setOpenPopup(true);
   };
 
+  const addOrEdit = (values: UpdateUserType, resetForm: () => void) => {};
+
   const openConfirmDialog = (item: User) => {
     setConfirmDialogOpen(true);
     setRecordForAction(item);
@@ -188,7 +192,7 @@ function UserManagement() {
       <Typography variant="h4" className={classes.screenName}>
         User Management
       </Typography>
-      <Box style={{ position: "relative" }}>
+      <Box style={{ display: "flex" }}>
         <Button variant="contained" color="primary" onClick={onAddUserClick}>
           Add user
         </Button>
@@ -197,15 +201,15 @@ function UserManagement() {
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
-          {/* <AddUserForm
+          <UserForm
             isEdit={isEdit}
             isView={isView}
-            recordForEdit={recordForEdit}
+            recordForAction={recordForAction}
             addOrEdit={addOrEdit}
-          /> */}
+          />
         </PopupDialog>
         <TextField
-          style={{ position: "absolute", right: 0 }}
+          style={{ marginLeft: "1em" }}
           label="Search username..."
           variant="outlined"
           size="small"
