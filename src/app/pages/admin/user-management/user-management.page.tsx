@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { User } from "@app/models/user.model";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import {
+  Box,
+  Button,
   Container,
   IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -13,12 +16,14 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Typography,
 } from "@material-ui/core";
 import {
   Visibility as VisibilityIcon,
   Create as CreateIcon,
   Delete as DeleteIcon,
+  Search as SearchIcon,
 } from "@material-ui/icons";
 import { useStyles } from "./make-style";
 import ConfirmDialog from "@app/components/confirm-dialog";
@@ -34,6 +39,7 @@ import { GlobalState } from "@app/store";
 import { useSelector } from "react-redux";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import { useSnackbar } from "notistack";
+import PopupDialog from "@app/components/popup-dialog";
 
 function UserManagement() {
   const classes = useStyles();
@@ -44,13 +50,17 @@ function UserManagement() {
   const [forceUpdate, setForceUpdate] = useForceUpdate();
   const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
+  const typingTimeoutRef = useRef<any>(null);
+
+  const [total, setTotal] = useState(0);
   const [users, setUsers] = useState<User[]>([]);
-  const [total, setTotal] = useState<number>(0);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
-  const [recordForAction, setRecordForAction] = useState<User>(new User(null));
-  const [pagination, setPagination] = useState<PaginationOption>(() => {
-    return DEFAULT_PAGINATION_OPTION;
-  });
+  const [isView, setIsView] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [searchState, setSearchState] = useState("");
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [recordForAction, setRecordForAction] = useState(new User(null));
+  const [pagination, setPagination] = useState(DEFAULT_PAGINATION_OPTION);
 
   useEffect(() => {
     subscribeUntilDestroy(
@@ -64,7 +74,14 @@ function UserManagement() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);
 
-  const openViewDialog = (item) => {
+  const onAddUserClick = () => {
+    setIsView(false);
+    setIsEdit(false);
+    setRecordForAction(new User(null));
+    setIsOpenPopup(true);
+  };
+
+  const openViewDialog = (item: User) => {
     // const itemView = {
     //   id: item.id,
     //   lastName: item.lastName,
@@ -84,7 +101,7 @@ function UserManagement() {
     // setOpenPopup(true);
   };
 
-  const openInPopup = (item) => {
+  const openInPopup = (item: User) => {
     // setIsView(false);
     // const itemEdit = {
     //   id: item.id,
@@ -147,11 +164,62 @@ function UserManagement() {
     setPagination(newPagination);
   };
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchState(value);
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      const newPaginationOption: PaginationOption = {
+        ...pagination,
+        like: {
+          username: value,
+        },
+      };
+      setPagination(newPaginationOption);
+    }, 500);
+  };
+
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
         User Management
       </Typography>
+      <Box style={{ position: "relative" }}>
+        <Button variant="contained" color="primary" onClick={onAddUserClick}>
+          Add user
+        </Button>
+        <PopupDialog
+          title="User form"
+          openPopup={isOpenPopup}
+          setOpenPopup={setIsOpenPopup}
+        >
+          {/* <AddUserForm
+            isEdit={isEdit}
+            isView={isView}
+            recordForEdit={recordForEdit}
+            addOrEdit={addOrEdit}
+          /> */}
+        </PopupDialog>
+        <TextField
+          style={{ position: "absolute", right: 0 }}
+          label="Search username..."
+          variant="outlined"
+          size="small"
+          value={searchState}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            ),
+          }}
+          onChange={handleSearchChange}
+        />
+      </Box>
       <Paper style={{ marginTop: 10 }}>
         <TableContainer style={{ maxHeight: 450 }}>
           <Table stickyHeader aria-label="sticky table">
