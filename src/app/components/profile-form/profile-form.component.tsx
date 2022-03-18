@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import {
@@ -37,13 +37,15 @@ function ProfileForm(props: PropTypes) {
 
   useEffect(() => {
     subscribeOnce(UserService.getUserById(userId), (data: User) => {
-      setUserInfo({
+      const newUserInfo: UpdateUserDto = {
+        ...userInfo,
         firstName: data.firstName,
         lastName: data.lastName,
         address: data.address,
         email: data.email,
         phone: data.phone,
-      });
+      };
+      setUserInfo(newUserInfo);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
@@ -54,13 +56,15 @@ function ProfileForm(props: PropTypes) {
 
   const onUpdateButtonClick = () => {
     subscribeOnce(UserService.updateUser(userId, userInfo), (data: User) => {
-      setUserInfo({
+      const newUserInfo: UpdateUserDto = {
+        ...userInfo,
         firstName: data.firstName,
         lastName: data.lastName,
         address: data.address,
         email: data.email,
         phone: data.phone,
-      });
+      };
+      setUserInfo(newUserInfo);
       onUpdateSuccess();
     });
   };
@@ -82,7 +86,7 @@ function ProfileForm(props: PropTypes) {
                 variant="outlined"
                 size="small"
                 fullWidth
-                value={userInfo.email}
+                value={userInfo.email ?? ""}
                 onChange={onValueChange}
               />
             </Box>
@@ -94,7 +98,7 @@ function ProfileForm(props: PropTypes) {
                 variant="outlined"
                 size="small"
                 fullWidth
-                value={userInfo.phone}
+                value={userInfo.phone ?? ""}
                 onChange={onValueChange}
               />
             </Box>
@@ -106,7 +110,7 @@ function ProfileForm(props: PropTypes) {
                 variant="outlined"
                 size="small"
                 fullWidth
-                value={userInfo.firstName}
+                value={userInfo.firstName ?? ""}
                 onChange={onValueChange}
               />
             </Box>
@@ -118,7 +122,7 @@ function ProfileForm(props: PropTypes) {
                 variant="outlined"
                 size="small"
                 fullWidth
-                value={userInfo.lastName}
+                value={userInfo.lastName ?? ""}
                 onChange={onValueChange}
               />
             </Box>
@@ -130,7 +134,7 @@ function ProfileForm(props: PropTypes) {
                 variant="outlined"
                 size="small"
                 fullWidth
-                value={userInfo.address}
+                value={userInfo.address ?? ""}
                 onChange={onValueChange}
               />
             </Box>
@@ -162,4 +166,4 @@ function ProfileForm(props: PropTypes) {
 
 const selectAuth = (state: GlobalState) => state.auth;
 
-export default memo(ProfileForm);
+export default ProfileForm;

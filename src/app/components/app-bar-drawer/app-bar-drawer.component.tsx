@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import clsx from "clsx";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CssBaseline,
   Drawer,
@@ -17,14 +20,12 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
 } from "@material-ui/icons";
-import { Link, useNavigate } from "react-router-dom";
-import clsx from "clsx";
-import { useDispatch, useSelector } from "react-redux";
 import { useStyles } from "./make-style";
-import { mainListItems } from "./app-bar-drawer.list-item";
+import { renderListItems } from "./app-bar-drawer.helper";
 import { GlobalState } from "@app/store";
 import StorageService from "@core/services/storage";
 import { clearUser } from "@app/store/auth/auth.action";
+import { mainMenuItems } from "@app/shared/constants/common";
 
 function AppBarDrawer() {
   const classes = useStyles();
@@ -142,9 +143,7 @@ function AppBarDrawer() {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
-        {/* <Divider />
-        <List>{secondaryListItems}</List> */}
+        <List>{renderListItems(mainMenuItems)}</List>
       </Drawer>
     </>
   );

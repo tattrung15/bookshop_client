@@ -7,6 +7,7 @@ import {
   IconButton,
   Paper,
   Snackbar,
+  SnackbarCloseReason,
   Table,
   TableBody,
   TableCell,
@@ -28,7 +29,12 @@ import {
   PaginationOption,
   ResponseResult,
 } from "@core/services/http/http.service";
-import { DEFAULT_PAGINATION_OPTION } from "@app/shared/constants/common";
+import {
+  DEFAULT_PAGINATION_OPTION,
+  TYPE_ALERT,
+} from "@app/shared/constants/common";
+import { GlobalState } from "@app/store";
+import { useSelector } from "react-redux";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -39,19 +45,25 @@ function UserManagement() {
 
   const { subscribeUntilDestroy } = useObservable();
 
+  const { id: userId } = useSelector(selectAuth);
+
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [openAlert, setOpenAlert] = useState(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
+  const [recordForAction, setRecordForAction] = useState<User>(new User(null));
+  const [responseAlert, setResponseAlert] = useState({
+    typeAlert: TYPE_ALERT.SUCCESS,
+    message: "",
+  });
   const [pagination, setPagination] = useState<PaginationOption>(() => {
     return DEFAULT_PAGINATION_OPTION;
   });
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [responseAlert, setResponseAlert] = useState({
-    typeAlert: "success",
-    message: "",
-  });
 
-  const handleClose = (event, reason) => {
+  const handleClose = (
+    event: React.SyntheticEvent<any, Event>,
+    reason: SnackbarCloseReason
+  ) => {
     if (reason === "clickaway") {
       return;
     }
@@ -111,20 +123,20 @@ function UserManagement() {
     // setOpenPopup(true);
   };
 
-  const openConfirmDialog = (item) => {
-    // setConfirmOpen(true);
-    // setRecordForDelete(item);
+  const openConfirmDialog = (item: User) => {
+    setConfirmDialogOpen(true);
+    setRecordForAction(item);
   };
 
   const handleDeleteUser = () => {
-    // if (userState.userId === recordForDelete.id) {
-    //   setOpenAlert(true);
-    //   setUserRes({
-    //     typeAlert: "error",
-    //     message: "Could not delete your account",
-    //   });
-    //   return;
-    // }
+    if (userId === recordForAction.id) {
+      setOpenAlert(true);
+      setResponseAlert({
+        typeAlert: TYPE_ALERT.ERROR,
+        message: "Cannot delete your account",
+      });
+      return;
+    }
     // deleteUser(recordForDelete.id)
     //   .then((data) => {
     //     setOpenAlert(true);
@@ -162,7 +174,7 @@ function UserManagement() {
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
-        Users Management
+        User Management
       </Typography>
       <Paper style={{ marginTop: 10 }}>
         <TableContainer style={{ maxHeight: 450 }}>
@@ -183,8 +195,8 @@ function UserManagement() {
             </TableHead>
             <TableBody>
               {!!users.length &&
-                users.map((item, index) => (
-                  <TableRow key={item.id}>
+                users.map((item: User, index: number) => (
+                  <TableRow hover key={item.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.firstName}</TableCell>
                     <TableCell>{item.lastName}</TableCell>
@@ -232,11 +244,14 @@ function UserManagement() {
         setOpen={setConfirmDialogOpen}
         onConfirm={handleDeleteUser}
       >
-        Are you sure you want to delete user:{" "}
-        {/* {recordForDelete && recordForDelete.username}? */}
+        {recordForAction &&
+          "Do you want to delete user: " + recordForAction.username}
+        ?
       </ConfirmDialog>
     </Container>
   );
 }
+
+const selectAuth = (state: GlobalState) => state.auth;
 
 export default UserManagement;

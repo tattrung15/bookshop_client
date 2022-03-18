@@ -24,13 +24,7 @@ class _UserService {
     editUserDto: UpdateUserDto
   ): Observable<User> {
     return HttpService.patch(`/users/${userId}`, {
-      body: {
-        firstName: editUserDto.firstName,
-        lastName: editUserDto.lastName,
-        address: editUserDto.address,
-        email: editUserDto.email,
-        phone: editUserDto.phone,
-      },
+      body: { ...editUserDto },
     }).pipe(map((response: any) => new User(response.result.data)));
   }
 }

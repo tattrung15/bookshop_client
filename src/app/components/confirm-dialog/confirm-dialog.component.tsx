@@ -25,7 +25,7 @@ const ConfirmDialog: React.FC<PropTypes> = (props) => {
     >
       <DialogTitle id="confirm-dialog">{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
-      <DialogActions>
+      <DialogActions style={{ margin: "1em" }}>
         <Button
           variant="contained"
           onClick={() => setOpen(false)}
