@@ -41,7 +41,7 @@ import useForceUpdate from "@core/hooks/use-force-update.hook";
 import { useSnackbar } from "notistack";
 import PopupDialog from "@app/components/popup-dialog";
 import UserForm from "@app/components/user-form";
-import { UpdateUserType } from "./dto/update-user-dto";
+import { CreateUserDto, UpdateUserDto } from "./dto/user-dto";
 
 function UserManagement() {
   const classes = useStyles();
@@ -61,7 +61,7 @@ function UserManagement() {
   const [searchState, setSearchState] = useState("");
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [recordForAction, setRecordForAction] = useState(new User(null));
+  const [recordForAction, setRecordForAction] = useState<any>(new User(null));
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION_OPTION);
 
   useEffect(() => {
@@ -84,23 +84,23 @@ function UserManagement() {
   };
 
   const openViewDialog = (item: User) => {
-    // const itemView = {
-    //   id: item.id,
-    //   lastName: item.lastName,
-    //   firstName: item.firstName,
-    //   email: item.email,
-    //   address: item.address,
-    //   username: item.username,
-    //   amount: item.amount,
-    //   mobile: item.phone,
-    //   roleId: item.role,
-    //   createAt: item.createAt,
-    //   updateAt: item.updateAt,
-    // };
-    // setIsView(true);
-    // setIsEdit(false);
-    // setRecordForEdit(itemView);
-    // setOpenPopup(true);
+    const itemView: UpdateUserDto = {
+      id: item.id,
+      lastName: item.lastName,
+      firstName: item.firstName,
+      email: item.email,
+      address: item.address,
+      username: item.username,
+      amount: item.amount,
+      phone: item.phone,
+      roleId: item.role,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    };
+    setIsView(true);
+    setIsEdit(false);
+    setRecordForAction(itemView);
+    setIsOpenPopup(true);
   };
 
   const openInPopup = (item: User) => {
@@ -123,7 +123,31 @@ function UserManagement() {
     // setOpenPopup(true);
   };
 
-  const addOrEdit = (values: UpdateUserType, resetForm: () => void) => {};
+  const addOrEdit = (values: UpdateUserDto, resetForm: () => void) => {
+    if (isEdit) {
+    } else {
+      const newUser: CreateUserDto = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        username: values.username,
+        password: values.password ?? "",
+        address: values.address,
+        phone: values.phone,
+        amount: values.amount,
+        role: values.roleId,
+        email: values.email,
+      };
+
+      subscribeOnce(UserService.createUser(newUser), () => {
+        enqueueSnackbar("Create user successfully", {
+          variant: TYPE_ALERT.SUCCESS,
+        });
+        resetForm();
+        setIsOpenPopup(false);
+        setForceUpdate();
+      });
+    }
+  };
 
   const openConfirmDialog = (item: User) => {
     setConfirmDialogOpen(true);

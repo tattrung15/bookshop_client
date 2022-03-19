@@ -1,15 +1,18 @@
+import { useEffect, useState } from "react";
+import clsx from "clsx";
+import dayjs from "dayjs";
 import { Grid, IconButton, InputAdornment } from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Form, useForm } from "@app/hooks/use-form.hook";
 import { User } from "@app/models/user.model";
 import {
   initialUserValues,
-  UpdateUserType,
-} from "@app/pages/admin/user-management/dto/update-user-dto";
+  UpdateUserDto,
+} from "@app/pages/admin/user-management/dto/user-dto";
 import { Role } from "@app/shared/types/user.type";
 import { titleCase } from "@core/helpers/string.helper";
 import Controls from "../controls";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
-import { useEffect, useState } from "react";
+import { DEFAULT_DATETIME_FORMAT } from "@app/shared/constants/common";
 
 const roleItems = () => {
   return Object.keys(Role)
@@ -24,7 +27,7 @@ type TypeProps = {
   isEdit: boolean;
   isView: boolean;
   recordForAction: User;
-  addOrEdit: (values: UpdateUserType, resetForm: () => void) => void;
+  addOrEdit: (values: UpdateUserDto, resetForm: () => void) => void;
 };
 
 function UserForm(props: TypeProps) {
@@ -127,14 +130,14 @@ function UserForm(props: TypeProps) {
   };
 
   useEffect(() => {
-    if (isEdit && recordForAction.id) {
+    if ((isView || isEdit) && recordForAction.id) {
       setValues({
         ...recordForAction,
       });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recordForAction, isEdit]);
+  }, [recordForAction, isView, isEdit]);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -198,48 +201,57 @@ function UserForm(props: TypeProps) {
             value={values.username ?? ""}
             onChange={handleInputChange}
             error={errors.username}
-            disabled
-          />
-          <Controls.Input
-            name="password"
-            label="Password"
-            value={values.password ?? ""}
-            onChange={handleInputChange}
-            error={errors.password}
-            type={isShowPassword ? "text" : "password"}
+            disabled={isView || isEdit}
             InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setIsShowPassword(!isShowPassword)}
-                  >
-                    {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+              classes: {
+                disabled: "bs-text-black",
+              },
             }}
           />
-          <Controls.Input
-            name="cfPassword"
-            label="Confirm password"
-            value={values.cfPassword ?? ""}
-            onChange={handleInputChange}
-            error={errors.cfPassword}
-            type={isShowPassword ? "text" : "password"}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setIsShowPassword(!isShowPassword)}
-                  >
-                    {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          {!isView && (
+            <>
+              <Controls.Input
+                name="password"
+                label="Password"
+                value={values.password ?? ""}
+                onChange={handleInputChange}
+                error={errors.password}
+                type={isShowPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setIsShowPassword(!isShowPassword)}
+                      >
+                        {isShowPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Controls.Input
+                name="cfPassword"
+                label="Confirm password"
+                value={values.cfPassword ?? ""}
+                onChange={handleInputChange}
+                error={errors.cfPassword}
+                type={isShowPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setIsShowPassword(!isShowPassword)}
+                      >
+                        {isShowPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </>
+          )}
           <Controls.Select
             name="roleId"
             label="Role"
@@ -247,6 +259,8 @@ function UserForm(props: TypeProps) {
             onChange={handleInputChange}
             options={roleItems()}
             error={errors.roleId}
+            disabled={isView}
+            className={clsx({ "bs-text-black": isView })}
           />
           <Controls.Input
             name="amount"
@@ -255,8 +269,34 @@ function UserForm(props: TypeProps) {
             onChange={handleInputChange}
             error={errors.amount}
             type="number"
-            InputProps={{ inputProps: { min: 0 } }}
+            disabled={isView}
+            InputProps={{
+              inputProps: { min: 0 },
+              classes: {
+                disabled: "bs-text-black",
+              },
+            }}
           />
+          {isView && (
+            <>
+              <Controls.Input
+                name="createdAt"
+                label="Created at"
+                value={dayjs(values.createdAt).format(DEFAULT_DATETIME_FORMAT)}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <Controls.Input
+                name="updatedAt"
+                label="Updated at"
+                value={dayjs(values.updatedAt).format(DEFAULT_DATETIME_FORMAT)}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </>
+          )}
         </Grid>
         {!isView && (
           <Grid item xs={12} style={{ marginTop: "1em" }}>

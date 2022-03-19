@@ -1,4 +1,5 @@
 import { UpdateUserDto, User } from "@app/models/user.model";
+import { CreateUserDto } from "@app/pages/admin/user-management/dto/user-dto";
 import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
@@ -8,9 +9,15 @@ import { map, pluck } from "rxjs/operators";
 
 class _UserService {
   public getList(options?: PaginationOption): Observable<any> {
-    return HttpService.get(`/users`, {
+    return HttpService.get("/users", {
       queryParams: options,
     } as HttpOptions).pipe(pluck("result"));
+  }
+
+  public createUser(user: CreateUserDto): Observable<User> {
+    return HttpService.post("/users", {
+      body: { ...user },
+    }).pipe(map((response: any) => new User(response.result.data)));
   }
 
   public getUserById(userId: number): Observable<User> {
