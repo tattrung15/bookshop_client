@@ -1,4 +1,4 @@
-import { User } from "@app/models/user.model";
+import { UpdateUserDto } from "@app/models/user.model";
 import { Role } from "@app/shared/types/user.type";
 
 export class CreateUserDto {
@@ -12,12 +12,6 @@ export class CreateUserDto {
   amount?: number;
   role?: string;
 }
-
-export type UpdateUserDto = Omit<User, "role" | "fill"> & {
-  password?: string;
-  cfPassword?: string;
-  roleId: string;
-};
 
 export const initialUserValues: UpdateUserDto = {
   id: 0,

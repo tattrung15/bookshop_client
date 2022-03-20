@@ -28,7 +28,7 @@ class _UserService {
 
   public updateUser(
     userId: number,
-    editUserDto: UpdateUserDto
+    editUserDto: Partial<UpdateUserDto>
   ): Observable<User> {
     return HttpService.patch(`/users/${userId}`, {
       body: { ...editUserDto },

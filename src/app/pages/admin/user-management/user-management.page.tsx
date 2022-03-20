@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { User } from "@app/models/user.model";
+import { UpdateUserDto, User } from "@app/models/user.model";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import {
@@ -41,7 +41,7 @@ import useForceUpdate from "@core/hooks/use-force-update.hook";
 import { useSnackbar } from "notistack";
 import PopupDialog from "@app/components/popup-dialog";
 import UserForm from "@app/components/user-form";
-import { CreateUserDto, UpdateUserDto } from "./dto/user-dto";
+import { CreateUserDto } from "./dto/user-dto";
 
 function UserManagement() {
   const classes = useStyles();
@@ -104,27 +104,50 @@ function UserManagement() {
   };
 
   const openInPopup = (item: User) => {
-    // setIsView(false);
-    // const itemEdit = {
-    //   id: item.id,
-    //   lastName: item.lastName,
-    //   firstName: item.firstName,
-    //   email: item.email,
-    //   address: item.address,
-    //   username: item.username,
-    //   amount: item.amount,
-    //   mobile: item.phone,
-    //   roleId: item.role,
-    //   password: "",
-    //   cfPassword: "",
-    // };
-    // setIsEdit(true);
-    // setRecordForEdit(itemEdit);
-    // setOpenPopup(true);
+    const itemEdit: UpdateUserDto = {
+      id: item.id,
+      lastName: item.lastName,
+      firstName: item.firstName,
+      email: item.email,
+      address: item.address,
+      username: item.username,
+      amount: item.amount,
+      phone: item.phone,
+      roleId: item.role,
+      password: "",
+      cfPassword: "",
+    };
+    setIsView(false);
+    setIsEdit(true);
+    setRecordForAction(itemEdit);
+    setIsOpenPopup(true);
   };
 
   const addOrEdit = (values: UpdateUserDto, resetForm: () => void) => {
     if (isEdit) {
+      const editUserId = values.id;
+      const editUserBody: Partial<UpdateUserDto> = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        password: values.password ? values.password : null,
+        address: values.address,
+        phone: values.phone,
+        amount: values.amount,
+        role: values.roleId,
+        email: values.email,
+      };
+      Object.keys(editUserBody).forEach(
+        (key) => editUserBody[key] === null && delete editUserBody[key]
+      );
+      subscribeOnce(UserService.updateUser(editUserId, editUserBody), () => {
+        enqueueSnackbar("Update user successfully", {
+          variant: TYPE_ALERT.SUCCESS,
+        });
+        resetForm();
+        setIsOpenPopup(false);
+        setRecordForAction(new User(null));
+        setForceUpdate();
+      });
     } else {
       const newUser: CreateUserDto = {
         firstName: values.firstName,

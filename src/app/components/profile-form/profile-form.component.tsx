@@ -27,7 +27,7 @@ function ProfileForm(props: PropTypes) {
   const { subscribeOnce } = useObservable();
 
   const { id: userId } = useSelector(selectAuth);
-  const [userInfo, setUserInfo] = useState<UpdateUserDto>({
+  const [userInfo, setUserInfo] = useState<Partial<UpdateUserDto>>({
     firstName: "",
     lastName: "",
     address: "",
@@ -37,7 +37,7 @@ function ProfileForm(props: PropTypes) {
 
   useEffect(() => {
     subscribeOnce(UserService.getUserById(userId), (data: User) => {
-      const newUserInfo: UpdateUserDto = {
+      const newUserInfo: Partial<UpdateUserDto> = {
         ...userInfo,
         firstName: data.firstName,
         lastName: data.lastName,
@@ -56,7 +56,7 @@ function ProfileForm(props: PropTypes) {
 
   const onUpdateButtonClick = () => {
     subscribeOnce(UserService.updateUser(userId, userInfo), (data: User) => {
-      const newUserInfo: UpdateUserDto = {
+      const newUserInfo: Partial<UpdateUserDto> = {
         ...userInfo,
         firstName: data.firstName,
         lastName: data.lastName,

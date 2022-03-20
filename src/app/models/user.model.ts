@@ -20,9 +20,18 @@ export class User extends Model {
 }
 
 export interface UpdateUserDto {
+  id: number;
   firstName: string;
   lastName: string;
+  username: string;
   address: string;
   email: string;
   phone: string;
+  amount: number;
+  password?: string | null;
+  cfPassword?: string;
+  roleId?: string;
+  role?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

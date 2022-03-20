@@ -61,11 +61,7 @@ function App() {
 
   useLayoutEffect(() => {
     HttpService.onError$.subscribe((ajaxResponse) => {
-      if (
-        ajaxResponse?.response?.message !==
-          "JWT String argument cannot be null or empty." ||
-        !["/", "/login", "/signup"].includes(window.location.pathname)
-      ) {
+      if (!["/"].includes(window.location.pathname)) {
         setOpenDialog(true);
         setDialogContent(ajaxResponse?.response?.message);
       }

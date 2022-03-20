@@ -4,11 +4,8 @@ import dayjs from "dayjs";
 import { Grid, IconButton, InputAdornment } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Form, useForm } from "@app/hooks/use-form.hook";
-import { User } from "@app/models/user.model";
-import {
-  initialUserValues,
-  UpdateUserDto,
-} from "@app/pages/admin/user-management/dto/user-dto";
+import { UpdateUserDto, User } from "@app/models/user.model";
+import { initialUserValues } from "@app/pages/admin/user-management/dto/user-dto";
 import { Role } from "@app/shared/types/user.type";
 import { titleCase } from "@core/helpers/string.helper";
 import Controls from "../controls";
