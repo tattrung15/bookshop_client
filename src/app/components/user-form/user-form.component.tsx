@@ -5,11 +5,26 @@ import { Grid, IconButton, InputAdornment } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Form, useForm } from "@app/hooks/use-form.hook";
 import { UpdateUserDto, User } from "@app/models/user.model";
-import { initialUserValues } from "@app/pages/admin/user-management/dto/user-dto";
 import { Role } from "@app/shared/types/user.type";
 import { titleCase } from "@core/helpers/string.helper";
 import Controls from "../controls";
 import { DEFAULT_DATETIME_FORMAT } from "@app/shared/constants/common";
+
+const initialUserValues: UpdateUserDto = {
+  id: 0,
+  lastName: "",
+  firstName: "",
+  email: "",
+  phone: "",
+  address: "",
+  username: "",
+  password: "",
+  cfPassword: "",
+  amount: 0,
+  roleId: Role.MEMBER,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
 
 const roleItems = () => {
   return Object.keys(Role)

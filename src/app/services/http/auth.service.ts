@@ -1,5 +1,5 @@
-import HttpService from "@core/services/http/http.service";
 import { Observable } from "rxjs";
+import HttpService from "@core/services/http/http.service";
 
 class _AuthService {
   public login(username: string, password: string): Observable<any> {

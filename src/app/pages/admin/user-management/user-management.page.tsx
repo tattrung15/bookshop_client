@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { UpdateUserDto, User } from "@app/models/user.model";
+import { CreateUserDto, UpdateUserDto, User } from "@app/models/user.model";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import {
@@ -41,7 +41,6 @@ import useForceUpdate from "@core/hooks/use-force-update.hook";
 import { useSnackbar } from "notistack";
 import PopupDialog from "@app/components/popup-dialog";
 import UserForm from "@app/components/user-form";
-import { CreateUserDto } from "./dto/user-dto";
 
 function UserManagement() {
   const classes = useStyles();

@@ -19,6 +19,18 @@ export class User extends Model {
   }
 }
 
+export interface CreateUserDto {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  address: string;
+  phone: string;
+  email: string;
+  amount?: number;
+  role?: string;
+}
+
 export interface UpdateUserDto {
   id: number;
   firstName: string;

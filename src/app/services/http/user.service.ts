@@ -1,11 +1,10 @@
-import { UpdateUserDto, User } from "@app/models/user.model";
-import { CreateUserDto } from "@app/pages/admin/user-management/dto/user-dto";
+import { Observable } from "rxjs";
+import { map, pluck } from "rxjs/operators";
+import { CreateUserDto, UpdateUserDto, User } from "@app/models/user.model";
 import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
 import { HttpOptions } from "@core/services/http/http.type";
-import { Observable } from "rxjs";
-import { map, pluck } from "rxjs/operators";
 
 class _UserService {
   public getList(options?: PaginationOption): Observable<any> {
