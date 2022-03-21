@@ -22,7 +22,7 @@ class _CategoryService {
   }
 
   public createCategory(category: CreateCategoryDto): Observable<Category> {
-    return HttpService.post("/users", {
+    return HttpService.post("/categories", {
       body: { ...category },
     }).pipe(map((response: any) => new Category(response.result.data)));
   }
