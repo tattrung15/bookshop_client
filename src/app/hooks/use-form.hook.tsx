@@ -11,9 +11,10 @@ export function useForm(
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const newValue = e.target.type === "checkbox" ? e.target.checked : value;
     setValues({
       ...values,
-      [name]: value,
+      [name]: newValue,
     });
     if (validateOnChange) {
       validate({ [name]: value });

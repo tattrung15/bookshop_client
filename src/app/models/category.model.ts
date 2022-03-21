@@ -19,9 +19,9 @@ export class Category extends Model {
 
 export interface CreateCategoryDto {
   name: string;
-  description: string;
-  isAuthor: boolean;
-  parentCategoryId?: number;
+  description: string | null;
+  isAuthor: boolean | null;
+  parentCategoryId?: number | null;
 }
 
 export interface UpdateCategoryDto {
@@ -29,7 +29,8 @@ export interface UpdateCategoryDto {
   name: string;
   description: string;
   isAuthor: boolean;
-  parentCategoryId?: number;
+  parentCategoryId: number | null;
+  parentCategory: Category | null;
   createdAt?: Date;
   updatedAt?: Date;
 }

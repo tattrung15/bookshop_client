@@ -26,7 +26,11 @@ import { useStyles } from "./make-style";
 import { useSnackbar } from "notistack";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import useObservable from "@core/hooks/use-observable.hook";
-import { Category, UpdateCategoryDto } from "@app/models/category.model";
+import {
+  Category,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from "@app/models/category.model";
 import {
   DEFAULT_PAGINATION_OPTION,
   FETCH_TYPE,
@@ -38,6 +42,7 @@ import CategoryService, {
 import { ResponseResult } from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import ConfirmDialog from "@app/components/confirm-dialog";
+import CategoryForm from "@app/components/category-form";
 
 function CategoryManagement() {
   const classes = useStyles();
@@ -80,97 +85,83 @@ function CategoryManagement() {
   }, [pagination, forceUpdate]);
 
   const onAddCategoryClick = () => {
-    // setIsView(false);
-    // setIsEdit(false);
-    // setRecordForAction(new User(null));
-    // setIsOpenPopup(true);
+    setIsView(false);
+    setIsEdit(false);
+    setRecordForAction(new Category(null));
+    setIsOpenPopup(true);
   };
 
   const openViewDialog = (item: Category) => {
-    // const itemView: UpdateUserDto = {
-    //   id: item.id,
-    //   lastName: item.lastName,
-    //   firstName: item.firstName,
-    //   email: item.email,
-    //   address: item.address,
-    //   username: item.username,
-    //   amount: item.amount,
-    //   phone: item.phone,
-    //   roleId: item.role,
-    //   createdAt: item.createdAt,
-    //   updatedAt: item.updatedAt,
-    // };
-    // setIsView(true);
-    // setIsEdit(false);
-    // setRecordForAction(itemView);
-    // setIsOpenPopup(true);
+    const itemView: UpdateCategoryDto = {
+      id: item.id,
+      name: item.name,
+      description: item.description ? item.description : "",
+      isAuthor: item.isAuthor,
+      parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
+      parentCategory: item.parentCategory ? item.parentCategory : null,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    };
+    setIsView(true);
+    setIsEdit(false);
+    setRecordForAction(itemView);
+    setIsOpenPopup(true);
   };
 
   const openInPopup = (item: Category) => {
-    // const itemEdit: UpdateUserDto = {
-    //   id: item.id,
-    //   lastName: item.lastName,
-    //   firstName: item.firstName,
-    //   email: item.email,
-    //   address: item.address,
-    //   username: item.username,
-    //   amount: item.amount,
-    //   phone: item.phone,
-    //   roleId: item.role,
-    //   password: "",
-    //   cfPassword: "",
-    // };
-    // setIsView(false);
-    // setIsEdit(true);
-    // setRecordForAction(itemEdit);
-    // setIsOpenPopup(true);
+    const itemEdit: UpdateCategoryDto = {
+      id: item.id,
+      name: item.name,
+      description: item.description ? item.description : "",
+      isAuthor: item.isAuthor,
+      parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
+      parentCategory: item.parentCategory ? item.parentCategory : null,
+    };
+    setIsView(false);
+    setIsEdit(true);
+    setRecordForAction(itemEdit);
+    setIsOpenPopup(true);
   };
 
   const addOrEdit = (values: UpdateCategoryDto, resetForm: () => void) => {
     if (isEdit) {
-      // const editUserId = values.id;
-      // const editUserBody: Partial<UpdateUserDto> = {
-      //   firstName: values.firstName,
-      //   lastName: values.lastName,
-      //   password: values.password ? values.password : null,
-      //   address: values.address,
-      //   phone: values.phone,
-      //   amount: values.amount,
-      //   role: values.roleId,
-      //   email: values.email,
-      // };
-      // Object.keys(editUserBody).forEach(
-      //   (key) => editUserBody[key] === null && delete editUserBody[key]
-      // );
-      // subscribeOnce(UserService.updateUser(editUserId, editUserBody), () => {
-      //   enqueueSnackbar("Update user successfully", {
-      //     variant: TYPE_ALERT.SUCCESS,
-      //   });
-      //   resetForm();
-      //   setIsOpenPopup(false);
-      //   setRecordForAction(new User(null));
-      //   setForceUpdate();
-      // });
+      const editCategoryId = values.id;
+      const editCategoryBody: Partial<UpdateCategoryDto> = {
+        name: values.name,
+        description: values.description ? values.description : "",
+        isAuthor: values.isAuthor ? values.isAuthor : false,
+        parentCategoryId: values.parentCategoryId,
+      };
+      subscribeOnce(
+        CategoryService.updateCategory(editCategoryId, editCategoryBody),
+        () => {
+          enqueueSnackbar("Update category successfully", {
+            variant: TYPE_ALERT.SUCCESS,
+          });
+          resetForm();
+          setIsOpenPopup(false);
+          setRecordForAction(new Category(null));
+          setForceUpdate();
+        }
+      );
     } else {
-      // const newUser: CreateUserDto = {
-      //   firstName: values.firstName,
-      //   lastName: values.lastName,
-      //   username: values.username,
-      //   password: values.password ?? "",
-      //   address: values.address,
-      //   phone: values.phone,
-      //   amount: values.amount,
-      //   role: values.roleId,
-      //   email: values.email,
-      // };
-      // subscribeOnce(UserService.createUser(newUser), () => {
-      //   enqueueSnackbar("Create user successfully", {
-      //     variant: TYPE_ALERT.SUCCESS,
-      //   });
-      //   resetForm();
-      //   setIsOpenPopup(false);
-      //   setForceUpdate();
-      // });
+      const newCategory: CreateCategoryDto = {
+        name: values.name,
+        description: values.description ? values.description : null,
+        isAuthor: values.isAuthor ? values.isAuthor : null,
+        parentCategoryId: values.parentCategoryId,
+      };
+      Object.keys(newCategory).forEach(
+        (key) => newCategory[key] === null && delete newCategory[key]
+      );
+      subscribeOnce(CategoryService.createCategory(newCategory), () => {
+        enqueueSnackbar("Create category successfully", {
+          variant: TYPE_ALERT.SUCCESS,
+        });
+        resetForm();
+        setIsOpenPopup(false);
+        setForceUpdate();
+      });
     }
   };
 
@@ -247,12 +238,13 @@ function CategoryManagement() {
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
-          {/* <CategoryForm
+          <CategoryForm
             isEdit={isEdit}
             isView={isView}
             recordForAction={recordForAction}
             addOrEdit={addOrEdit}
-          /> */}
+            categories={categories}
+          />
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}
