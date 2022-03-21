@@ -68,6 +68,7 @@ export const mainMenuItems: MenuItem[] = [
 enum FETCH_TYPE {
   ADMIN = 1,
   USER = 2,
+  ALL = 3,
 }
 
 enum BANNER_TYPE {

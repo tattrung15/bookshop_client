@@ -56,6 +56,7 @@ function CategoryManagement() {
 
   const [total, setTotal] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [searchState, setSearchState] = useState("");
@@ -81,6 +82,17 @@ function CategoryManagement() {
       }
     );
 
+    const options: CategoryPaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+      fetchType: FETCH_TYPE.ALL,
+    };
+    subscribeUntilDestroy(
+      CategoryService.getList(options),
+      (response: ResponseResult) => {
+        setAllCategories(response.data as Category[]);
+      }
+    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);
 
@@ -98,7 +110,6 @@ function CategoryManagement() {
       description: item.description ? item.description : "",
       isAuthor: item.isAuthor,
       parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
-      parentCategory: item.parentCategory ? item.parentCategory : null,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     };
@@ -115,7 +126,6 @@ function CategoryManagement() {
       description: item.description ? item.description : "",
       isAuthor: item.isAuthor,
       parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
-      parentCategory: item.parentCategory ? item.parentCategory : null,
     };
     setIsView(false);
     setIsEdit(true);
@@ -243,7 +253,7 @@ function CategoryManagement() {
             isView={isView}
             recordForAction={recordForAction}
             addOrEdit={addOrEdit}
-            categories={categories}
+            categories={allCategories}
           />
         </PopupDialog>
         <TextField

@@ -14,7 +14,6 @@ const initialCategoryValues: UpdateCategoryDto = {
   description: "",
   isAuthor: false,
   parentCategoryId: null,
-  parentCategory: null,
   createdAt: new Date(),
   updatedAt: new Date(),
 };

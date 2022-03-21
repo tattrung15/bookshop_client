@@ -30,7 +30,6 @@ export interface UpdateCategoryDto {
   description: string;
   isAuthor: boolean;
   parentCategoryId: number | null;
-  parentCategory: Category | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
