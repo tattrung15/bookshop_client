@@ -280,13 +280,12 @@ function ProductImageManagement() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {!!products.length &&
+              {!!products.length &&
                 products.map((item: Product, index: number) => (
                   <TableRow key={item.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.title}</TableCell>
-                    <TableCell>{item.price.toLocaleString("vn")} đ</TableCell>
-                    <TableCell>{item.author}</TableCell>
+                    <TableCell>{item.productImages.length}</TableCell>
                     <TableCell align="center">
                       <IconButton onClick={() => openViewDialog(item)}>
                         <VisibilityIcon style={{ color: "black" }} />
@@ -303,7 +302,7 @@ function ProductImageManagement() {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                ))} */}
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
