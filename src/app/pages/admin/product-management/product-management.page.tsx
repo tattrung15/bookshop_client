@@ -340,7 +340,7 @@ function ProductManagement() {
         />
       </Paper>
       <ConfirmDialog
-        title="Delete User?"
+        title="Delete product?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
         onConfirm={handleDeleteProduct}
