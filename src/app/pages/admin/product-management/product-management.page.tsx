@@ -22,8 +22,8 @@ import {
   Delete as DeleteIcon,
   Search as SearchIcon,
 } from "@material-ui/icons";
-import { useStyles } from "./make-style";
 import { useSnackbar } from "notistack";
+import { useStyles } from "./make-style";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import useObservable from "@core/hooks/use-observable.hook";
 import {
@@ -34,8 +34,19 @@ import {
 import { ResponseResult } from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import ConfirmDialog from "@app/components/confirm-dialog";
-import { Product } from "@app/models/product.model";
-import ProductService from "@app/services/http/product.service";
+import {
+  CreateProductDto,
+  Product,
+  UpdateProductDto,
+} from "@app/models/product.model";
+import ProductService, {
+  ProductPaginationOption,
+} from "@app/services/http/product.service";
+import ProductForm from "@app/components/product-form";
+import { Category } from "@app/models/category.model";
+import CategoryService, {
+  CategoryPaginationOption,
+} from "@app/services/http/category.service";
 
 function ProductManagement() {
   const classes = useStyles();
@@ -49,6 +60,7 @@ function ProductManagement() {
 
   const [total, setTotal] = useState(0);
   const [products, setProducts] = useState<Product[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [searchState, setSearchState] = useState("");
@@ -57,7 +69,12 @@ function ProductManagement() {
   const [recordForAction, setRecordForAction] = useState<any>(
     new Product(null)
   );
-  const [pagination, setPagination] = useState(DEFAULT_PAGINATION_OPTION);
+  const [pagination, setPagination] = useState(() => {
+    const options: ProductPaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+    };
+    return options;
+  });
 
   useEffect(() => {
     subscribeUntilDestroy(
@@ -65,6 +82,17 @@ function ProductManagement() {
       (response: ResponseResult) => {
         setProducts(response.data as Product[]);
         setTotal(response?.pagination?.total || 0);
+      }
+    );
+
+    const options: CategoryPaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+      fetchType: FETCH_TYPE.ALL,
+    };
+    subscribeUntilDestroy(
+      CategoryService.getList(options),
+      (response: ResponseResult) => {
+        setAllCategories(response.data as Category[]);
       }
     );
 
@@ -79,75 +107,88 @@ function ProductManagement() {
   };
 
   const openViewDialog = (item: Product) => {
-    // const itemView: UpdateCategoryDto = {
-    //   id: item.id,
-    //   name: item.name,
-    //   description: item.description ? item.description : "",
-    //   isAuthor: item.isAuthor,
-    //   parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
-    //   createdAt: item.createdAt,
-    //   updatedAt: item.updatedAt,
-    // };
-    // setIsView(true);
-    // setIsEdit(false);
-    // setRecordForAction(itemView);
-    // setIsOpenPopup(true);
+    const itemView: UpdateProductDto = {
+      id: item.id,
+      title: item.title,
+      longDescription: item.longDescription,
+      categoryId: item.category.id,
+      price: item.price,
+      author: item.author,
+      currentNumber: item.currentNumber,
+      numberOfPage: item.numberOfPage,
+      quantityPurchased: item.quantityPurchased,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    };
+    setIsView(true);
+    setIsEdit(false);
+    setRecordForAction(itemView);
+    setIsOpenPopup(true);
   };
 
   const openInPopup = (item: Product) => {
-    // const itemEdit: UpdateCategoryDto = {
-    //   id: item.id,
-    //   name: item.name,
-    //   description: item.description ? item.description : "",
-    //   isAuthor: item.isAuthor,
-    //   parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
-    // };
-    // setIsView(false);
-    // setIsEdit(true);
-    // setRecordForAction(itemEdit);
-    // setIsOpenPopup(true);
+    const itemEdit: UpdateProductDto = {
+      id: item.id,
+      title: item.title,
+      longDescription: item.longDescription,
+      categoryId: item.category.id,
+      price: item.price,
+      author: item.author,
+      currentNumber: item.currentNumber,
+      numberOfPage: item.numberOfPage,
+      quantityPurchased: item.quantityPurchased,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    };
+    setIsView(false);
+    setIsEdit(true);
+    setRecordForAction(itemEdit);
+    setIsOpenPopup(true);
   };
 
-  const addOrEdit = (values: any, resetForm: () => void) => {
-    // if (isEdit) {
-    //   const editCategoryId = values.id;
-    //   const editCategoryBody: Partial<UpdateCategoryDto> = {
-    //     name: values.name,
-    //     description: values.description ? values.description : "",
-    //     isAuthor: values.isAuthor ? values.isAuthor : false,
-    //     parentCategoryId: values.parentCategoryId,
-    //   };
-    //   subscribeOnce(
-    //     CategoryService.updateCategory(editCategoryId, editCategoryBody),
-    //     () => {
-    //       enqueueSnackbar("Update category successfully", {
-    //         variant: TYPE_ALERT.SUCCESS,
-    //       });
-    //       resetForm();
-    //       setIsOpenPopup(false);
-    //       setRecordForAction(new Category(null));
-    //       setForceUpdate();
-    //     }
-    //   );
-    // } else {
-    //   const newCategory: CreateCategoryDto = {
-    //     name: values.name,
-    //     description: values.description ? values.description : null,
-    //     isAuthor: values.isAuthor ? values.isAuthor : null,
-    //     parentCategoryId: values.parentCategoryId,
-    //   };
-    //   Object.keys(newCategory).forEach(
-    //     (key) => newCategory[key] === null && delete newCategory[key]
-    //   );
-    //   subscribeOnce(CategoryService.createCategory(newCategory), () => {
-    //     enqueueSnackbar("Create category successfully", {
-    //       variant: TYPE_ALERT.SUCCESS,
-    //     });
-    //     resetForm();
-    //     setIsOpenPopup(false);
-    //     setForceUpdate();
-    //   });
-    // }
+  const addOrEdit = (values: UpdateProductDto, resetForm: () => void) => {
+    if (isEdit) {
+      const editProductId = values.id;
+      const editProductBody: Partial<UpdateProductDto> = {
+        title: values.title,
+        longDescription: values.longDescription,
+        categoryId: values.categoryId,
+        price: values.price,
+        author: values.author,
+        currentNumber: values.currentNumber,
+        numberOfPage: values.numberOfPage,
+      };
+      subscribeOnce(
+        ProductService.updateProduct(editProductId, editProductBody),
+        () => {
+          enqueueSnackbar("Update product successfully", {
+            variant: TYPE_ALERT.SUCCESS,
+          });
+          resetForm();
+          setIsOpenPopup(false);
+          setRecordForAction(new Product(null));
+          setForceUpdate();
+        }
+      );
+    } else {
+      const newProduct: CreateProductDto = {
+        title: values.title,
+        longDescription: values.longDescription,
+        price: values.price,
+        author: values.author,
+        currentNumber: values.currentNumber,
+        numberOfPage: values.numberOfPage,
+        categoryId: values.categoryId,
+      };
+      subscribeOnce(ProductService.createProduct(newProduct), () => {
+        enqueueSnackbar("Create product successfully", {
+          variant: TYPE_ALERT.SUCCESS,
+        });
+        resetForm();
+        setIsOpenPopup(false);
+        setForceUpdate();
+      });
+    }
   };
 
   const openConfirmDialog = (item: Product) => {
@@ -168,39 +209,39 @@ function ProductManagement() {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
     newPage: number
   ) => {
-    // const newPagination: CategoryPaginationOption = {
-    //   ...pagination,
-    //   page: newPage + 1,
-    // };
-    // setPagination(newPagination);
+    const newPagination: ProductPaginationOption = {
+      ...pagination,
+      page: newPage + 1,
+    };
+    setPagination(newPagination);
   };
 
   const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    // const newPagination: CategoryPaginationOption = {
-    //   ...pagination,
-    //   page: 1,
-    //   perPage: +event.target.value,
-    // };
-    // setPagination(newPagination);
+    const newPagination: ProductPaginationOption = {
+      ...pagination,
+      page: 1,
+      perPage: +event.target.value,
+    };
+    setPagination(newPagination);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // const value = event.target.value;
-    // setSearchState(value);
-    // if (typingTimeoutRef.current) {
-    //   clearTimeout(typingTimeoutRef.current);
-    // }
-    // typingTimeoutRef.current = setTimeout(() => {
-    //   const newPaginationOption: CategoryPaginationOption = {
-    //     ...pagination,
-    //     like: {
-    //       name: value,
-    //     },
-    //   };
-    //   setPagination(newPaginationOption);
-    // }, 500);
+    const value = event.target.value;
+    setSearchState(value);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    typingTimeoutRef.current = setTimeout(() => {
+      const newPaginationOption: ProductPaginationOption = {
+        ...pagination,
+        like: {
+          title: value,
+        },
+      };
+      setPagination(newPaginationOption);
+    }, 500);
   };
 
   return (
@@ -217,13 +258,13 @@ function ProductManagement() {
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
-          {/* <ProductForm
+          <ProductForm
             isEdit={isEdit}
             isView={isView}
             recordForAction={recordForAction}
             addOrEdit={addOrEdit}
             categories={allCategories}
-          /> */}
+          />
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}

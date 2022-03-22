@@ -4,13 +4,36 @@ import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
 import { HttpOptions } from "@core/services/http/http.type";
-import { Product } from "@app/models/product.model";
+import {
+  CreateProductDto,
+  Product,
+  UpdateProductDto,
+} from "@app/models/product.model";
+
+export type ProductPaginationOption = PaginationOption & {
+  productType?: string;
+};
 
 class _ProductService {
-  public getList(options?: PaginationOption): Observable<any> {
+  public getList(options?: ProductPaginationOption): Observable<any> {
     return HttpService.get("/products", {
       queryParams: options,
     } as HttpOptions).pipe(pluck("result"));
+  }
+
+  public createProduct(product: CreateProductDto): Observable<Product> {
+    return HttpService.post("/products", {
+      body: { ...product },
+    }).pipe(map((response: any) => new Product(response.result.data)));
+  }
+
+  public updateProduct(
+    productId: number,
+    editProductDto: Partial<UpdateProductDto>
+  ): Observable<Product> {
+    return HttpService.patch(`/products/${productId}`, {
+      body: { ...editProductDto },
+    }).pipe(map((response: any) => new Product(response.result.data)));
   }
 
   public deleteProduct(productId: number): Observable<Product> {
