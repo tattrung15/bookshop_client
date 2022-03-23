@@ -28,6 +28,7 @@ import useForceUpdate from "@core/hooks/use-force-update.hook";
 import useObservable from "@core/hooks/use-observable.hook";
 import {
   DEFAULT_PAGINATION_OPTION,
+  PRODUCT_TYPE,
   TYPE_ALERT,
 } from "@app/shared/constants/common";
 import { ResponseResult } from "@core/services/http/http.service";
@@ -38,6 +39,7 @@ import ProductService, {
   ProductPaginationOption,
 } from "@app/services/http/product.service";
 import ProductImageForm from "@app/components/product-image-form";
+import { UpdateProductImageDto } from "@app/models/product-image.model";
 
 function ProductImageManagement() {
   const classes = useStyles();
@@ -51,6 +53,7 @@ function ProductImageManagement() {
 
   const [total, setTotal] = useState(0);
   const [products, setProducts] = useState<Product[]>([]);
+  const [productNoImages, setProductNoImages] = useState<Product[]>([]);
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [searchState, setSearchState] = useState("");
@@ -72,6 +75,16 @@ function ProductImageManagement() {
       (response: ResponseResult) => {
         setProducts(response.data as Product[]);
         setTotal(response?.pagination?.total || 0);
+      }
+    );
+
+    const options: ProductPaginationOption = DEFAULT_PAGINATION_OPTION;
+    options.productType = PRODUCT_TYPE.NO_IMAGE;
+
+    subscribeUntilDestroy(
+      ProductService.getList(options),
+      (response: ResponseResult) => {
+        setProductNoImages(response.data as Product[]);
       }
     );
 
@@ -125,7 +138,10 @@ function ProductImageManagement() {
     // setIsOpenPopup(true);
   };
 
-  const addOrEdit = (values: any, resetForm: () => void) => {
+  const addOrEdit = (
+    values: Partial<UpdateProductImageDto>,
+    resetForm: () => void
+  ) => {
     // if (isEdit) {
     //   const editProductId = values.id;
     //   const editProductBody: Partial<UpdateProductDto> = {
@@ -238,11 +254,11 @@ function ProductImageManagement() {
           setOpenPopup={setIsOpenPopup}
         >
           <ProductImageForm
-          // isEdit={isEdit}
-          // isView={isView}
-          // recordForAction={recordForAction}
-          // addOrEdit={addOrEdit}
-          // categories={allCategories}
+            isEdit={isEdit}
+            isView={isView}
+            recordForAction={recordForAction}
+            addOrEdit={addOrEdit}
+            productNoImages={productNoImages}
           />
         </PopupDialog>
         <TextField

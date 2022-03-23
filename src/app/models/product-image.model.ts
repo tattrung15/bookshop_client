@@ -12,3 +12,14 @@ export class ProductImage extends Model {
     this.fill(data);
   }
 }
+
+export interface CreateProductImageDto {
+  productId: number;
+  files: File[];
+}
+
+export interface UpdateProductImageDto {
+  productId: number;
+  title: string;
+  productImages: File[];
+}
