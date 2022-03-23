@@ -37,6 +37,7 @@ import { Product } from "@app/models/product.model";
 import ProductService, {
   ProductPaginationOption,
 } from "@app/services/http/product.service";
+import ProductImageForm from "@app/components/product-image-form";
 
 function ProductImageManagement() {
   const classes = useStyles();
@@ -236,13 +237,13 @@ function ProductImageManagement() {
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
-          {/* <ProductForm
-            isEdit={isEdit}
-            isView={isView}
-            recordForAction={recordForAction}
-            addOrEdit={addOrEdit}
-            categories={allCategories}
-          /> */}
+          <ProductImageForm
+          // isEdit={isEdit}
+          // isView={isView}
+          // recordForAction={recordForAction}
+          // addOrEdit={addOrEdit}
+          // categories={allCategories}
+          />
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}

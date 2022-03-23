@@ -9,9 +9,10 @@ import {
   Product,
   UpdateProductDto,
 } from "@app/models/product.model";
+import { PRODUCT_TYPE } from "@app/shared/constants/common";
 
 export type ProductPaginationOption = PaginationOption & {
-  productType?: string;
+  productType?: PRODUCT_TYPE;
 };
 
 class _ProductService {
