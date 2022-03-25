@@ -129,6 +129,10 @@ export class _HttpService {
       if (data[key] !== null) {
         if (data[key] instanceof File) {
           formData.append(key, data[key], data[key].name);
+        } else if (Array.isArray(data[key])) {
+          for (const item of data[key]) {
+            formData.append(key, item);
+          }
         } else {
           formData.append(key, data[key]);
         }

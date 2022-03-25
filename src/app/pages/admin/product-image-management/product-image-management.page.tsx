@@ -39,7 +39,11 @@ import ProductService, {
   ProductPaginationOption,
 } from "@app/services/http/product.service";
 import ProductImageForm from "@app/components/product-image-form";
-import { UpdateProductImageDto } from "@app/models/product-image.model";
+import {
+  CreateProductImageDto,
+  UpdateProductImageDto,
+} from "@app/models/product-image.model";
+import ProductImageService from "@app/services/http/product-image.service";
 
 function ProductImageManagement() {
   const classes = useStyles();
@@ -79,7 +83,7 @@ function ProductImageManagement() {
     );
 
     const options: ProductPaginationOption = DEFAULT_PAGINATION_OPTION;
-    options.productType = PRODUCT_TYPE.NO_IMAGE;
+    options.productType = PRODUCT_TYPE.NO_IMAGE_ALL;
 
     subscribeUntilDestroy(
       ProductService.getList(options),
@@ -99,91 +103,73 @@ function ProductImageManagement() {
   };
 
   const openViewDialog = (item: Product) => {
-    // const itemView: UpdateProductDto = {
-    //   id: item.id,
-    //   title: item.title,
-    //   longDescription: item.longDescription,
-    //   categoryId: item.category.id,
-    //   price: item.price,
-    //   author: item.author,
-    //   currentNumber: item.currentNumber,
-    //   numberOfPage: item.numberOfPage,
-    //   quantityPurchased: item.quantityPurchased,
-    //   createdAt: item.createdAt,
-    //   updatedAt: item.updatedAt,
-    // };
-    // setIsView(true);
-    // setIsEdit(false);
-    // setRecordForAction(itemView);
-    // setIsOpenPopup(true);
+    const itemView: Partial<UpdateProductImageDto> = {
+      productId: item.id,
+      productImages: item.productImages,
+      title: item.title,
+    };
+    setIsView(true);
+    setIsEdit(false);
+    setRecordForAction(itemView);
+    setIsOpenPopup(true);
   };
 
   const openInPopup = (item: Product) => {
-    // const itemEdit: UpdateProductDto = {
-    //   id: item.id,
-    //   title: item.title,
-    //   longDescription: item.longDescription,
-    //   categoryId: item.category.id,
-    //   price: item.price,
-    //   author: item.author,
-    //   currentNumber: item.currentNumber,
-    //   numberOfPage: item.numberOfPage,
-    //   quantityPurchased: item.quantityPurchased,
-    //   createdAt: item.createdAt,
-    //   updatedAt: item.updatedAt,
-    // };
-    // setIsView(false);
-    // setIsEdit(true);
-    // setRecordForAction(itemEdit);
-    // setIsOpenPopup(true);
+    const itemEdit: Partial<UpdateProductImageDto> = {
+      productId: item.id,
+      productImages: item.productImages,
+      title: item.title,
+    };
+    setIsView(false);
+    setIsEdit(true);
+    setRecordForAction(itemEdit);
+    setIsOpenPopup(true);
   };
 
   const addOrEdit = (
     values: Partial<UpdateProductImageDto>,
     resetForm: () => void
   ) => {
-    // if (isEdit) {
-    //   const editProductId = values.id;
-    //   const editProductBody: Partial<UpdateProductDto> = {
-    //     title: values.title,
-    //     longDescription: values.longDescription,
-    //     categoryId: values.categoryId,
-    //     price: values.price,
-    //     author: values.author,
-    //     currentNumber: values.currentNumber,
-    //     numberOfPage: values.numberOfPage,
-    //   };
-    //   subscribeOnce(
-    //     ProductService.updateProduct(editProductId, editProductBody),
-    //     () => {
-    //       enqueueSnackbar("Update product successfully", {
-    //         variant: TYPE_ALERT.SUCCESS,
-    //       });
-    //       resetForm();
-    //       setIsOpenPopup(false);
-    //       setRecordForAction(new Product(null));
-    //       setForceUpdate();
-    //     }
-    //   );
-    // } else {
-    //   const newProduct: CreateProductDto = {
-    //     title: values.title,
-    //     longDescription: values.longDescription,
-    //     price: values.price,
-    //     author: values.author,
-    //     currentNumber: values.currentNumber,
-    //     numberOfPage: values.numberOfPage,
-    //     categoryId: values.categoryId,
-    //   };
-    //   subscribeOnce(ProductService.createProduct(newProduct), () => {
-    //     enqueueSnackbar("Create product successfully", {
-    //       variant: TYPE_ALERT.SUCCESS,
-    //     });
-    //     resetForm();
-    //     setIsOpenPopup(false);
-    //     setForceUpdate();
-    //   });
-    // }
+    if (!values.files?.length) {
+      enqueueSnackbar("Please upload some files", {
+        variant: TYPE_ALERT.WARNING,
+      });
+      return;
+    }
+    if (isEdit) {
+      const editProductImage: CreateProductImageDto = {
+        productId: values.productId ?? 0,
+        files: values.files ?? [],
+      };
+      subscribeOnce(
+        ProductImageService.createProductImages(editProductImage),
+        () => {
+          enqueueSnackbar("Update product images successfully", {
+            variant: TYPE_ALERT.SUCCESS,
+          });
+          resetForm();
+          setIsOpenPopup(false);
+          setRecordForAction(new Product(null));
+          setForceUpdate();
+        }
+      );
+    } else {
+      const newProductImage: CreateProductImageDto = {
+        productId: values.productId ?? 0,
+        files: values.files ?? [],
+      };
+      subscribeOnce(
+        ProductImageService.createProductImages(newProductImage),
+        () => {
+          enqueueSnackbar("Create product images successfully", {
+            variant: TYPE_ALERT.SUCCESS,
+          });
+          resetForm();
+          setIsOpenPopup(false);
+          setForceUpdate();
+        }
+      );
+    }
   };
 
   const openConfirmDialog = (item: Product) => {
@@ -191,13 +177,16 @@ function ProductImageManagement() {
     setRecordForAction(item);
   };
 
-  const handleDeleteProduct = () => {
-    subscribeOnce(ProductService.deleteProduct(recordForAction.id), () => {
-      enqueueSnackbar("Delete product successfully", {
-        variant: TYPE_ALERT.SUCCESS,
-      });
-      setForceUpdate();
-    });
+  const handleDeleteProductImages = () => {
+    subscribeOnce(
+      ProductImageService.deleteProductImages(recordForAction.id),
+      () => {
+        enqueueSnackbar("Delete product images successfully", {
+          variant: TYPE_ALERT.SUCCESS,
+        });
+        setForceUpdate();
+      }
+    );
   };
 
   const handlePageChange = (
@@ -336,10 +325,10 @@ function ProductImageManagement() {
         title="Delete product images?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
-        onConfirm={handleDeleteProduct}
+        onConfirm={handleDeleteProductImages}
       >
         {recordForAction &&
-          "Do you want to delete product images: " + recordForAction.name}
+          "Do you want to delete product images: " + recordForAction.title}
         ?
       </ConfirmDialog>
     </Container>

@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, pluck } from "rxjs/operators";
 import HttpService from "@core/services/http/http.service";
 import {
   CreateProductImageDto,
@@ -8,17 +8,26 @@ import {
 
 class _ProductImageService {
   public createProductImages(
-    productImage: CreateProductImageDto
+    productImageDto: CreateProductImageDto
   ): Observable<ProductImage> {
-    const formData = new FormData();
-    formData.append("productId", productImage.productId.toString());
-    for (const file of productImage.files) {
-      formData.append("files", file);
-    }
+    const formData = {
+      productId: productImageDto.productId,
+      files: productImageDto.files,
+    };
+
     return HttpService.post("/product-images", {
       body: formData,
       multipart: true,
     }).pipe(map((response: any) => new ProductImage(response.result.data)));
+  }
+
+  public deleteProductImages(productId: number): Observable<ProductImage[]> {
+    return HttpService.delete(`/products/${productId}/product-images`).pipe(
+      pluck("result"),
+      map((result: any) =>
+        result.data.map((item: ProductImage) => new ProductImage(item))
+      )
+    );
   }
 }
 

@@ -20,6 +20,7 @@ export interface CreateProductImageDto {
 
 export interface UpdateProductImageDto {
   productId: number;
-  title: string;
-  productImages: File[];
+  productImages: ProductImage[];
+  title?: string;
+  files?: File[];
 }

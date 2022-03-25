@@ -5,10 +5,12 @@ type PropTypes = {
   acceptFileTypes: string;
   messageSuggest: string;
   onDropAccepted: <T extends File>(files: T[], event: DropEvent) => void;
+  onFileDialogOpen: () => void;
 };
 
 function DropZone(props: PropTypes) {
-  const { acceptFileTypes, messageSuggest, onDropAccepted } = props;
+  const { acceptFileTypes, messageSuggest, onDropAccepted, onFileDialogOpen } =
+    props;
 
   const classes = useStyles();
 
@@ -16,6 +18,7 @@ function DropZone(props: PropTypes) {
     useDropzone({
       accept: acceptFileTypes,
       onDropAccepted,
+      onFileDialogOpen,
     });
 
   const acceptedFileItems = acceptedFiles.map((file: File) => (

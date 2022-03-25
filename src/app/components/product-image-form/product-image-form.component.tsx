@@ -6,20 +6,21 @@ import { Product } from "@app/models/product.model";
 import { Form, useForm } from "@app/hooks/use-form.hook";
 import DropZone from "../drop-zone/drop-zone.component";
 import Controls from "../controls";
+import ImageGridList from "../image-grid-list";
 
 const acceptFileTypes = "image/jpeg, image/png";
 const messageSuggest = "Only *.jpeg and *.png images will be accepted";
 
-const initialProductImageValues: UpdateProductImageDto = {
+const initialProductImageValues: Partial<UpdateProductImageDto> = {
   productId: 0,
-  title: "",
   productImages: [],
+  files: [],
 };
 
 type TypeProps = {
   isEdit: boolean;
   isView: boolean;
-  recordForAction: Product;
+  recordForAction: Partial<UpdateProductImageDto>;
   addOrEdit: (
     values: Partial<UpdateProductImageDto>,
     resetForm: () => void
@@ -35,6 +36,10 @@ function ProductImageForm(props: TypeProps) {
   }
 
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  const onFileDialogOpen = () => {
+    setImageFiles([]);
+  };
 
   const onDropAccepted = (files: File[], event: DropEvent) => {
     setImageFiles(files);
@@ -57,7 +62,7 @@ function ProductImageForm(props: TypeProps) {
     e.preventDefault();
     const newProductImage: Partial<UpdateProductImageDto> = {
       productId: values.productId,
-      productImages: imageFiles,
+      files: imageFiles,
     };
     if (isEdit) {
       addOrEdit(newProductImage, resetForm);
@@ -67,7 +72,7 @@ function ProductImageForm(props: TypeProps) {
   };
 
   useEffect(() => {
-    if ((isView || isEdit) && recordForAction.id) {
+    if ((isView || isEdit) && recordForAction.productId) {
       setValues({
         ...recordForAction,
       });
@@ -80,7 +85,7 @@ function ProductImageForm(props: TypeProps) {
     <Form onSubmit={handleSubmit}>
       <Grid container>
         <Grid item xs={6}>
-          {!!productNoImages.length && (
+          {!isView && !isEdit && !!productNoImages.length && (
             <Controls.Select
               name="productId"
               label="Title"
@@ -88,6 +93,18 @@ function ProductImageForm(props: TypeProps) {
               options={productNoImages}
               onChange={handleInputChange}
               error={errors.productId}
+              MenuProps={{ style: { maxHeight: 400 } }}
+            />
+          )}
+          {(isView || isEdit) && !!productNoImages.length && (
+            <Controls.Input
+              name="title"
+              label="Title"
+              value={values.title ?? ""}
+              onChange={handleInputChange}
+              InputProps={{
+                readOnly: true,
+              }}
             />
           )}
         </Grid>
@@ -97,8 +114,10 @@ function ProductImageForm(props: TypeProps) {
               acceptFileTypes={acceptFileTypes}
               messageSuggest={messageSuggest}
               onDropAccepted={onDropAccepted}
+              onFileDialogOpen={onFileDialogOpen}
             />
           )}
+          {isView && <ImageGridList images={values.productImages} />}
         </Grid>
         {!isView && (
           <Grid item xs={12}>

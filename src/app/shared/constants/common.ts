@@ -79,6 +79,7 @@ enum BANNER_TYPE {
 enum PRODUCT_TYPE {
   HAVE_IMAGE = "have-image",
   NO_IMAGE = "no-image",
+  NO_IMAGE_ALL = "no-image-all",
 }
 
 enum TYPE_ALERT {
