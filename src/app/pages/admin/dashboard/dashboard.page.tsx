@@ -2,16 +2,15 @@ import { Route, Routes } from "react-router-dom";
 import AppBarDrawer from "@app/components/app-bar-drawer";
 import { useStyles } from "./make-style";
 import NotFound from "@app/pages/not-found";
-import { GlobalState } from "@app/store";
-import { useSelector } from "react-redux";
 import { guardRoutes } from "@core/helpers/components.helper";
 import { Role } from "@app/shared/types/user.type";
 import { routes } from "../admin.routing";
+import RoleService from "@app/services/role.service";
 
 function Dashboard() {
   const classes = useStyles();
 
-  const { role } = useSelector(selectAuth);
+  const role = RoleService.getRole();
 
   return (
     <>
@@ -20,7 +19,7 @@ function Dashboard() {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Routes>
-            {guardRoutes(routes, Role.ADMIN, {
+            {guardRoutes(routes, role, {
               roles: [Role.ADMIN],
               redirect: "/",
             })}
@@ -31,7 +30,5 @@ function Dashboard() {
     </>
   );
 }
-
-const selectAuth = (state: GlobalState) => state.auth;
 
 export default Dashboard;

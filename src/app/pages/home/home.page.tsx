@@ -4,17 +4,46 @@ import { bannerDoremon, bannerWingsbooks } from "@app/shared/constants/common";
 import Footer from "@app/components/footer";
 import { useStyles } from "./make-style";
 import AppBar from "@app/components/app-bar";
+import ProductService, {
+  ProductPaginationOption,
+} from "@app/services/http/product.service";
+import useObservable from "@core/hooks/use-observable.hook";
+import { Product } from "@app/models/product.model";
+import { ResponseResult } from "@core/services/http/http.service";
+import ProductItem from "@app/components/product-item";
 
 export default function HomePage() {
   const classes = useStyles();
+
+  const { subscribeUntilDestroy } = useObservable();
 
   const [productImage, setProductImage] = useState([]);
   const [productImageDoraemon, setProductImageDoraemon] = useState([]);
   const [productImageWingsBooks, setProductImageWingsBooks] = useState([]);
   const [productImageComicManga, setProductImageComicManga] = useState([]);
-  const [productImageBestSelling, setProductImageBestSelling] = useState([]);
+  const [productImageBestSelling, setProductImageBestSelling] = useState<
+    Product[]
+  >([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    let options: ProductPaginationOption = {
+      page: 1,
+      perPage: 4,
+      sort: "-quantityPurchased",
+    };
+
+    subscribeUntilDestroy(
+      ProductService.getList(options),
+      (response: ResponseResult) => {
+        const data: Product[] = response.data.map(
+          (item: any) => new Product(item)
+        );
+        setProductImageBestSelling(data);
+      }
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -66,10 +95,10 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {productImageBestSelling &&
-                productImageBestSelling.map((val, index) => (
+              {!!productImageBestSelling.length &&
+                productImageBestSelling.map((item, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    {/* <CardItem item={val} /> */}
+                    <ProductItem item={item} />
                   </Grid>
                 ))}
             </Grid>

@@ -26,6 +26,7 @@ import StorageService from "@core/services/storage";
 import { storeUser } from "./store/auth/auth.action";
 import { User } from "./models/user.model";
 import { useStyles } from "./app.make-style";
+import RoleService from "./services/role.service";
 
 function App() {
   const classes = useStyles();
@@ -39,7 +40,8 @@ function App() {
   const [dialogContent, setDialogContent] = useState<string>("");
 
   const { isDeliveryLoading, isDeliveryError } = useSelector(selectDelivery);
-  const { role } = useSelector(selectAuth);
+
+  const role = RoleService.getRole();
 
   const handleClose = () => {
     setOpenDialog(false);
@@ -92,7 +94,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<SignIn />} />
-          {guardRoutes(routes, Role.ADMIN, {
+          {guardRoutes(routes, role, {
             roles: [Role.MEMBER],
             redirect: "/login",
           })}
@@ -126,6 +128,5 @@ function App() {
 }
 
 const selectDelivery = (state: GlobalState) => state.delivery;
-const selectAuth = (state: GlobalState) => state.auth;
 
 export default App;

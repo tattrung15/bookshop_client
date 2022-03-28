@@ -1,4 +1,4 @@
-class StorageService {
+export class StorageService {
   private prefix = "app";
   private localStorage: Storage;
   private sessionStorage: Storage;
