@@ -27,10 +27,10 @@ class _UserService {
 
   public updateUser(
     userId: number,
-    editUserDto: Partial<UpdateUserDto>
+    updateUserDto: Partial<UpdateUserDto>
   ): Observable<User> {
     return HttpService.patch(`/users/${userId}`, {
-      body: { ...editUserDto },
+      body: { ...updateUserDto },
     }).pipe(map((response: any) => new User(response.result.data)));
   }
 

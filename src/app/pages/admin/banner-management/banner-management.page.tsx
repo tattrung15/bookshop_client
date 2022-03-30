@@ -6,6 +6,7 @@ import {
   IconButton,
   InputAdornment,
   Paper,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -27,24 +28,24 @@ import { useSnackbar } from "notistack";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import useObservable from "@core/hooks/use-observable.hook";
 import {
-  Category,
-  CreateCategoryDto,
-  UpdateCategoryDto,
-} from "@app/models/category.model";
-import {
+  BANNER_TYPE,
   DEFAULT_PAGINATION_OPTION,
-  FETCH_TYPE,
   TYPE_ALERT,
 } from "@app/shared/constants/common";
-import CategoryService, {
-  CategoryPaginationOption,
-} from "@app/services/http/category.service";
 import { ResponseResult } from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import ConfirmDialog from "@app/components/confirm-dialog";
-import CategoryForm from "@app/components/category-form";
+import {
+  Banner,
+  CreateBannerDto,
+  UpdateBannerDto,
+} from "@app/models/banner.model";
+import BannerService, {
+  BannerPaginationOption,
+} from "@app/services/http/banner.service";
+import BannerForm from "@app/components/banner-form";
 
-function CategoryManagement() {
+function BannerManagement() {
   const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -55,63 +56,46 @@ function CategoryManagement() {
   const typingTimeoutRef = useRef<any>(null);
 
   const [total, setTotal] = useState(0);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [allCategories, setAllCategories] = useState<Category[]>([]);
+  const [banners, setBanners] = useState<Banner[]>([]);
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [searchState, setSearchState] = useState("");
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [recordForAction, setRecordForAction] = useState<any>(
-    new Category(null)
-  );
-  const [pagination, setPagination] = useState(() => {
-    const options: CategoryPaginationOption = {
-      ...DEFAULT_PAGINATION_OPTION,
-      fetchType: FETCH_TYPE.ADMIN,
-    };
-    return options;
-  });
+  const [recordForAction, setRecordForAction] = useState<any>(new Banner(null));
+  const [pagination, setPagination] = useState(DEFAULT_PAGINATION_OPTION);
 
   useEffect(() => {
     subscribeUntilDestroy(
-      CategoryService.getList(pagination),
+      BannerService.getList(pagination),
       (response: ResponseResult) => {
-        setCategories(response.data as Category[]);
-        setTotal(response?.pagination?.total || 0);
-      }
-    );
-
-    const options: CategoryPaginationOption = {
-      ...DEFAULT_PAGINATION_OPTION,
-      fetchType: FETCH_TYPE.ALL,
-    };
-    subscribeUntilDestroy(
-      CategoryService.getList(options),
-      (response: ResponseResult) => {
-        setAllCategories(response.data as Category[]);
+        setBanners(response.data as Banner[]);
+        setTotal(response?.pagination?.total ?? 0);
       }
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);
 
-  const onAddCategoryClick = () => {
+  const onAddBannerClick = () => {
     setIsView(false);
     setIsEdit(false);
-    setRecordForAction(new Category(null));
+    setRecordForAction(new Banner(null));
     setIsOpenPopup(true);
   };
 
-  const openViewDialog = (item: Category) => {
-    const itemView: UpdateCategoryDto = {
-      id: item.id,
-      name: item.name,
-      description: item.description ? item.description : "",
-      isAuthor: item.isAuthor,
-      parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
+  const onIsActiveSwitchChange = (item: Banner) => {
+    subscribeOnce(BannerService.changeStatus(item.id, !item.isActive), () => {
+      setForceUpdate();
+    });
+  };
+
+  const openViewDialog = (item: Banner) => {
+    const itemView: UpdateBannerDto = {
+      bannerId: item.id,
+      title: item.title,
+      imageUrl: item.imageUrl ?? "",
+      type: item.type,
     };
     setIsView(true);
     setIsEdit(false);
@@ -119,13 +103,12 @@ function CategoryManagement() {
     setIsOpenPopup(true);
   };
 
-  const openInPopup = (item: Category) => {
-    const itemEdit: UpdateCategoryDto = {
-      id: item.id,
-      name: item.name,
-      description: item.description ? item.description : "",
-      isAuthor: item.isAuthor,
-      parentCategoryId: item.parentCategory ? item.parentCategory.id : null,
+  const openInPopup = (item: Banner) => {
+    const itemEdit: UpdateBannerDto = {
+      bannerId: item.id,
+      title: item.title,
+      imageUrl: item.imageUrl ?? "",
+      type: item.type,
     };
     setIsView(false);
     setIsEdit(true);
@@ -133,39 +116,37 @@ function CategoryManagement() {
     setIsOpenPopup(true);
   };
 
-  const addOrEdit = (values: UpdateCategoryDto, resetForm: () => void) => {
+  const addOrEdit = (
+    values: Partial<UpdateBannerDto>,
+    resetForm: () => void
+  ) => {
     if (isEdit) {
-      const editCategoryId = values.id;
-      const editCategoryBody: Partial<UpdateCategoryDto> = {
-        name: values.name,
-        description: values.description ? values.description : "",
-        isAuthor: values.isAuthor ? values.isAuthor : false,
-        parentCategoryId: values.parentCategoryId,
-      };
-      subscribeOnce(
-        CategoryService.updateCategory(editCategoryId, editCategoryBody),
-        () => {
-          enqueueSnackbar("Update category successfully", {
-            variant: TYPE_ALERT.SUCCESS,
-          });
-          resetForm();
-          setIsOpenPopup(false);
-          setRecordForAction(new Category(null));
-          setForceUpdate();
-        }
-      );
+      // const editCategoryId = values.id;
+      // const editCategoryBody: Partial<UpdateCategoryDto> = {
+      //   name: values.name,
+      //   description: values.description ? values.description : "",
+      //   isAuthor: values.isAuthor ? values.isAuthor : false,
+      //   parentCategoryId: values.parentCategoryId,
+      // };
+      // subscribeOnce(
+      //   CategoryService.updateCategory(editCategoryId, editCategoryBody),
+      //   () => {
+      //     enqueueSnackbar("Update category successfully", {
+      //       variant: TYPE_ALERT.SUCCESS,
+      //     });
+      //     resetForm();
+      //     setIsOpenPopup(false);
+      //     setRecordForAction(new Category(null));
+      //     setForceUpdate();
+      //   }
+      // );
     } else {
-      const newCategory: CreateCategoryDto = {
-        name: values.name,
-        description: values.description ? values.description : null,
-        isAuthor: values.isAuthor ? values.isAuthor : null,
-        parentCategoryId: values.parentCategoryId,
+      const newBanner: CreateBannerDto = {
+        title: values.title ?? "",
+        type: values.type ?? BANNER_TYPE.CATEGORY,
       };
-      Object.keys(newCategory).forEach(
-        (key) => newCategory[key] === null && delete newCategory[key]
-      );
-      subscribeOnce(CategoryService.createCategory(newCategory), () => {
-        enqueueSnackbar("Create category successfully", {
+      subscribeOnce(BannerService.createBanner(newBanner), () => {
+        enqueueSnackbar("Create banner successfully", {
           variant: TYPE_ALERT.SUCCESS,
         });
         resetForm();
@@ -175,14 +156,14 @@ function CategoryManagement() {
     }
   };
 
-  const openConfirmDialog = (item: Category) => {
+  const openConfirmDialog = (item: Banner) => {
     setConfirmDialogOpen(true);
     setRecordForAction(item);
   };
 
-  const handleDeleteCategory = () => {
-    subscribeOnce(CategoryService.deleteCategory(recordForAction.id), () => {
-      enqueueSnackbar("Delete user successfully", {
+  const handleDeleteBanner = () => {
+    subscribeOnce(BannerService.deleteBanner(recordForAction.id), () => {
+      enqueueSnackbar("Delete banner successfully", {
         variant: TYPE_ALERT.SUCCESS,
       });
       setForceUpdate();
@@ -193,7 +174,7 @@ function CategoryManagement() {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
     newPage: number
   ) => {
-    const newPagination: CategoryPaginationOption = {
+    const newPagination: BannerPaginationOption = {
       ...pagination,
       page: newPage + 1,
     };
@@ -203,7 +184,7 @@ function CategoryManagement() {
   const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    const newPagination: CategoryPaginationOption = {
+    const newPagination: BannerPaginationOption = {
       ...pagination,
       page: 1,
       perPage: +event.target.value,
@@ -220,7 +201,7 @@ function CategoryManagement() {
     }
 
     typingTimeoutRef.current = setTimeout(() => {
-      const newPaginationOption: CategoryPaginationOption = {
+      const newPaginationOption: BannerPaginationOption = {
         ...pagination,
         like: {
           name: value,
@@ -233,27 +214,22 @@ function CategoryManagement() {
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
-        Category Management
+        Banner Management
       </Typography>
       <Box style={{ display: "flex" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onAddCategoryClick}
-        >
-          Add category
+        <Button variant="contained" color="primary" onClick={onAddBannerClick}>
+          Add banner
         </Button>
         <PopupDialog
-          title="Category form"
+          title="Banner form"
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
-          <CategoryForm
+          <BannerForm
             isEdit={isEdit}
             isView={isView}
             recordForAction={recordForAction}
             addOrEdit={addOrEdit}
-            categories={allCategories}
           />
         </PopupDialog>
         <TextField
@@ -278,9 +254,9 @@ function CategoryManagement() {
             <TableHead>
               <TableRow>
                 <TableCell width="10%">STT</TableCell>
-                <TableCell width="20%">Category Name</TableCell>
-                <TableCell width="29%">Description</TableCell>
-                <TableCell width="20%">Parent Category</TableCell>
+                <TableCell width="29%">Title</TableCell>
+                <TableCell width="20%">Image</TableCell>
+                <TableCell width="20%">Active</TableCell>
                 <TableCell width="7%" align="center">
                   View
                 </TableCell>
@@ -293,18 +269,21 @@ function CategoryManagement() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {!!categories.length &&
-                categories.map((item: Category, index: number) => (
+              {!!banners.length &&
+                banners.map((item: Banner, index: number) => (
                   <TableRow hover key={item.id}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.title}</TableCell>
+                    <TableCell>{item.imageUrl ? 1 : 0}</TableCell>
                     <TableCell>
-                      {item.description?.substring(0, 90)}
-                      {item.description &&
-                        item.description.length > 90 &&
-                        "..."}
+                      <Switch
+                        checked={item.isActive}
+                        onChange={() => onIsActiveSwitchChange(item)}
+                        color="primary"
+                        name="isActive"
+                        inputProps={{ "aria-label": "primary checkbox" }}
+                      />
                     </TableCell>
-                    <TableCell>{item.parentCategory?.name}</TableCell>
                     <TableCell align="justify">
                       <IconButton onClick={() => openViewDialog(item)}>
                         <VisibilityIcon style={{ color: "black" }} />
@@ -335,17 +314,17 @@ function CategoryManagement() {
         />
       </Paper>
       <ConfirmDialog
-        title="Delete category?"
+        title="Delete banner?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
-        onConfirm={handleDeleteCategory}
+        onConfirm={handleDeleteBanner}
       >
         {recordForAction &&
-          "Do you want to delete category: " + recordForAction.name}
+          "Do you want to delete banner: " + recordForAction.title}
         ?
       </ConfirmDialog>
     </Container>
   );
 }
 
-export default CategoryManagement;
+export default BannerManagement;

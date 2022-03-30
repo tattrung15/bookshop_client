@@ -1,5 +1,6 @@
 import { Role } from "@app/shared/types/user.type";
 import { RouteGuardShape } from "@core/types/route.type";
+import BannerManagement from "./banner-management";
 import CategoryManagement from "./category-management";
 import ProductImageManagement from "./product-image-management";
 import ProductManagement from "./product-management";
@@ -42,6 +43,14 @@ export const routes: RouteGuardShape[] = [
   {
     path: "/product-image-management",
     component: ProductImageManagement,
+    config: {
+      roles: [Role.ADMIN],
+      redirect: "/",
+    },
+  },
+  {
+    path: "/banner-management",
+    component: BannerManagement,
     config: {
       roles: [Role.ADMIN],
       redirect: "/",

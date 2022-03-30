@@ -11,6 +11,7 @@ import {
   Book as BookIcon,
   Image as ImageIcon,
   Home as HomeIcon,
+  ViewCarousel as ViewCarouselIcon,
 } from "@material-ui/icons";
 import { MenuItem } from "../types/menu-item.type";
 
@@ -24,6 +25,11 @@ export enum BANNER_TYPE {
   CATEGORY = 1,
   PRODUCT = 2,
 }
+
+export const BANNER_TYPE_MAP = {
+  [BANNER_TYPE.CATEGORY]: "Category",
+  [BANNER_TYPE.PRODUCT]: "Product",
+};
 
 export enum PRODUCT_TYPE {
   HAVE_IMAGE = "have-image",
@@ -92,5 +98,11 @@ export const mainMenuItems: MenuItem[] = [
     tooltip: "Sale order management",
     mainContent: "Sale orders",
     icon: ReceiptIcon,
+  },
+  {
+    linkTo: "/admin/banner-management",
+    tooltip: "Banner management",
+    mainContent: "Banner",
+    icon: ViewCarouselIcon,
   },
 ];

@@ -30,10 +30,10 @@ class _ProductService {
 
   public updateProduct(
     productId: number,
-    editProductDto: Partial<UpdateProductDto>
+    updateProductDto: Partial<UpdateProductDto>
   ): Observable<Product> {
     return HttpService.patch(`/products/${productId}`, {
-      body: { ...editProductDto },
+      body: { ...updateProductDto },
     }).pipe(map((response: any) => new Product(response.result.data)));
   }
 

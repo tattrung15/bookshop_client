@@ -29,14 +29,14 @@ class _CategoryService {
 
   public updateCategory(
     categoryId: number,
-    editCategoryDto: Partial<UpdateCategoryDto>
+    updateCategoryDto: Partial<UpdateCategoryDto>
   ): Observable<Category> {
     return HttpService.patch(`/categories/${categoryId}`, {
-      body: { ...editCategoryDto },
+      body: { ...updateCategoryDto },
     }).pipe(map((response: any) => new Category(response.result.data)));
   }
 
-  public deleteUser(categoryId: number): Observable<Category> {
+  public deleteCategory(categoryId: number): Observable<Category> {
     return HttpService.delete(`/categories/${categoryId}`).pipe(
       map((response: any) => new Category(response.result.data))
     );

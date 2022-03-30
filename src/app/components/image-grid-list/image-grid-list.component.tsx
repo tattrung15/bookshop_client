@@ -1,6 +1,7 @@
 import { ImageList, ImageListItem } from "@material-ui/core";
 import { ProductImage } from "@app/models/product-image.model";
 import { useStyles } from "./make-style";
+import { buildImageSrc } from "@app/shared/helpers/helpers";
 
 type TypeProps = {
   images: ProductImage[];
@@ -16,15 +17,11 @@ function ImageGridList(props: TypeProps) {
       <ImageList rowHeight={200} className={classes.gridList} cols={3}>
         {!!images.length &&
           images.map((item: ProductImage) => {
-            const baseUrl = new URL(process.env.REACT_APP_BASE_API_URL || "");
-            const srcImage = item.imageUrl.startsWith("http")
-              ? item.imageUrl
-              : `${baseUrl.origin}${item.imageUrl}`;
             return (
               <ImageListItem key={item.id}>
                 <img
                   className={classes.image}
-                  src={srcImage}
+                  src={buildImageSrc(item.imageUrl)}
                   alt={item.imagePublicId}
                 />
               </ImageListItem>
