@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Product } from "@app/models/product.model";
 import { imageNotFound } from "@app/shared/constants/common";
-import "./style.scss";
+import "./product-item.style.scss";
 
 type TypeProps = {
   item: Product;

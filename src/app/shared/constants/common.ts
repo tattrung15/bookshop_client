@@ -1,5 +1,5 @@
-import bannerDangKy from "@app/assets/images/banner_dangky_mail.jpg";
-import bannerDoremon from "@app/assets/images/doremon.png";
+import bannerCombo from "@app/assets/images/banner_combo.jpg";
+import bannerManga from "@app/assets/images/banner_manga.jpg";
 import bannerWingsbooks from "@app/assets/images/banner_wingsbooks.jpg";
 import imageNotFound from "@app/assets/images/image-not-found.jpg";
 import { PaginationOption } from "@core/services/http/http.service";
@@ -44,7 +44,7 @@ export enum TYPE_ALERT {
   WARNING = "warning",
 }
 
-export { bannerDangKy, bannerDoremon, bannerWingsbooks, imageNotFound };
+export { bannerCombo, bannerManga, bannerWingsbooks, imageNotFound };
 
 export const PAGING_DEFAULT_LIMIT = 10;
 export const STRING_LENGTH_LIMIT = 255;

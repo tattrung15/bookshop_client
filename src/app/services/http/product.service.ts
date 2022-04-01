@@ -22,6 +22,15 @@ class _ProductService {
     } as HttpOptions).pipe(pluck("result"));
   }
 
+  public getListByCategory(
+    categoryId: number | string,
+    options?: ProductPaginationOption
+  ): Observable<any> {
+    return HttpService.get(`/categories/${categoryId}/products`, {
+      queryParams: options,
+    } as HttpOptions).pipe(pluck("result"));
+  }
+
   public createProduct(product: CreateProductDto): Observable<Product> {
     return HttpService.post("/products", {
       body: { ...product },

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
-import { bannerDoremon, bannerWingsbooks } from "@app/shared/constants/common";
+import {
+  bannerCombo,
+  bannerManga,
+  bannerWingsbooks,
+} from "@app/shared/constants/common";
 import Footer from "@app/components/footer";
 import { useStyles } from "./make-style";
 import AppBar from "@app/components/app-bar";
@@ -11,34 +16,73 @@ import useObservable from "@core/hooks/use-observable.hook";
 import { Product } from "@app/models/product.model";
 import { ResponseResult } from "@core/services/http/http.service";
 import ProductItem from "@app/components/product-item";
+import MainSlider from "@app/components/main-slider";
 
 export default function HomePage() {
   const classes = useStyles();
 
   const { subscribeUntilDestroy } = useObservable();
 
-  const [productImage, setProductImage] = useState([]);
-  const [productImageDoraemon, setProductImageDoraemon] = useState([]);
-  const [productImageWingsBooks, setProductImageWingsBooks] = useState([]);
-  const [productImageComicManga, setProductImageComicManga] = useState([]);
-  const [productImageBestSelling, setProductImageBestSelling] = useState<
-    Product[]
-  >([]);
+  const [newProducts, setNewProducts] = useState<Product[]>([]);
+  const [productCombo, setProductCombo] = useState<Product[]>([]);
+  const [productWingsBooks, setProductWingsBooks] = useState<Product[]>([]);
+  const [productComicManga, setProductComicManga] = useState<Product[]>([]);
+  const [productBestSelling, setProductBestSelling] = useState<Product[]>([]);
 
   useEffect(() => {
-    let options: ProductPaginationOption = {
+    const options: ProductPaginationOption = {
       page: 1,
       perPage: 4,
       sort: "-quantityPurchased",
     };
-
     subscribeUntilDestroy(
       ProductService.getList(options),
       (response: ResponseResult) => {
         const data: Product[] = response.data.map(
           (item: any) => new Product(item)
         );
-        setProductImageBestSelling(data);
+        setProductBestSelling(data);
+      }
+    );
+
+    delete options.sort;
+    subscribeUntilDestroy(
+      ProductService.getList(options),
+      (response: ResponseResult) => {
+        const data: Product[] = response.data.map(
+          (item: any) => new Product(item)
+        );
+        setNewProducts(data);
+      }
+    );
+
+    subscribeUntilDestroy(
+      ProductService.getListByCategory("combo", options),
+      (response: ResponseResult) => {
+        const data: Product[] = response.data.map(
+          (item: any) => new Product(item)
+        );
+        setProductCombo(data);
+      }
+    );
+
+    subscribeUntilDestroy(
+      ProductService.getListByCategory("wings-books", options),
+      (response: ResponseResult) => {
+        const data: Product[] = response.data.map(
+          (item: any) => new Product(item)
+        );
+        setProductWingsBooks(data);
+      }
+    );
+
+    subscribeUntilDestroy(
+      ProductService.getListByCategory("manga-comic", options),
+      (response: ResponseResult) => {
+        const data: Product[] = response.data.map(
+          (item: any) => new Product(item)
+        );
+        setProductComicManga(data);
       }
     );
 
@@ -48,14 +92,7 @@ export default function HomePage() {
   return (
     <>
       <AppBar />
-      <Box
-        paddingTop={2}
-        paddingX={5.5}
-        maxWidth="930px"
-        style={{ margin: "0 auto" }}
-      >
-        {/* <CategoryHeader /> */}
-      </Box>
+      <MainSlider />
       <Box
         marginTop={2}
         paddingX={5.5}
@@ -69,22 +106,19 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {/* {productImage &&
-                productImage.map((val, index) => (
+              {!!newProducts.length &&
+                newProducts.map((item, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    <CardItem item={val} />
+                    <ProductItem item={item} />
                   </Grid>
-                ))} */}
+                ))}
             </Grid>
           </div>
 
-          <Box style={{ textAlign: "center", marginTop: "1em" }}>
-            {/* <Link
-              to="/categories/sach-moi"
-              style={{ color: "black", textDecoration: "none" }}
-            >
+          <Box className={classes.showMoreBox}>
+            <Link to="" className={classes.showMoreLink}>
               <Button variant="contained">Xem thêm</Button>
-            </Link> */}
+            </Link>
           </Box>
         </Box>
 
@@ -95,27 +129,59 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {!!productImageBestSelling.length &&
-                productImageBestSelling.map((item, index) => (
+              {!!productBestSelling.length &&
+                productBestSelling.map((item, index) => (
                   <Grid key={index} item xs={6} sm={3}>
                     <ProductItem item={item} />
                   </Grid>
                 ))}
             </Grid>
           </div>
+
+          <Box className={classes.showMoreBox}>
+            <Link to="" className={classes.showMoreLink}>
+              <Button variant="contained">Xem thêm</Button>
+            </Link>
+          </Box>
         </Box>
       </Box>
 
-      <div className={classes.bannerEmail}>
-        <div className="email">
-          <div className={classes.emaill}>
-            <p className={classes.emaillP}>ĐĂNG KÝ EMAIL NHẬN THÔNG TIN</p>
-            <form className={classes.emaillForm}>
-              <input className={classes.emaillFormInput} type="text" name="" />
-              <Button variant="contained">Đăng ký</Button>
-            </form>
+      <div className="banner-combo">
+        <img className={classes.bannerComboImg} src={bannerCombo} alt="" />
+      </div>
+
+      <Box
+        marginTop={2}
+        paddingX={5.5}
+        maxWidth="930px"
+        style={{ margin: "0 auto" }}
+      >
+        <Box marginTop={5} marginBottom={5}>
+          <Typography variant="h6" gutterBottom align="center">
+            COMBO
+          </Typography>
+
+          <div className={classes.root}>
+            <Grid container spacing={1}>
+              {productCombo &&
+                productCombo.map((item, index) => (
+                  <Grid key={index} item xs={6} sm={3}>
+                    <ProductItem item={item} />
+                  </Grid>
+                ))}
+            </Grid>
           </div>
-        </div>
+
+          <Box className={classes.showMoreBox}>
+            <Link to="" className={classes.showMoreLink}>
+              <Button variant="contained">Xem thêm</Button>
+            </Link>
+          </Box>
+        </Box>
+      </Box>
+
+      <div className="banner-manga">
+        <img className={classes.bannerMangaImg} src={bannerManga} alt="" />
       </div>
 
       <Box
@@ -131,48 +197,26 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {productImageComicManga &&
-                productImageComicManga.map((val, index) => (
+              {productComicManga &&
+                productComicManga.map((item, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    {/* <CardItem item={val} /> */}
+                    <ProductItem item={item} />
                   </Grid>
                 ))}
             </Grid>
           </div>
-        </Box>
-      </Box>
 
-      <div className="banner-doremon">
-        <img className={classes.banneDoremonImg} src={bannerDoremon} alt="" />
-      </div>
-
-      <Box
-        marginTop={2}
-        paddingX={5.5}
-        maxWidth="930px"
-        style={{ margin: "0 auto" }}
-      >
-        <Box marginTop={5} marginBottom={5}>
-          <Typography variant="h6" gutterBottom align="center">
-            DORAEMON
-          </Typography>
-
-          <div className={classes.root}>
-            <Grid container spacing={1}>
-              {productImageDoraemon &&
-                productImageDoraemon.map((val, index) => (
-                  <Grid key={index} item xs={6} sm={3}>
-                    {/* <CardItem item={val} /> */}
-                  </Grid>
-                ))}
-            </Grid>
-          </div>
+          <Box className={classes.showMoreBox}>
+            <Link to="" className={classes.showMoreLink}>
+              <Button variant="contained">Xem thêm</Button>
+            </Link>
+          </Box>
         </Box>
       </Box>
 
       <div className="banner-wings">
         <img
-          className={classes.banneWingsBooksImg}
+          className={classes.bannerWingsBooksImg}
           src={bannerWingsbooks}
           alt=""
         />
@@ -191,14 +235,20 @@ export default function HomePage() {
 
           <div className={classes.root}>
             <Grid container spacing={1}>
-              {productImageWingsBooks &&
-                productImageWingsBooks.map((val, index) => (
+              {productWingsBooks &&
+                productWingsBooks.map((item, index) => (
                   <Grid key={index} item xs={6} sm={3}>
-                    {/* <CardItem item={val} /> */}
+                    <ProductItem item={item} />
                   </Grid>
                 ))}
             </Grid>
           </div>
+
+          <Box className={classes.showMoreBox}>
+            <Link to="" className={classes.showMoreLink}>
+              <Button variant="contained">Xem thêm</Button>
+            </Link>
+          </Box>
         </Box>
       </Box>
       <Footer />
