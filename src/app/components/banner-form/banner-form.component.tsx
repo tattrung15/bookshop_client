@@ -76,7 +76,7 @@ function BannerForm(props: TypeProps) {
     if (isEdit) {
       if (validate()) {
         const updateValue: Partial<UpdateBannerDto> = {
-          bannerId: values.id,
+          bannerId: values.bannerId,
           title: values.title,
           type: values.type,
           files: imageFiles,

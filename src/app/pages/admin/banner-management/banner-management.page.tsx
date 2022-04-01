@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { switchMap } from "rxjs/operators";
 import {
   Box,
   Button,
@@ -121,25 +122,35 @@ function BannerManagement() {
     resetForm: () => void
   ) => {
     if (isEdit) {
-      // const editCategoryId = values.id;
-      // const editCategoryBody: Partial<UpdateCategoryDto> = {
-      //   name: values.name,
-      //   description: values.description ? values.description : "",
-      //   isAuthor: values.isAuthor ? values.isAuthor : false,
-      //   parentCategoryId: values.parentCategoryId,
-      // };
-      // subscribeOnce(
-      //   CategoryService.updateCategory(editCategoryId, editCategoryBody),
-      //   () => {
-      //     enqueueSnackbar("Update category successfully", {
-      //       variant: TYPE_ALERT.SUCCESS,
-      //     });
-      //     resetForm();
-      //     setIsOpenPopup(false);
-      //     setRecordForAction(new Category(null));
-      //     setForceUpdate();
-      //   }
-      // );
+      const editBannerId = values.bannerId ?? 0;
+      const editBannerBody: UpdateBannerDto = {
+        bannerId: values.bannerId ?? 0,
+        title: values.title ?? "",
+        type: values.type ?? BANNER_TYPE.CATEGORY,
+        imageUrl: "",
+      };
+
+      let updateBannerObs = BannerService.updateBanner(
+        editBannerId,
+        editBannerBody
+      );
+      if (values.files && values.files.length > 0) {
+        const file = values.files[0];
+        updateBannerObs = updateBannerObs.pipe(
+          switchMap((banner: Banner) => {
+            return BannerService.uploadBannerImage(banner.id, file);
+          })
+        );
+      }
+      subscribeOnce(updateBannerObs, () => {
+        enqueueSnackbar("Update banner successfully", {
+          variant: TYPE_ALERT.SUCCESS,
+        });
+        resetForm();
+        setIsOpenPopup(false);
+        setRecordForAction(new Banner(null));
+        setForceUpdate();
+      });
     } else {
       const newBanner: CreateBannerDto = {
         title: values.title ?? "",
