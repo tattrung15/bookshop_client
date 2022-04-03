@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import clsx from "clsx";
+import { Link } from "react-router-dom";
 import { Box } from "@material-ui/core";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Banner } from "@app/models/banner.model";
 import { buildImageSrc } from "@app/shared/helpers/helpers";
 import "./main-slider.style.scss";
 import useObservable from "@core/hooks/use-observable.hook";
@@ -15,11 +15,17 @@ import {
   FETCH_TYPE,
 } from "@app/shared/constants/common";
 import { ResponseResult } from "@core/services/http/http.service";
+import { Banner } from "@app/models/banner.model";
+import { Category } from "@app/models/category.model";
+import CategoryService, {
+  CategoryPaginationOption,
+} from "@app/services/http/category.service";
 
 function MainSlider() {
   const { subscribeUntilDestroy } = useObservable();
 
   const [banners, setBanners] = useState<Banner[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const bannerOptions: BannerPaginationOption = {
@@ -34,6 +40,21 @@ function MainSlider() {
           (item: any) => new Banner(item)
         );
         setBanners(data);
+      }
+    );
+
+    const categoryOptions: CategoryPaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+      fetchType: FETCH_TYPE.USER,
+    };
+
+    subscribeUntilDestroy(
+      CategoryService.getList(categoryOptions),
+      (response: ResponseResult) => {
+        const data: Category[] = response.data.map(
+          (item: any) => new Category(item)
+        );
+        setCategories(data);
       }
     );
 
@@ -55,42 +76,41 @@ function MainSlider() {
             autoPlay
             emulateTouch
           >
-            {banners.map((item: Banner) => (
-              <div key={item.id}>
+            {banners.map((item, index) => (
+              <div key={index}>
                 <img src={buildImageSrc(item.imageUrl ?? "")} alt="" />
               </div>
             ))}
           </Carousel>
-          <div className="menu">
+          <div className="menu-wrapper">
             <ul>
               <li>
                 <Link to="">
                   <i className="fa fa-bars"></i> Danh mục sản phẩm
                 </Link>
-                <ul className="sub-menu">
-                  <li className="has-child">
-                    <Link to="">Web</Link>
-                    <ul className="sub-menu1">
-                      <li>
-                        <Link to="">HTML</Link>
+                <ul className="menu">
+                  {!!categories.length &&
+                    categories.map((item, index) => (
+                      <li
+                        key={index}
+                        className={clsx({
+                          "has-child": !!item.linkedCategories?.length ?? false,
+                        })}
+                      >
+                        <Link to={`/categories/${item.slug}`}>{item.name}</Link>
+                        {!!item.linkedCategories?.length && (
+                          <ul className="sub-menu">
+                            {item.linkedCategories.map((item, index) => (
+                              <li key={index}>
+                                <Link to={`/categories/${item.slug}`}>
+                                  {item.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </li>
-                      <li>
-                        <Link to="">CSS</Link>
-                      </li>
-                      <li>
-                        <Link to="">Javascript</Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link to="">Java</Link>
-                  </li>
-                  <li>
-                    <Link to="">Python</Link>
-                  </li>
-                  <li>
-                    <Link to="">C++</Link>
-                  </li>
+                    ))}
                 </ul>
               </li>
             </ul>

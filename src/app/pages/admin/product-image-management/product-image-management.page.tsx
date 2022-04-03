@@ -287,7 +287,7 @@ function ProductImageManagement() {
             </TableHead>
             <TableBody>
               {!!products.length &&
-                products.map((item: Product, index: number) => (
+                products.map((item, index) => (
                   <TableRow key={item.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.title}</TableCell>

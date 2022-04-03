@@ -1,5 +1,5 @@
-import { Button, Icon } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
+import { Button, Icon } from "@material-ui/core";
 import "./style.scss";
 
 function NotFound() {

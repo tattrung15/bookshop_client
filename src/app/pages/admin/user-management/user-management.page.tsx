@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CreateUserDto, UpdateUserDto, User } from "@app/models/user.model";
-import UserService from "@app/services/http/user.service";
-import useObservable from "@core/hooks/use-observable.hook";
 import {
   Box,
   Button,
@@ -25,6 +22,11 @@ import {
   Delete as DeleteIcon,
   Search as SearchIcon,
 } from "@material-ui/icons";
+import { useSelector } from "react-redux";
+import { useSnackbar } from "notistack";
+import { CreateUserDto, UpdateUserDto, User } from "@app/models/user.model";
+import UserService from "@app/services/http/user.service";
+import useObservable from "@core/hooks/use-observable.hook";
 import { useStyles } from "./make-style";
 import ConfirmDialog from "@app/components/confirm-dialog";
 import {
@@ -36,9 +38,7 @@ import {
   TYPE_ALERT,
 } from "@app/shared/constants/common";
 import { GlobalState } from "@app/store";
-import { useSelector } from "react-redux";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
-import { useSnackbar } from "notistack";
 import PopupDialog from "@app/components/popup-dialog";
 import UserForm from "@app/components/user-form";
 
@@ -289,7 +289,7 @@ function UserManagement() {
             </TableHead>
             <TableBody>
               {!!users.length &&
-                users.map((item: User, index: number) => (
+                users.map((item, index) => (
                   <TableRow hover key={item.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.firstName}</TableCell>

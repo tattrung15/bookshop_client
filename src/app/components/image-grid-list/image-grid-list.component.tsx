@@ -16,9 +16,9 @@ function ImageGridList(props: TypeProps) {
     <div className={classes.root}>
       <ImageList rowHeight={200} className={classes.gridList} cols={3}>
         {!!images.length &&
-          images.map((item: ProductImage) => {
+          images.map((item: ProductImage, index: number) => {
             return (
-              <ImageListItem key={item.id}>
+              <ImageListItem key={index}>
                 <img
                   className={classes.image}
                   src={buildImageSrc(item.imageUrl)}

@@ -22,8 +22,8 @@ import {
   Delete as DeleteIcon,
   Search as SearchIcon,
 } from "@material-ui/icons";
-import { useStyles } from "./make-style";
 import { useSnackbar } from "notistack";
+import { useStyles } from "./make-style";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import useObservable from "@core/hooks/use-observable.hook";
 import {
@@ -294,7 +294,7 @@ function CategoryManagement() {
             </TableHead>
             <TableBody>
               {!!categories.length &&
-                categories.map((item: Category, index: number) => (
+                categories.map((item, index) => (
                   <TableRow hover key={item.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.name}</TableCell>

@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { Link, NavLink, Route, Routes } from "react-router-dom";
 import {
   Box,
   Breadcrumbs,
@@ -7,12 +9,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import { NavigateNext as NavigateNextIcon } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
-import { Link, NavLink, Route, Routes } from "react-router-dom";
 import clsx from "clsx";
+import { useSelector } from "react-redux";
 import { useStyles } from "./make-style";
 import { GlobalState } from "@app/store";
-import { useSelector } from "react-redux";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import { User } from "@app/models/user.model";

@@ -11,7 +11,7 @@ export const renderListItems = (listItems: MenuItem[]) => {
   return (
     <div>
       {!!listItems.length &&
-        listItems.map((item: MenuItem, index: number) => {
+        listItems.map((item, index) => {
           const Icon = item.icon;
           return (
             <Link

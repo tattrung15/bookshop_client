@@ -1,4 +1,4 @@
-.menu {
+.menu-wrapper {
   position: absolute;
   z-index: 2;
   top: 0;
@@ -18,7 +18,7 @@
       position: relative;
       width: 15em;
 
-      .sub-menu {
+      .menu {
         display: none;
         position: absolute;
         background: white;
@@ -33,7 +33,7 @@
           }
         }
 
-        .sub-menu1 {
+        .sub-menu {
           display: none;
           position: absolute;
           background: white;
@@ -56,11 +56,11 @@
         display: block;
       }
 
-      &:hover > .sub-menu {
+      &:hover > .menu {
         display: block;
       }
 
-      &:hover > .sub-menu1 {
+      &:hover > .sub-menu {
         display: block;
         left: 15em;
         top: 0;
@@ -76,7 +76,7 @@
   }
 }
 
-.sub-menu,
-.sub-menu1 {
+.menu,
+.sub-menu {
   box-shadow: 0 10px 15px black;
 }

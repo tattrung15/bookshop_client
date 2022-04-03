@@ -27,8 +27,8 @@ import {
 } from "@material-ui/icons";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { GlobalState } from "@app/store";
 import { useDispatch, useSelector } from "react-redux";
+import { GlobalState } from "@app/store";
 import { Role } from "@app/shared/types/user.type";
 import { clearUser } from "@app/store/auth/auth.action";
 import StorageService from "@core/services/storage";
