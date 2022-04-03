@@ -48,7 +48,7 @@ function UserForm(props: TypeProps) {
   const [isShowPassword, setIsShowPassword] = useState(false);
 
   const validate = (fieldValues = values) => {
-    let temp = { ...errors };
+    const temp = { ...errors };
 
     if (isEdit) {
       temp.password = "";

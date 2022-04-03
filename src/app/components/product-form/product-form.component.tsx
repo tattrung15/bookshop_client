@@ -42,7 +42,7 @@ function ProductForm(props: TypeProps) {
   };
 
   const validate = (fieldValues = values) => {
-    let temp = { ...errors };
+    const temp = { ...errors };
 
     if ("title" in fieldValues) {
       temp.title =

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Grid, ImageList, ImageListItem } from "@material-ui/core";
-import { DropEvent } from "react-dropzone";
 import { Form, useForm } from "@app/hooks/use-form.hook";
 import DropZone from "../drop-zone/drop-zone.component";
 import Controls from "../controls";
@@ -49,12 +48,12 @@ function BannerForm(props: TypeProps) {
     setImageFiles([]);
   };
 
-  const onDropAccepted = (files: File[], event: DropEvent) => {
+  const onDropAccepted = (files: File[]) => {
     setImageFiles(files);
   };
 
   const validate = (fieldValues = values) => {
-    let temp = { ...errors };
+    const temp = { ...errors };
 
     if ("title" in fieldValues) {
       temp.title =

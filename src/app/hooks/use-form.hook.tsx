@@ -50,7 +50,7 @@ export function Form(props) {
   const { children, ...other } = props;
   return (
     <form className={classes.root} autoComplete="off" {...other}>
-      {props.children}
+      {children}
     </form>
   );
 }

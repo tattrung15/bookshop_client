@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Grid } from "@material-ui/core";
-import { DropEvent } from "react-dropzone";
 import { UpdateProductImageDto } from "@app/models/product-image.model";
 import { Product } from "@app/models/product.model";
 import { Form, useForm } from "@app/hooks/use-form.hook";
@@ -41,12 +40,12 @@ function ProductImageForm(props: TypeProps) {
     setImageFiles([]);
   };
 
-  const onDropAccepted = (files: File[], event: DropEvent) => {
+  const onDropAccepted = (files: File[]) => {
     setImageFiles(files);
   };
 
   const validate = (fieldValues = values) => {
-    let temp = { ...errors };
+    const temp = { ...errors };
 
     setErrors({
       ...temp,

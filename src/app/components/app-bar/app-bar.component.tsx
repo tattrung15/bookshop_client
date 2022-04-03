@@ -303,7 +303,7 @@ function AppBar() {
               disableRipple
               disableFocusRipple
             >
-              {!!authState.username ? (
+              {authState.username ? (
                 <Chip
                   className={classes.chip}
                   label={authState.username}

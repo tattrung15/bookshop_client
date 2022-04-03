@@ -1,6 +1,6 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles(() => ({
   image: {
     "&:hover": {
       opacity: 0.75,

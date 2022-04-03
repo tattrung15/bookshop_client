@@ -39,7 +39,7 @@ function CategoryForm(props: TypeProps) {
   };
 
   const validate = (fieldValues = values) => {
-    let temp = { ...errors };
+    const temp = { ...errors };
 
     if ("name" in fieldValues) {
       temp.name =
