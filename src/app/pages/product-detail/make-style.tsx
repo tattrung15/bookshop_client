@@ -5,4 +5,12 @@ export const useStyles = makeStyles(() => ({
     width: "100%",
     height: "500px",
   },
+  showMoreBox: {
+    textAlign: "center",
+    marginTop: "1em",
+  },
+  showMoreLink: {
+    color: "black",
+    textDecoration: "none",
+  },
 }));

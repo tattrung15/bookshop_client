@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createRef } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Box,
   Divider,
@@ -96,7 +96,7 @@ function ProductDetail() {
           />
         )}
       </Box>
-      <MainSlider />
+      <MainSlider shouldShowBanner={false} />
       <Box
         paddingTop={2}
         paddingX={5.5}
@@ -223,6 +223,17 @@ function ProductDetail() {
                 ))}
             </Grid>
           </div>
+
+          <Box className={classes.showMoreBox}>
+            <Link
+              to={
+                product.category ? `/categories/${product.category.slug}` : ""
+              }
+              className={classes.showMoreLink}
+            >
+              <Button variant="contained">Xem thêm</Button>
+            </Link>
+          </Box>
         </Box>
       </Box>
       <Footer />

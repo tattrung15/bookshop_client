@@ -65,7 +65,10 @@ function App() {
     HttpService.onError$.subscribe((ajaxResponse) => {
       if (!["/"].includes(window.location.pathname)) {
         setOpenDialog(true);
-        setDialogContent(ajaxResponse?.response?.message);
+        setDialogContent(
+          ajaxResponse?.response?.message ??
+            "Cannot fetch data, please try again..."
+        );
       }
     });
 

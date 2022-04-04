@@ -21,7 +21,13 @@ import CategoryService, {
   CategoryPaginationOption,
 } from "@app/services/http/category.service";
 
-function MainSlider() {
+type PropTypes = {
+  shouldShowBanner?: boolean;
+};
+
+function MainSlider(props: PropTypes) {
+  const { shouldShowBanner = true } = props;
+
   const { subscribeUntilDestroy } = useObservable();
 
   const [banners, setBanners] = useState<Banner[]>([]);
@@ -62,26 +68,28 @@ function MainSlider() {
   }, []);
 
   return (
-    <Box paddingTop={5} paddingX={5.5}>
+    <Box paddingTop={5} paddingX={5.5} marginBottom={2.5}>
       {!!banners.length && (
-        <Box style={{ position: "relative" }}>
-          <Carousel
-            dynamicHeight={false}
-            showStatus={false}
-            showThumbs={false}
-            interval={4000}
-            transitionTime={1000}
-            swipeScrollTolerance={50}
-            infiniteLoop
-            autoPlay
-            emulateTouch
-          >
-            {banners.map((item, index) => (
-              <div key={index}>
-                <img src={buildImageSrc(item.imageUrl ?? "")} alt="" />
-              </div>
-            ))}
-          </Carousel>
+        <Box style={{ position: "relative", borderTop: "1px solid black" }}>
+          {shouldShowBanner && (
+            <Carousel
+              dynamicHeight={false}
+              showStatus={false}
+              showThumbs={false}
+              interval={4000}
+              transitionTime={1000}
+              swipeScrollTolerance={50}
+              infiniteLoop
+              autoPlay
+              emulateTouch
+            >
+              {banners.map((item, index) => (
+                <div key={index}>
+                  <img src={buildImageSrc(item.imageUrl ?? "")} alt="" />
+                </div>
+              ))}
+            </Carousel>
+          )}
           <div className="menu-wrapper">
             <ul>
               <li>
