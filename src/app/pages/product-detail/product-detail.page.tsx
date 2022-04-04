@@ -22,9 +22,12 @@ import ProductService, {
 } from "@app/services/http/product.service";
 import Footer from "@app/components/footer";
 import { buildImageSrc } from "@app/shared/helpers/helpers";
-import { ResponseResult } from "@core/services/http/http.service";
-import { PRODUCT_TYPE } from "@app/shared/constants/common";
+import {
+  PaginationOption,
+  ResponseResult,
+} from "@core/services/http/http.service";
 import ProductItem from "@app/components/product-item";
+import ViewService from "@app/services/view.service";
 
 function ProductDetail() {
   const classes = useStyles();
@@ -36,6 +39,7 @@ function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<Product>(new Product(null));
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+  const [lastViewProducts, setLastViewProducts] = useState<Product[]>([]);
 
   const pageRef = createRef<HTMLDivElement>();
 
@@ -45,10 +49,9 @@ function ProductDetail() {
         ProductService.getDetail(slug).pipe(
           switchMap((product) => {
             setProduct(product);
-            const options: ProductPaginationOption = {
+            const options: PaginationOption = {
               page: 1,
               perPage: 4,
-              productType: PRODUCT_TYPE.NO_IMAGE_ALL,
             };
             return ProductService.getListByCategory(
               product.category.id,
@@ -64,6 +67,23 @@ function ProductDetail() {
         }
       );
     }
+
+    const options: ProductPaginationOption = {
+      page: 1,
+      perPage: 4,
+      in: {
+        id: ViewService.getLastView(),
+      },
+    };
+    subscribeUntilDestroy(
+      ProductService.getList(options),
+      (response: ResponseResult) => {
+        const data: Product[] = response.data.map(
+          (item: any) => new Product(item)
+        );
+        setLastViewProducts(data);
+      }
+    );
 
     if (pageRef.current) {
       pageRef.current.scrollIntoView({ behavior: "smooth" });
@@ -231,6 +251,42 @@ function ProductDetail() {
               }
               className={classes.showMoreLink}
             >
+              <Button variant="contained">Xem thêm</Button>
+            </Link>
+          </Box>
+        </Box>
+      </Box>
+      <Box
+        paddingTop={5}
+        paddingX={5.5}
+        maxWidth="930px"
+        style={{ margin: "0 auto" }}
+      >
+        <Typography
+          variant="h6"
+          color="textPrimary"
+          style={{
+            margin: "0 auto",
+            background: "#EBE9E9",
+            padding: "0.2em",
+          }}
+        >
+          Sản phẩm đã xem
+        </Typography>
+        <Box marginTop={2}>
+          <div>
+            <Grid container spacing={1}>
+              {!!lastViewProducts.length &&
+                lastViewProducts.map((item, index) => (
+                  <Grid key={index} item xs={6} sm={3}>
+                    <ProductItem item={item} />
+                  </Grid>
+                ))}
+            </Grid>
+          </div>
+
+          <Box className={classes.showMoreBox}>
+            <Link to="" className={classes.showMoreLink}>
               <Button variant="contained">Xem thêm</Button>
             </Link>
           </Box>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Product } from "@app/models/product.model";
 import { imageNotFound } from "@app/shared/constants/common";
 import "./product-item.style.scss";
+import ViewService from "@app/services/view.service";
 
 type TypeProps = {
   item: Product;
@@ -19,11 +20,16 @@ function ProductItem(props: TypeProps) {
       : `${baseUrl.origin}${item.productImages[0].imageUrl}`;
   }
 
+  const onProductItemClick = () => {
+    ViewService.addLastView(item.id);
+  };
+
   return (
     <>
       <Link
         to={`/products/${item.slug}`}
         style={{ textDecoration: "none", color: "black" }}
+        onClick={onProductItemClick}
       >
         <div
           className="col-xl-3 col-lg-3 col-md-3 bcontent"

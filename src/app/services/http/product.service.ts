@@ -30,7 +30,7 @@ class _ProductService {
 
   public getListByCategory(
     categoryId: number | string,
-    options?: ProductPaginationOption
+    options?: PaginationOption
   ): Observable<any> {
     return HttpService.get(`/categories/${categoryId}/products`, {
       queryParams: options,

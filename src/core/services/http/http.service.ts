@@ -159,7 +159,11 @@ export class _HttpService {
         if (obj.hasOwnProperty(key)) {
           const k = prefix ? prefix + "[" + key + "]" : key;
           const v = (obj as any)[key];
-          if (v !== null && typeof v === "object") {
+          if (Array.isArray(v)) {
+            for (const vv of v) {
+              httpParams.push(k + "=" + vv);
+            }
+          } else if (v !== null && typeof v === "object") {
             objectToQueryString(v, k);
           } else {
             if (!isNullOrUndefined(v) && !isStrEmpty(v.toString())) {
