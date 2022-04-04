@@ -95,7 +95,7 @@ function ProductImageForm(props: TypeProps) {
               MenuProps={{ style: { maxHeight: 400 } }}
             />
           )}
-          {(isView || isEdit) && !!productNoImages.length && (
+          {(isView || isEdit) && (
             <Controls.Input
               name="title"
               label="Title"

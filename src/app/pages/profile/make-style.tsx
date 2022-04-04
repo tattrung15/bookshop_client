@@ -5,14 +5,6 @@ export const useStyles = makeStyles(() => ({
     margin: "0 auto",
     maxWidth: "1200px",
   },
-  wrapBreadcrumb: {
-    margin: "0 auto",
-    maxWidth: "930px",
-  },
-  breadcrumb: {
-    background: "#EBE9E9",
-    padding: "0.5em",
-  },
   itemNavLink: {
     marginTop: "1em",
   },

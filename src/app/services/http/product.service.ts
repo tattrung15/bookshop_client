@@ -22,6 +22,12 @@ class _ProductService {
     } as HttpOptions).pipe(pluck("result"));
   }
 
+  public getDetail(productId: number | string): Observable<Product> {
+    return HttpService.get(`/products/${productId}`).pipe(
+      map((response: any) => new Product(response.result.data))
+    );
+  }
+
   public getListByCategory(
     categoryId: number | string,
     options?: ProductPaginationOption

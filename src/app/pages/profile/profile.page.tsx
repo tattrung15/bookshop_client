@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, Route, Routes } from "react-router-dom";
-import {
-  Box,
-  Breadcrumbs,
-  Grid,
-  Paper,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-import { NavigateNext as NavigateNextIcon } from "@material-ui/icons";
+import { NavLink, Route, Routes } from "react-router-dom";
+import { Box, Grid, Paper, Tooltip, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import { useSelector } from "react-redux";
 import { useStyles } from "./make-style";
@@ -18,6 +10,7 @@ import useObservable from "@core/hooks/use-observable.hook";
 import { User } from "@app/models/user.model";
 import ProfileForm from "@app/components/profile-form";
 import AppBar from "@app/components/app-bar";
+import CustomBreadcrumbs from "@app/components/custom-breadcrumbs";
 
 const handleLinkActiving = ({ isActive }: { isActive: boolean }) => {
   return isActive
@@ -26,6 +19,17 @@ const handleLinkActiving = ({ isActive }: { isActive: boolean }) => {
         color: "red",
       }
     : {};
+};
+
+const TypographyPrimary: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = (props) => {
+  return (
+    <Typography noWrap color="textPrimary" {...props}>
+      {props.children}
+    </Typography>
+  );
 };
 
 function Profile() {
@@ -52,40 +56,21 @@ function Profile() {
     }
   };
 
-  const TypographyPrimary: React.FC<{
-    children: React.ReactNode;
-    className?: string;
-  }> = (props) => {
-    return (
-      <Typography noWrap color="textPrimary" {...props}>
-        {props.children}
-      </Typography>
-    );
-  };
-
   return (
     <>
       <AppBar />
       <Box paddingTop={2} className={classes.container}>
-        <Box paddingX={5.5} className={classes.wrapBreadcrumb}>
-          <Breadcrumbs
-            separator={<NavigateNextIcon fontSize="small" />}
-            aria-label="breadcrumb"
-            className={classes.breadcrumb}
-          >
-            <Link color="inherit" to="/">
-              Trang chủ
-            </Link>
-            <TypographyPrimary>Thông tin tài khoản</TypographyPrimary>
-          </Breadcrumbs>
-        </Box>
+        <CustomBreadcrumbs
+          navigation={[{ title: "Trang chủ", linkTo: "/" }]}
+          textPrimary="Thông tin tài khoản"
+        />
         <Box paddingTop={2} style={{ display: "flex" }}>
           <Grid item xs={3} md={3} style={{ marginRight: "1em" }}>
             <Paper>
               <Box className={classes.menuLeft}>
                 <Tooltip
                   title={
-                    !!currentUser &&
+                    !!currentUser.id &&
                     currentUser?.firstName + " " + currentUser?.lastName
                   }
                   placement="top-start"
@@ -94,14 +79,15 @@ function Profile() {
                 >
                   <span>
                     <TypographyPrimary className={classes.typographyBolder}>
-                      {!!currentUser &&
+                      {!!currentUser.id &&
                         currentUser?.firstName + " " + currentUser?.lastName}
                     </TypographyPrimary>
                   </span>
                 </Tooltip>
                 <TypographyPrimary className={classes.typographyBolder}>
                   Tiền:{" "}
-                  {!!currentUser && currentUser?.amount?.toLocaleString("vn")}đ
+                  {!!currentUser.id &&
+                    currentUser?.amount?.toLocaleString("vn") + "đ"}
                 </TypographyPrimary>
                 <Box>
                   <ul style={{ listStyle: "none" }}>
