@@ -346,7 +346,7 @@ function ProductManagement() {
         onConfirm={handleDeleteProduct}
       >
         {recordForAction &&
-          "Do you want to delete product: " + recordForAction.name}
+          "Do you want to delete product: " + recordForAction.title}
         ?
       </ConfirmDialog>
     </Container>
