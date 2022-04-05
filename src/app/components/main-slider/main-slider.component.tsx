@@ -94,7 +94,8 @@ function MainSlider(props: PropTypes) {
             <ul>
               <li>
                 <Link to="">
-                  <i className="fa fa-bars"></i> Danh mục sản phẩm
+                  <i className="fa fa-bars"></i>{" "}
+                  <span style={{ fontWeight: "500" }}>Danh mục sản phẩm</span>
                 </Link>
                 <ul className="menu">
                   {!!categories.length &&

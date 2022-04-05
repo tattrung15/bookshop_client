@@ -68,22 +68,23 @@ function ProductDetail() {
       );
     }
 
-    const options: ProductPaginationOption = {
-      page: 1,
-      perPage: 4,
-      in: {
-        id: ViewService.getLastView(),
-      },
-    };
-    subscribeUntilDestroy(
-      ProductService.getList(options),
-      (response: ResponseResult) => {
-        const data: Product[] = response.data.map(
-          (item: any) => new Product(item)
-        );
-        setLastViewProducts(data);
-      }
-    );
+    const lastViewIds = ViewService.getLastView();
+    if (!!lastViewIds.length) {
+      const options: ProductPaginationOption = {
+        page: 1,
+        perPage: 4,
+        ids: lastViewIds,
+      };
+      subscribeUntilDestroy(
+        ProductService.getList(options),
+        (response: ResponseResult) => {
+          const data: Product[] = response.data.map(
+            (item: any) => new Product(item)
+          );
+          setLastViewProducts(data);
+        }
+      );
+    }
 
     if (pageRef.current) {
       pageRef.current.scrollIntoView({ behavior: "smooth" });
@@ -256,42 +257,44 @@ function ProductDetail() {
           </Box>
         </Box>
       </Box>
-      <Box
-        paddingTop={5}
-        paddingX={5.5}
-        maxWidth="930px"
-        style={{ margin: "0 auto" }}
-      >
-        <Typography
-          variant="h6"
-          color="textPrimary"
-          style={{
-            margin: "0 auto",
-            background: "#EBE9E9",
-            padding: "0.2em",
-          }}
+      {!!lastViewProducts.length && (
+        <Box
+          paddingTop={5}
+          paddingX={5.5}
+          maxWidth="930px"
+          style={{ margin: "0 auto" }}
         >
-          Sản phẩm đã xem
-        </Typography>
-        <Box marginTop={2}>
-          <div>
-            <Grid container spacing={1}>
-              {!!lastViewProducts.length &&
-                lastViewProducts.map((item, index) => (
-                  <Grid key={index} item xs={6} sm={3}>
-                    <ProductItem item={item} />
-                  </Grid>
-                ))}
-            </Grid>
-          </div>
+          <Typography
+            variant="h6"
+            color="textPrimary"
+            style={{
+              margin: "0 auto",
+              background: "#EBE9E9",
+              padding: "0.2em",
+            }}
+          >
+            Sản phẩm đã xem
+          </Typography>
+          <Box marginTop={2}>
+            <div>
+              <Grid container spacing={1}>
+                {!!lastViewProducts.length &&
+                  lastViewProducts.map((item, index) => (
+                    <Grid key={index} item xs={6} sm={3}>
+                      <ProductItem item={item} />
+                    </Grid>
+                  ))}
+              </Grid>
+            </div>
 
-          <Box className={classes.showMoreBox}>
-            <Link to="" className={classes.showMoreLink}>
-              <Button variant="contained">Xem thêm</Button>
-            </Link>
+            <Box className={classes.showMoreBox}>
+              <Link to="" className={classes.showMoreLink}>
+                <Button variant="contained">Xem thêm</Button>
+              </Link>
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
       <Footer />
     </div>
   );

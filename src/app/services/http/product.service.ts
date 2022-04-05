@@ -13,6 +13,7 @@ import { PRODUCT_TYPE } from "@app/shared/constants/common";
 
 export type ProductPaginationOption = PaginationOption & {
   productType?: PRODUCT_TYPE;
+  ids?: number[];
 };
 
 class _ProductService {
