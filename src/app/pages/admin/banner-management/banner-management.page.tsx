@@ -33,7 +33,10 @@ import {
   DEFAULT_PAGINATION_OPTION,
   TYPE_ALERT,
 } from "@app/shared/constants/common";
-import { ResponseResult } from "@core/services/http/http.service";
+import {
+  PaginationOption,
+  ResponseResult,
+} from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import ConfirmDialog from "@app/components/confirm-dialog";
 import {
@@ -64,7 +67,12 @@ function BannerManagement() {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [recordForAction, setRecordForAction] = useState<any>(new Banner(null));
-  const [pagination, setPagination] = useState(DEFAULT_PAGINATION_OPTION);
+  const [pagination, setPagination] = useState(() => {
+    const options: PaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+    };
+    return options;
+  });
 
   useEffect(() => {
     subscribeUntilDestroy(
@@ -215,7 +223,7 @@ function BannerManagement() {
       const newPaginationOption: BannerPaginationOption = {
         ...pagination,
         like: {
-          name: value,
+          title: value,
         },
       };
       setPagination(newPaginationOption);

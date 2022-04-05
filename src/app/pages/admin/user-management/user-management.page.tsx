@@ -61,7 +61,12 @@ function UserManagement() {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [recordForAction, setRecordForAction] = useState<any>(new User(null));
-  const [pagination, setPagination] = useState(DEFAULT_PAGINATION_OPTION);
+  const [pagination, setPagination] = useState(() => {
+    const options: PaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+    };
+    return options;
+  });
 
   useEffect(() => {
     subscribeUntilDestroy(

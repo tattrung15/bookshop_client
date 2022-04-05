@@ -82,8 +82,10 @@ function ProductImageManagement() {
       }
     );
 
-    const options: ProductPaginationOption = DEFAULT_PAGINATION_OPTION;
-    options.productType = PRODUCT_TYPE.NO_IMAGE_ALL;
+    const options: ProductPaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+      productType: PRODUCT_TYPE.NO_IMAGE_ALL,
+    };
 
     subscribeUntilDestroy(
       ProductService.getList(options),
