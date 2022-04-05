@@ -37,7 +37,7 @@ function ProductItem(props: TypeProps) {
         >
           <div>
             <span>
-              <img src={srcImage || imageNotFound} alt={item.title} />
+              <img src={srcImage} alt={item.title} />
             </span>
           </div>
           <div className="btitle">

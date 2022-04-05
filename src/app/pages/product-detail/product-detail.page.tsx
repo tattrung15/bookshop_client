@@ -28,6 +28,7 @@ import {
 } from "@core/services/http/http.service";
 import ProductItem from "@app/components/product-item";
 import ViewService from "@app/services/view.service";
+import { imageNotFound } from "@app/shared/constants/common";
 
 function ProductDetail() {
   const classes = useStyles();
@@ -119,7 +120,7 @@ function ProductDetail() {
       </Box>
       <MainSlider shouldShowBanner={false} />
       <Box
-        paddingTop={2}
+        paddingTop={4}
         paddingX={5.5}
         maxWidth="992px"
         style={{ margin: "0 auto", display: "flex" }}
@@ -132,6 +133,13 @@ function ProductDetail() {
                   buildImageSrc(item.imageUrl)
                 )}
                 classes={{ root: classes.wrapper }}
+              />
+            )}
+            {!product.productImages?.length && (
+              <img
+                src={imageNotFound}
+                alt="Not found"
+                style={{ width: "100%", height: "500px" }}
               />
             )}
           </Box>
