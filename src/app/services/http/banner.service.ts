@@ -4,7 +4,6 @@ import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
 import { FETCH_TYPE } from "@app/shared/constants/common";
-import { HttpOptions } from "@core/services/http/http.type";
 import {
   Banner,
   CreateBannerDto,
@@ -18,8 +17,8 @@ export type BannerPaginationOption = PaginationOption & {
 class _BannerService {
   public getList(options?: BannerPaginationOption): Observable<any> {
     return HttpService.get("/banners", {
-      queryParams: options,
-    } as HttpOptions).pipe(pluck("result"));
+      queryParams: { ...options },
+    }).pipe(pluck("result"));
   }
 
   public createBanner(banner: CreateBannerDto): Observable<Banner> {
@@ -59,9 +58,7 @@ class _BannerService {
       body: {
         isActive: newStatus,
       },
-    } as HttpOptions).pipe(
-      map((response: any) => new Banner(response.result.data))
-    );
+    }).pipe(map((response: any) => new Banner(response.result.data)));
   }
 
   public deleteBanner(bannerId: number): Observable<Banner> {

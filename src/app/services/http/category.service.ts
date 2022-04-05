@@ -3,7 +3,6 @@ import { map, pluck } from "rxjs/operators";
 import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
-import { HttpOptions } from "@core/services/http/http.type";
 import {
   Category,
   CreateCategoryDto,
@@ -17,8 +16,8 @@ export type CategoryPaginationOption = PaginationOption & {
 class _CategoryService {
   public getList(options?: CategoryPaginationOption): Observable<any> {
     return HttpService.get("/categories", {
-      queryParams: options,
-    } as HttpOptions).pipe(pluck("result"));
+      queryParams: { ...options },
+    }).pipe(pluck("result"));
   }
 
   public createCategory(category: CreateCategoryDto): Observable<Category> {

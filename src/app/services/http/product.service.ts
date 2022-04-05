@@ -3,7 +3,6 @@ import { map, pluck } from "rxjs/operators";
 import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
-import { HttpOptions } from "@core/services/http/http.type";
 import {
   CreateProductDto,
   Product,
@@ -19,8 +18,8 @@ export type ProductPaginationOption = PaginationOption & {
 class _ProductService {
   public getList(options?: ProductPaginationOption): Observable<any> {
     return HttpService.get("/products", {
-      queryParams: options,
-    } as HttpOptions).pipe(pluck("result"));
+      queryParams: { ...options },
+    }).pipe(pluck("result"));
   }
 
   public getDetail(productId: number | string): Observable<Product> {
@@ -34,8 +33,8 @@ class _ProductService {
     options?: PaginationOption
   ): Observable<any> {
     return HttpService.get(`/categories/${categoryId}/products`, {
-      queryParams: options,
-    } as HttpOptions).pipe(pluck("result"));
+      queryParams: { ...options },
+    }).pipe(pluck("result"));
   }
 
   public createProduct(product: CreateProductDto): Observable<Product> {

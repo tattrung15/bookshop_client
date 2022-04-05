@@ -4,13 +4,12 @@ import { CreateUserDto, UpdateUserDto, User } from "@app/models/user.model";
 import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
-import { HttpOptions } from "@core/services/http/http.type";
 
 class _UserService {
   public getList(options?: PaginationOption): Observable<any> {
     return HttpService.get("/users", {
-      queryParams: options,
-    } as HttpOptions).pipe(pluck("result"));
+      queryParams: { ...options },
+    }).pipe(pluck("result"));
   }
 
   public createUser(user: CreateUserDto): Observable<User> {
