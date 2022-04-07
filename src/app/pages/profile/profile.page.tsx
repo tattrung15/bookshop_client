@@ -41,9 +41,11 @@ function Profile() {
   const [currentUser, setCurrentUser] = useState<User>(new User(null));
 
   useEffect(() => {
-    subscribeOnce(UserService.getUserById(userId), (data) => {
-      setCurrentUser(data);
-    });
+    if (userId) {
+      subscribeOnce(UserService.getUserById(userId), (data) => {
+        setCurrentUser(data);
+      });
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);

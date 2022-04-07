@@ -27,6 +27,7 @@ import { storeUser } from "./store/auth/auth.action";
 import { User } from "./models/user.model";
 import { useStyles } from "./app.make-style";
 import RoleService from "./services/role.service";
+import { CartEpic } from "./store/cart";
 
 function App() {
   const classes = useStyles();
@@ -40,6 +41,7 @@ function App() {
   const [dialogContent, setDialogContent] = useState<string>("");
 
   const { isDeliveryLoading, isDeliveryError } = useSelector(selectDelivery);
+  const { isCartLoading, isCartError } = useSelector(selectCart);
 
   const role = RoleService.getRole();
 
@@ -56,6 +58,7 @@ function App() {
       dispatch(storeUser(new User(data.result.data.user)));
       StorageService.set("access_token", data.result.data.jwt);
       StorageService.set("role", data.result.data.user.role);
+      dispatch(CartEpic.fetchCart());
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,17 +83,23 @@ function App() {
       }
     });
 
-    if (isDeliveryLoading) {
+    if (isDeliveryLoading || isCartLoading) {
       setOpenBackdrop(true);
     } else {
       setOpenBackdrop(false);
     }
 
-    if (isDeliveryError) {
+    if (isDeliveryError || isCartError) {
       setOpenDialog(true);
       setDialogContent("Cannot fetch data, please try again...");
     }
-  }, [destroy$, isDeliveryError, isDeliveryLoading]);
+  }, [
+    destroy$,
+    isDeliveryError,
+    isDeliveryLoading,
+    isCartError,
+    isCartLoading,
+  ]);
 
   return (
     <div>
@@ -131,5 +140,6 @@ function App() {
 }
 
 const selectDelivery = (state: GlobalState) => state.delivery;
+const selectCart = (state: GlobalState) => state.cart;
 
 export default App;

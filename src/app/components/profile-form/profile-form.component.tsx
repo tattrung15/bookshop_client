@@ -36,17 +36,20 @@ function ProfileForm(props: PropTypes) {
   });
 
   useEffect(() => {
-    subscribeOnce(UserService.getUserById(userId), (data: User) => {
-      const newUserInfo: Partial<UpdateUserDto> = {
-        ...userInfo,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        address: data.address,
-        email: data.email,
-        phone: data.phone,
-      };
-      setUserInfo(newUserInfo);
-    });
+    if (userId) {
+      subscribeOnce(UserService.getUserById(userId), (data: User) => {
+        const newUserInfo: Partial<UpdateUserDto> = {
+          ...userInfo,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address: data.address,
+          email: data.email,
+          phone: data.phone,
+        };
+        setUserInfo(newUserInfo);
+      });
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 

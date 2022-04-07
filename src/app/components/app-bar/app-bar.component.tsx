@@ -33,6 +33,7 @@ import { Role } from "@app/shared/types/user.type";
 import { clearUser } from "@app/store/auth/auth.action";
 import StorageService from "@core/services/storage";
 import { useStyles } from "./make-style";
+import { clearCart } from "@app/store/cart/cart.action";
 
 function AppBar() {
   const classes = useStyles();
@@ -70,6 +71,7 @@ function AppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
     dispatch(clearUser());
+    dispatch(clearCart());
     StorageService.set("access_token", "");
     StorageService.set("role", "");
     StorageService.setSession("access_token", "");
@@ -124,27 +126,29 @@ function AppBar() {
       onClose={handleMobileMenuClose}
     >
       <Link to={"/cart"} style={{ color: "black", textDecoration: "none" }}>
-        <MenuItem>
-          {authState.id && (
-            <IconButton
-              aria-label="show 4 new mails"
-              color="inherit"
-              disableRipple
-              disableFocusRipple
-            >
-              <Badge
-                badgeContent={cartState.numberOfProducts}
-                color="secondary"
+        {authState.username && (
+          <>
+            <MenuItem>
+              <IconButton
+                aria-label="show 4 new mails"
+                color="inherit"
+                disableRipple
+                disableFocusRipple
               >
-                <Icon
-                  style={{ overflow: "visible" }}
-                  className="fa fa-shopping-cart"
-                />
-              </Badge>
-            </IconButton>
-          )}
-          <p>Giỏ hàng</p>
-        </MenuItem>
+                <Badge
+                  badgeContent={cartState.numberOfProducts}
+                  color="secondary"
+                >
+                  <Icon
+                    style={{ overflow: "visible" }}
+                    className="fa fa-shopping-cart"
+                  />
+                </Badge>
+              </IconButton>
+              <p>Giỏ hàng</p>
+            </MenuItem>
+          </>
+        )}
       </Link>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -156,11 +160,15 @@ function AppBar() {
           disableTouchRipple
         >
           {authState.username && (
-            <Box>
-              <Avatar className={classes.small}>
-                {authState.username.substring(0, 1).toUpperCase()}
-              </Avatar>
-            </Box>
+            <Chip
+              className={classes.chip}
+              label={authState.username}
+              avatar={
+                <Avatar>
+                  {authState.username.substring(0, 1).toUpperCase()}
+                </Avatar>
+              }
+            />
           )}
           {!authState.username && <Icon className="fa fa-user" />}
         </IconButton>

@@ -21,6 +21,7 @@ import StorageService from "@core/services/storage";
 import { User } from "@app/models/user.model";
 import { storeUser } from "@app/store/auth/auth.action";
 import HttpService from "@core/services/http/http.service";
+import { CartEpic } from "@app/store/cart";
 
 export default function SignIn() {
   const classes = useStyles();
@@ -48,6 +49,7 @@ export default function SignIn() {
           StorageService.setSession("access_token", data.result.data.jwt);
           StorageService.setSession("role", data.result.data.user.role);
         }
+        dispatch(CartEpic.fetchCart());
         navigate("/", { replace: true });
       }
     );

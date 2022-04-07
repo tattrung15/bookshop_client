@@ -36,9 +36,9 @@ import { storeCart } from "@app/store/cart/cart.action";
 function ProductDetail() {
   const classes = useStyles();
 
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { slug } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   const { subscribeUntilDestroy } = useObservable();
 
   const [quantity, setQuantity] = useState(1);

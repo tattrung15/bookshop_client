@@ -8,12 +8,9 @@ import {
   switchMap,
   takeUntil,
 } from "rxjs";
-
 import { Delivery } from "@app/models/delivery.model";
 import DeliveryService from "@app/services/http/delivery.service";
-
 import { AppAction } from "@core/types/redux.type";
-
 import { storeDelivery } from "./delivery.action";
 import { DeliveryActionType, DeliveryEpicType } from "./delivery.type";
 

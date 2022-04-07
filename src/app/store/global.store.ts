@@ -3,7 +3,7 @@ import { combineEpics, createEpicMiddleware } from "redux-observable";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { deliveryEpic, deliveryReducer, DeliveryState } from "./delivery";
 import { authReducer, AuthState } from "./auth";
-import { cartReducer, CartState } from "./cart";
+import { cartEpic, cartReducer, CartState } from "./cart";
 
 const rootReducer = combineReducers<GlobalState>({
   delivery: deliveryReducer,
@@ -11,7 +11,7 @@ const rootReducer = combineReducers<GlobalState>({
   cart: cartReducer,
 });
 
-const rootEpic = combineEpics(deliveryEpic);
+const rootEpic = combineEpics(deliveryEpic, cartEpic);
 
 const epicMiddleware = createEpicMiddleware();
 const store = createStore(
