@@ -31,7 +31,10 @@ import {
 import ProductItem from "@app/components/product-item";
 import ViewService from "@app/services/view.service";
 import { imageNotFound, TYPE_ALERT } from "@app/shared/constants/common";
-import { storeCart } from "@app/store/cart/cart.action";
+import { CreateCartDto } from "@app/models/cart.model";
+import CartService from "@app/services/http/cart.service";
+import { fetchCart } from "@app/store/cart/cart.epic";
+import useDestroy from "@core/hooks/use-destroy.hook";
 
 function ProductDetail() {
   const classes = useStyles();
@@ -39,7 +42,8 @@ function ProductDetail() {
   const dispatch = useDispatch();
   const { slug } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const { subscribeUntilDestroy } = useObservable();
+  const { destroy$ } = useDestroy();
+  const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<Product>(new Product(null));
@@ -108,6 +112,17 @@ function ProductDetail() {
         variant: TYPE_ALERT.WARNING,
       });
     }
+
+    const cartDto: CreateCartDto = {
+      productId: product.id,
+      quantity,
+    };
+    subscribeOnce(CartService.addToCart(cartDto), () => {
+      dispatch(fetchCart({ destroy$ }));
+      enqueueSnackbar("Thêm vào giỏ hàng thành công", {
+        variant: TYPE_ALERT.SUCCESS,
+      });
+    });
   };
 
   return (

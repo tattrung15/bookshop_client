@@ -1,13 +1,22 @@
 import { combineEpics, ofType } from "redux-observable";
-import { catchError, map, Observable, of, switchMap } from "rxjs";
+import {
+  catchError,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  takeUntil,
+} from "rxjs";
 import { AppAction } from "@core/types/redux.type";
 import { CartActionType, CartEpicType } from "./cart.type";
 import CartService from "@app/services/http/cart.service";
 import { clearCart, storeCart } from "./cart.action";
 
-export const fetchCart = (): AppAction => {
+export const fetchCart = (extras: { destroy$: Subject<void> }): AppAction => {
   return {
     type: CartEpicType.FETCH_CART,
+    payload: { extras },
   };
 };
 
@@ -16,7 +25,7 @@ const fetchAndStoreCartEpic = (
 ): Observable<AppAction> => {
   return action$.pipe(
     ofType(CartEpicType.FETCH_CART),
-    switchMap(() =>
+    switchMap((action: AppAction) =>
       CartService.getCart().pipe(
         map((result: any) => {
           if (result?.data) {
@@ -29,7 +38,8 @@ const fetchAndStoreCartEpic = (
           of({
             type: CartActionType.FETCH_CART_FAILED,
           })
-        )
+        ),
+        takeUntil(action.payload?.extras.destroy$)
       )
     )
   );

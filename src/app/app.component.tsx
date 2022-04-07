@@ -27,7 +27,7 @@ import { storeUser } from "./store/auth/auth.action";
 import { User } from "./models/user.model";
 import { useStyles } from "./app.make-style";
 import RoleService from "./services/role.service";
-import { CartEpic } from "./store/cart";
+import { fetchCart } from "./store/cart/cart.epic";
 
 function App() {
   const classes = useStyles();
@@ -58,7 +58,7 @@ function App() {
       dispatch(storeUser(new User(data.result.data.user)));
       StorageService.set("access_token", data.result.data.jwt);
       StorageService.set("role", data.result.data.user.role);
-      dispatch(CartEpic.fetchCart());
+      dispatch(fetchCart({ destroy$ }));
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
