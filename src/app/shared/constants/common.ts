@@ -59,7 +59,7 @@ export const DEFAULT_PAGINATION_OPTION: PaginationOption = {
 export const mainMenuItems: MenuItem[] = [
   {
     linkTo: "/",
-    tooltip: "Home",
+    tooltip: "Trang chủ",
     mainContent: "Home",
     icon: HomeIcon,
   },
@@ -71,37 +71,37 @@ export const mainMenuItems: MenuItem[] = [
   },
   {
     linkTo: "/admin/user-management",
-    tooltip: "User management",
+    tooltip: "Quản lý người dùng",
     mainContent: "Users",
     icon: PeopleIcon,
   },
   {
     linkTo: "/admin/category-management",
-    tooltip: "Category management",
+    tooltip: "Quản lý danh mục",
     mainContent: "Categories",
     icon: CategoryIcon,
   },
   {
     linkTo: "/admin/product-management",
-    tooltip: "Book management",
+    tooltip: "Quản lý sản phẩm",
     mainContent: "Products",
     icon: BookIcon,
   },
   {
     linkTo: "/admin/product-image-management",
-    tooltip: "Product image management",
+    tooltip: "Quản lý hình ảnh sản phẩm",
     mainContent: "Product images",
     icon: ImageIcon,
   },
   {
     linkTo: "/admin/sale-order-management",
-    tooltip: "Sale order management",
+    tooltip: "Quản lý đơn hàng",
     mainContent: "Sale orders",
     icon: ReceiptIcon,
   },
   {
     linkTo: "/admin/banner-management",
-    tooltip: "Banner management",
+    tooltip: "Quản lý banner",
     mainContent: "Banner",
     icon: ViewCarouselIcon,
   },

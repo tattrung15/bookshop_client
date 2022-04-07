@@ -13,4 +13,9 @@ export const useStyles = makeStyles(() => ({
     color: "black",
     textDecoration: "none",
   },
+  btnAddToCart: {
+    marginTop: "0.5em",
+    marginBottom: "1em",
+    padding: "0.5em 1em",
+  },
 }));

@@ -161,7 +161,7 @@ function ProductManagement() {
       subscribeOnce(
         ProductService.updateProduct(editProductId, editProductBody),
         () => {
-          enqueueSnackbar("Update product successfully", {
+          enqueueSnackbar("Cập nhật sản phẩm thành công", {
             variant: TYPE_ALERT.SUCCESS,
           });
           resetForm();
@@ -181,7 +181,7 @@ function ProductManagement() {
         categoryId: values.categoryId,
       };
       subscribeOnce(ProductService.createProduct(newProduct), () => {
-        enqueueSnackbar("Create product successfully", {
+        enqueueSnackbar("Tạo sản phẩm thành công", {
           variant: TYPE_ALERT.SUCCESS,
         });
         resetForm();
@@ -198,7 +198,7 @@ function ProductManagement() {
 
   const handleDeleteProduct = () => {
     subscribeOnce(ProductService.deleteProduct(recordForAction.id), () => {
-      enqueueSnackbar("Delete product successfully", {
+      enqueueSnackbar("Xóa sản phẩm thành công", {
         variant: TYPE_ALERT.SUCCESS,
       });
       setForceUpdate();
@@ -247,14 +247,14 @@ function ProductManagement() {
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
-        Product Management
+        Quản lý sản phẩm
       </Typography>
       <Box style={{ display: "flex" }}>
         <Button variant="contained" color="primary" onClick={onAddProductClick}>
-          Add product
+          Thêm sản phẩm
         </Button>
         <PopupDialog
-          title="Product form"
+          title="Biểu mẫu sản phẩm"
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
@@ -268,7 +268,7 @@ function ProductManagement() {
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}
-          label="Search title..."
+          label="Tìm kiếm theo tiêu đề"
           variant="outlined"
           size="small"
           value={searchState}
@@ -288,17 +288,17 @@ function ProductManagement() {
             <TableHead>
               <TableRow>
                 <TableCell width="7%">STT</TableCell>
-                <TableCell width="37%">Title</TableCell>
-                <TableCell width="15%">Price</TableCell>
-                <TableCell width="20%">Author</TableCell>
+                <TableCell width="37%">Tiêu đề</TableCell>
+                <TableCell width="15%">Giá</TableCell>
+                <TableCell width="20%">Tác giả</TableCell>
                 <TableCell width="7%" align="center">
-                  View
+                  Xem
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Edit
+                  Cập nhật
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Delete
+                  Xóa
                 </TableCell>
               </TableRow>
             </TableHead>

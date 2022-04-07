@@ -10,7 +10,7 @@ import { buildImageSrc } from "@app/shared/helpers/helpers";
 import { BANNER_TYPE_MAP } from "@app/shared/constants/common";
 
 const acceptFileTypes = "image/jpeg, image/png";
-const messageSuggest = "Only *.jpeg and *.png images will be accepted";
+const messageSuggest = "Chỉ các hình ảnh *.jpeg và *.png mới được chấp nhận";
 
 const initialBannerValues: Partial<UpdateBannerDto> = {
   bannerId: 0,
@@ -57,7 +57,7 @@ function BannerForm(props: TypeProps) {
 
     if ("title" in fieldValues) {
       temp.title =
-        fieldValues.title.trim() !== "" ? "" : "This field is required";
+        fieldValues.title.trim() !== "" ? "" : "Trường này là bắt buộc";
     }
 
     setErrors({
@@ -113,7 +113,7 @@ function BannerForm(props: TypeProps) {
         >
           <Controls.Input
             name="title"
-            label="Title"
+            label="Tiêu đề"
             value={values.title ?? ""}
             onChange={handleInputChange}
             error={errors.title}
@@ -123,7 +123,7 @@ function BannerForm(props: TypeProps) {
           />
           <Controls.Select
             name="type"
-            label="Type"
+            label="Kiểu banner"
             value={values.type || ""}
             onChange={handleInputChange}
             options={bannerItems()}
@@ -159,9 +159,9 @@ function BannerForm(props: TypeProps) {
         {!isView && (
           <Grid item xs={12}>
             <div style={{ textAlign: "center" }}>
-              <Controls.Button type="submit" text="Submit" />
+              <Controls.Button type="submit" text="Gửi đi" />
               <Controls.Button
-                text="Reset"
+                text="Đặt lại"
                 color="default"
                 onClick={resetForm}
               />

@@ -144,7 +144,7 @@ function UserManagement() {
         (key) => editUserBody[key] === null && delete editUserBody[key]
       );
       subscribeOnce(UserService.updateUser(editUserId, editUserBody), () => {
-        enqueueSnackbar("Update user successfully", {
+        enqueueSnackbar("Cập nhật người dùng thành công", {
           variant: TYPE_ALERT.SUCCESS,
         });
         resetForm();
@@ -166,7 +166,7 @@ function UserManagement() {
       };
 
       subscribeOnce(UserService.createUser(newUser), () => {
-        enqueueSnackbar("Create user successfully", {
+        enqueueSnackbar("Tạo người dùng thành công", {
           variant: TYPE_ALERT.SUCCESS,
         });
         resetForm();
@@ -183,14 +183,14 @@ function UserManagement() {
 
   const handleDeleteUser = () => {
     if (userId === recordForAction.id) {
-      enqueueSnackbar("Cannot delete your account", {
+      enqueueSnackbar("Không thể xóa tài khoản của bạn", {
         variant: TYPE_ALERT.ERROR,
       });
       return;
     }
 
     subscribeOnce(UserService.deleteUser(recordForAction.id), () => {
-      enqueueSnackbar("Delete user successfully", {
+      enqueueSnackbar("Xóa người dùng thành công", {
         variant: TYPE_ALERT.SUCCESS,
       });
       setForceUpdate();
@@ -241,14 +241,14 @@ function UserManagement() {
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
-        User Management
+        Quản lý người dùng
       </Typography>
       <Box style={{ display: "flex" }}>
         <Button variant="contained" color="primary" onClick={onAddUserClick}>
-          Add user
+          Thêm người dùng
         </Button>
         <PopupDialog
-          title="User form"
+          title="Biểu mẫu người dùng"
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
@@ -261,7 +261,7 @@ function UserManagement() {
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}
-          label="Search username..."
+          label="Tìm kiếm theo tên người dùng"
           variant="outlined"
           size="small"
           value={searchState}
@@ -281,15 +281,15 @@ function UserManagement() {
             <TableHead>
               <TableRow>
                 <TableCell>STT</TableCell>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell>User Name</TableCell>
-                <TableCell>Phone</TableCell>
+                <TableCell>Tên</TableCell>
+                <TableCell>Họ</TableCell>
+                <TableCell>Tên người dùng</TableCell>
+                <TableCell>Điện thoại</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell align="justify">View</TableCell>
-                <TableCell align="justify">Edit</TableCell>
-                <TableCell align="justify">Delete</TableCell>
+                <TableCell>Địa chỉ</TableCell>
+                <TableCell align="justify">Xem</TableCell>
+                <TableCell align="justify">Cập nhật</TableCell>
+                <TableCell align="justify">Xóa</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

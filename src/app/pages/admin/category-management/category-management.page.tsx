@@ -145,7 +145,7 @@ function CategoryManagement() {
       subscribeOnce(
         CategoryService.updateCategory(editCategoryId, editCategoryBody),
         () => {
-          enqueueSnackbar("Update category successfully", {
+          enqueueSnackbar("Cập nhật danh mục thành công", {
             variant: TYPE_ALERT.SUCCESS,
           });
           resetForm();
@@ -165,7 +165,7 @@ function CategoryManagement() {
         (key) => newCategory[key] === null && delete newCategory[key]
       );
       subscribeOnce(CategoryService.createCategory(newCategory), () => {
-        enqueueSnackbar("Create category successfully", {
+        enqueueSnackbar("Tạo danh mục thành công", {
           variant: TYPE_ALERT.SUCCESS,
         });
         resetForm();
@@ -182,7 +182,7 @@ function CategoryManagement() {
 
   const handleDeleteCategory = () => {
     subscribeOnce(CategoryService.deleteCategory(recordForAction.id), () => {
-      enqueueSnackbar("Delete user successfully", {
+      enqueueSnackbar("Xóa danh mục thành công", {
         variant: TYPE_ALERT.SUCCESS,
       });
       setForceUpdate();
@@ -233,7 +233,7 @@ function CategoryManagement() {
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
-        Category Management
+        Quản lý danh mục
       </Typography>
       <Box style={{ display: "flex" }}>
         <Button
@@ -241,10 +241,10 @@ function CategoryManagement() {
           color="primary"
           onClick={onAddCategoryClick}
         >
-          Add category
+          Thêm danh mục
         </Button>
         <PopupDialog
-          title="Category form"
+          title="Biểu mẫu danh mục"
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
@@ -258,7 +258,7 @@ function CategoryManagement() {
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}
-          label="Search name..."
+          label="Tìm kiếm theo tên"
           variant="outlined"
           size="small"
           value={searchState}
@@ -278,17 +278,17 @@ function CategoryManagement() {
             <TableHead>
               <TableRow>
                 <TableCell width="10%">STT</TableCell>
-                <TableCell width="20%">Category Name</TableCell>
-                <TableCell width="29%">Description</TableCell>
-                <TableCell width="20%">Parent Category</TableCell>
+                <TableCell width="20%">Tên</TableCell>
+                <TableCell width="29%">Mô tả</TableCell>
+                <TableCell width="20%">Danh mục cha</TableCell>
                 <TableCell width="7%" align="center">
-                  View
+                  Xem
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Edit
+                  Cập nhật
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Delete
+                  Xóa
                 </TableCell>
               </TableRow>
             </TableHead>

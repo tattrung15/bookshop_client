@@ -56,65 +56,65 @@ function UserForm(props: TypeProps) {
     }
 
     if ("firstName" in fieldValues) {
-      temp.firstName = fieldValues.firstName ? "" : "This field is required";
+      temp.firstName = fieldValues.firstName ? "" : "Trường này là bắt buộc";
     }
     if ("lastName" in fieldValues) {
-      temp.lastName = fieldValues.lastName ? "" : "This field is required";
+      temp.lastName = fieldValues.lastName ? "" : "Trường này là bắt buộc";
     }
     if ("address" in fieldValues) {
-      temp.address = fieldValues.address ? "" : "This field is required";
+      temp.address = fieldValues.address ? "" : "Trường này là bắt buộc";
     }
     if ("email" in fieldValues) {
       temp.email = !fieldValues.email
-        ? "This field is required"
+        ? "Trường này là bắt buộc"
         : /$^|.+@.+..+/.test(fieldValues.email)
         ? ""
-        : "Email is not valid";
+        : "Email không hợp lệ";
     }
     if ("phone" in fieldValues) {
       temp.phone =
-        fieldValues.phone.length >= 10 ? "" : "Minimum 10 numbers required";
+        fieldValues.phone.length >= 10 ? "" : "Yêu cầu tối thiểu 10 số";
     }
     if ("username" in fieldValues) {
       temp.username = !fieldValues.username
-        ? "This field is required"
+        ? "Trường này là bắt buộc"
         : /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/.test(fieldValues.username)
         ? ""
-        : "Username contains only letters, numbers and characters: . or _";
+        : "Tên người dùng chỉ chứa các chữ cái, số và ký tự:. hoặc _";
     }
     if (isEdit) {
       if (fieldValues.password) {
         if ("password" in fieldValues) {
           temp.password = !fieldValues.password
-            ? "This field is required"
+            ? "Trường này là bắt buộc"
             : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
                 fieldValues.password
               )
             ? ""
-            : "Password at least 8 characters, at least one letter and one number";
+            : "Mật khẩu ít nhất 8 ký tự, ít nhất một chữ cái và một số";
         }
         if ("cfPassword" in fieldValues) {
           temp.cfPassword =
             values.password === fieldValues.cfPassword
               ? ""
-              : "Doesn't match the password";
+              : "Không khớp với mật khẩu";
         }
       }
     } else {
       if ("password" in fieldValues) {
         temp.password = !fieldValues.password
-          ? "This field is required"
+          ? "Trường này là bắt buộc"
           : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
               fieldValues.password
             )
           ? ""
-          : "Password at least 8 characters, at least one letter and one number";
+          : "Mật khẩu ít nhất 8 ký tự, ít nhất một chữ cái và một số";
       }
       if ("cfPassword" in fieldValues) {
         temp.cfPassword =
           values.password === fieldValues.cfPassword
             ? ""
-            : "Doesn't match the password";
+            : "Không khớp với mật khẩu";
       }
     }
 
@@ -157,7 +157,7 @@ function UserForm(props: TypeProps) {
         <Grid item xs={6}>
           <Controls.Input
             name="firstName"
-            label="First Name"
+            label="Tên"
             value={values.firstName ?? ""}
             error={errors.firstName}
             onChange={handleInputChange}
@@ -167,7 +167,7 @@ function UserForm(props: TypeProps) {
           />
           <Controls.Input
             name="lastName"
-            label="Last Name"
+            label="Họ"
             value={values.lastName ?? ""}
             error={errors.lastName}
             onChange={handleInputChange}
@@ -186,8 +186,8 @@ function UserForm(props: TypeProps) {
             }}
           />
           <Controls.Input
-            label="Phone"
             name="phone"
+            label="Điện thoại"
             value={values.phone ?? ""}
             error={errors.phone}
             onChange={handleInputChange}
@@ -196,8 +196,8 @@ function UserForm(props: TypeProps) {
             }}
           />
           <Controls.Input
-            label="Address"
             name="address"
+            label="Địa chỉ"
             value={values.address ?? ""}
             error={errors.address}
             onChange={handleInputChange}
@@ -209,7 +209,7 @@ function UserForm(props: TypeProps) {
         <Grid item xs={6}>
           <Controls.Input
             name="username"
-            label="Username"
+            label="Tên người dùng"
             value={values.username ?? ""}
             onChange={handleInputChange}
             error={errors.username}
@@ -224,7 +224,7 @@ function UserForm(props: TypeProps) {
             <>
               <Controls.Input
                 name="password"
-                label="Password"
+                label="Mật khẩu"
                 value={values.password ?? ""}
                 onChange={handleInputChange}
                 error={errors.password}
@@ -244,7 +244,7 @@ function UserForm(props: TypeProps) {
               />
               <Controls.Input
                 name="cfPassword"
-                label="Confirm password"
+                label="Nhập lại mật khẩu"
                 value={values.cfPassword ?? ""}
                 onChange={handleInputChange}
                 error={errors.cfPassword}
@@ -266,7 +266,7 @@ function UserForm(props: TypeProps) {
           )}
           <Controls.Select
             name="roleId"
-            label="Role"
+            label="Vai trò"
             value={values.roleId ?? ""}
             onChange={handleInputChange}
             options={roleItems()}
@@ -276,7 +276,7 @@ function UserForm(props: TypeProps) {
           />
           <Controls.Input
             name="amount"
-            label="Amount"
+            label="Số tiền"
             value={values.amount ?? ""}
             onChange={handleInputChange}
             error={errors.amount}
@@ -293,7 +293,7 @@ function UserForm(props: TypeProps) {
             <>
               <Controls.Input
                 name="createdAt"
-                label="Created at"
+                label="Được tạo lúc"
                 value={dayjs(values.createdAt).format(DEFAULT_DATETIME_FORMAT)}
                 InputProps={{
                   readOnly: true,
@@ -301,7 +301,7 @@ function UserForm(props: TypeProps) {
               />
               <Controls.Input
                 name="updatedAt"
-                label="Updated at"
+                label="Được cập nhật lúc"
                 value={dayjs(values.updatedAt).format(DEFAULT_DATETIME_FORMAT)}
                 InputProps={{
                   readOnly: true,
@@ -313,9 +313,9 @@ function UserForm(props: TypeProps) {
         {!isView && (
           <Grid item xs={12} style={{ marginTop: "1em" }}>
             <div style={{ textAlign: "center" }}>
-              <Controls.Button type="submit" text="Submit" />
+              <Controls.Button type="submit" text="Gửi đi" />
               <Controls.Button
-                text="Reset"
+                text="Đặt lại"
                 color="default"
                 onClick={resetForm}
               />

@@ -133,7 +133,7 @@ function ProductImageManagement() {
     resetForm: () => void
   ) => {
     if (!values.files?.length) {
-      enqueueSnackbar("Please upload some files", {
+      enqueueSnackbar("Vui lòng tải lên tệp", {
         variant: TYPE_ALERT.WARNING,
       });
       return;
@@ -146,7 +146,7 @@ function ProductImageManagement() {
       subscribeOnce(
         ProductImageService.createProductImages(editProductImage),
         () => {
-          enqueueSnackbar("Update product images successfully", {
+          enqueueSnackbar("cập nhật hình ảnh sản phẩm thành công", {
             variant: TYPE_ALERT.SUCCESS,
           });
           resetForm();
@@ -163,7 +163,7 @@ function ProductImageManagement() {
       subscribeOnce(
         ProductImageService.createProductImages(newProductImage),
         () => {
-          enqueueSnackbar("Create product images successfully", {
+          enqueueSnackbar("Tạo hình ảnh sản phẩm thành công", {
             variant: TYPE_ALERT.SUCCESS,
           });
           resetForm();
@@ -183,7 +183,7 @@ function ProductImageManagement() {
     subscribeOnce(
       ProductImageService.deleteProductImages(recordForAction.id),
       () => {
-        enqueueSnackbar("Delete product images successfully", {
+        enqueueSnackbar("Xóa hình ảnh sản phẩm thành công", {
           variant: TYPE_ALERT.SUCCESS,
         });
         setForceUpdate();
@@ -233,14 +233,14 @@ function ProductImageManagement() {
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
-        Product Image Management
+        Quản lý hình ảnh sản phẩm
       </Typography>
       <Box style={{ display: "flex" }}>
         <Button variant="contained" color="primary" onClick={onAddProductClick}>
-          Add product images
+          Thêm hình ảnh sản phẩm
         </Button>
         <PopupDialog
-          title="Product image form"
+          title="Biểu mẫu hình ảnh sản phẩm"
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
@@ -254,7 +254,7 @@ function ProductImageManagement() {
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}
-          label="Search title..."
+          label="Tìm kiếm theo tiêu đề"
           variant="outlined"
           size="small"
           value={searchState}
@@ -274,16 +274,16 @@ function ProductImageManagement() {
             <TableHead>
               <TableRow>
                 <TableCell width="7%">STT</TableCell>
-                <TableCell width="42%">Title</TableCell>
-                <TableCell width="30%">Number Of Images</TableCell>
+                <TableCell width="42%">Tiêu đề</TableCell>
+                <TableCell width="30%">Số lượng ảnh</TableCell>
                 <TableCell width="7%" align="center">
-                  View
+                  Xem
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Edit
+                  Cập nhật
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Delete
+                  Xóa
                 </TableCell>
               </TableRow>
             </TableHead>

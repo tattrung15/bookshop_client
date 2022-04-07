@@ -77,9 +77,9 @@ function AppBarDrawer() {
       onClose={handleMenuClose}
     >
       <Link to="/profile" style={{ textDecoration: "none", color: "black" }}>
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Hồ sơ</MenuItem>
       </Link>
-      <MenuItem onClick={handleLogout}>Log out</MenuItem>
+      <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
     </Menu>
   );
 

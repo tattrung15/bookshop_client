@@ -43,7 +43,7 @@ function CategoryForm(props: TypeProps) {
 
     if ("name" in fieldValues) {
       temp.name =
-        fieldValues.name.trim() !== "" ? "" : "This field is required";
+        fieldValues.name.trim() !== "" ? "" : "Trường này là bắt buộc";
     }
 
     setErrors({
@@ -89,7 +89,7 @@ function CategoryForm(props: TypeProps) {
         >
           <Controls.Input
             name="name"
-            label="Category Name"
+            label="Tên"
             value={values.name}
             onChange={handleInputChange}
             error={errors.name}
@@ -99,7 +99,7 @@ function CategoryForm(props: TypeProps) {
           />
           <Controls.Input
             name="description"
-            label="Description"
+            label="Mô tả"
             multiline
             maxRows={8}
             disabled={isView}
@@ -115,7 +115,7 @@ function CategoryForm(props: TypeProps) {
           />
           <Controls.Select
             name="parentCategoryId"
-            label="Parent Category"
+            label="Danh mục cha"
             value={values.parentCategoryId ? values.parentCategoryId : ""}
             onChange={handleInputChange}
             options={categoryItems()}
@@ -141,13 +141,13 @@ function CategoryForm(props: TypeProps) {
                 className="bs-color-primary"
               />
             }
-            label={<span className="bs-text-black">Is author</span>}
+            label={<span className="bs-text-black">Là tác giả</span>}
           />
           {isView && (
             <>
               <Controls.Input
                 name="createdAt"
-                label="Created At"
+                label="Được tạo lúc"
                 value={dayjs(values.createdAt).format(DEFAULT_DATETIME_FORMAT)}
                 InputProps={{
                   readOnly: isView,
@@ -155,7 +155,7 @@ function CategoryForm(props: TypeProps) {
               />
               <Controls.Input
                 name="updatedAt"
-                label="Updated At"
+                label="Được cập nhật lúc"
                 value={dayjs(values.updatedAt).format(DEFAULT_DATETIME_FORMAT)}
                 InputProps={{
                   readOnly: isView,
@@ -167,9 +167,9 @@ function CategoryForm(props: TypeProps) {
         {!isView && (
           <Grid item xs={12}>
             <div style={{ textAlign: "center" }}>
-              <Controls.Button type="submit" text="Submit" />
+              <Controls.Button type="submit" text="Gửi đi" />
               <Controls.Button
-                text="Reset"
+                text="Đặt lại"
                 color="default"
                 onClick={resetForm}
               />

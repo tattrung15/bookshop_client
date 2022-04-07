@@ -37,6 +37,8 @@ import { useStyles } from "./make-style";
 function AppBar() {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [state, setState] = useState({ left: false });
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -45,7 +47,7 @@ function AppBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const authState = useSelector(selectAuth);
-  const dispatch = useDispatch();
+  const cartState = useSelector(selectCart);
 
   const handleProfileMenuOpen = (event: React.SyntheticEvent<any>) => {
     setAnchorEl(event.currentTarget);
@@ -96,10 +98,10 @@ function AppBar() {
             to="/profile"
             style={{ color: "black", textDecoration: "none" }}
           >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Hồ sơ</MenuItem>
           </Link>
 
-          <MenuItem onClick={handleMenuLogout}>Log out</MenuItem>
+          <MenuItem onClick={handleMenuLogout}>Đăng xuất</MenuItem>
         </Box>
       )}
       {!authState.username && (
@@ -123,7 +125,7 @@ function AppBar() {
     >
       <Link to={"/cart"} style={{ color: "black", textDecoration: "none" }}>
         <MenuItem>
-          {/* {!!authState.username && (
+          {authState.id && (
             <IconButton
               aria-label="show 4 new mails"
               color="inherit"
@@ -140,8 +142,8 @@ function AppBar() {
                 />
               </Badge>
             </IconButton>
-          )} */}
-          <p>Cart</p>
+          )}
+          <p>Giỏ hàng</p>
         </MenuItem>
       </Link>
       <MenuItem onClick={handleProfileMenuOpen}>
@@ -249,9 +251,10 @@ function AppBar() {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder="Tìm kiếm sản phẩm"
               className={classes.searchInput}
               inputProps={{ "aria-label": "search" }}
+              // TODO
               // onKeyPress={(ev) => {
               //   if (ev.which === 13 || ev.keyCode === 13) {
               //     const strSearch = ev.target.value;
@@ -282,7 +285,7 @@ function AppBar() {
                   disableFocusRipple
                 >
                   <Badge
-                    // badgeContent={cartState.numberOfProducts}
+                    badgeContent={cartState.numberOfProducts}
                     color="secondary"
                   >
                     <Icon
@@ -338,5 +341,6 @@ function AppBar() {
 }
 
 const selectAuth = (state: GlobalState) => state.auth;
+const selectCart = (state: GlobalState) => state.cart;
 
 export default AppBar;

@@ -11,6 +11,8 @@ import {
 import { ShoppingCart as ShoppingCartIcon } from "@material-ui/icons";
 import MuiImageSlider from "mui-image-slider";
 import { switchMap } from "rxjs/operators";
+import { useDispatch } from "react-redux";
+import { useSnackbar } from "notistack";
 import { useStyles } from "./make-style";
 import { Product } from "@app/models/product.model";
 import AppBar from "@app/components/app-bar";
@@ -28,14 +30,16 @@ import {
 } from "@core/services/http/http.service";
 import ProductItem from "@app/components/product-item";
 import ViewService from "@app/services/view.service";
-import { imageNotFound } from "@app/shared/constants/common";
+import { imageNotFound, TYPE_ALERT } from "@app/shared/constants/common";
+import { storeCart } from "@app/store/cart/cart.action";
 
 function ProductDetail() {
   const classes = useStyles();
 
-  const { subscribeUntilDestroy } = useObservable();
-
+  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
   const { slug } = useParams();
+  const { subscribeUntilDestroy } = useObservable();
 
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<Product>(new Product(null));
@@ -98,7 +102,13 @@ function ProductDetail() {
     setQuantity(+ev.target.value);
   };
 
-  const onBtnBuyClick = () => {};
+  const onAddToCartClick = () => {
+    if (quantity <= 0) {
+      enqueueSnackbar("Số lượng không hợp lệ", {
+        variant: TYPE_ALERT.WARNING,
+      });
+    }
+  };
 
   return (
     <div ref={pageRef}>
@@ -145,7 +155,7 @@ function ProductDetail() {
           </Box>
         </Grid>
         <Grid item xs={8} sm={8}>
-          <Box paddingTop={2} paddingX={5.5}>
+          <Box paddingTop={2} paddingX={3}>
             <Typography variant="h6" color="textPrimary">
               {product.title}
             </Typography>
@@ -195,22 +205,21 @@ function ProductDetail() {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    InputProps={{ inputProps: { min: 1 } }}
                     style={{ width: "12em" }}
                     variant="outlined"
                   />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<ShoppingCartIcon />}
-                    style={{
-                      width: "14em",
-                      marginTop: "0.5em",
-                      marginBottom: "1em",
-                    }}
-                    onClick={onBtnBuyClick}
-                  >
-                    Mua ngay
-                  </Button>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<ShoppingCartIcon />}
+                      className={classes.btnAddToCart}
+                      onClick={onAddToCartClick}
+                    >
+                      Thêm vào giỏ hàng
+                    </Button>
+                  </Box>
                 </Box>
               </Grid>
             </Box>

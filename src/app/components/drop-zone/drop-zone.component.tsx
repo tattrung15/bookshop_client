@@ -51,13 +51,13 @@ function DropZone(props: PropTypes) {
     <section className={classes.container}>
       <div {...getRootProps({ className: classes.dropzone })}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>Kéo và thả một số tệp vào đây hoặc nhấp để chọn tệp</p>
         <em>({messageSuggest})</em>
       </div>
       <aside>
-        <h4>Accepted files</h4>
+        <h4>Tệp được chấp nhận</h4>
         <ul>{acceptedFileItems}</ul>
-        <h4>Rejected files</h4>
+        <h4>Tệp bị từ chối</h4>
         <ul>{fileRejectionItems}</ul>
       </aside>
     </section>

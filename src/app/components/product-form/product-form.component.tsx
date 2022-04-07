@@ -46,36 +46,33 @@ function ProductForm(props: TypeProps) {
 
     if ("title" in fieldValues) {
       temp.title =
-        fieldValues.title.trim() !== "" ? "" : "This field is required";
+        fieldValues.title.trim() !== "" ? "" : "Trường này là bắt buộc";
     }
 
     if ("longDescription" in fieldValues) {
       temp.longDescription =
         fieldValues.longDescription.trim() !== ""
           ? ""
-          : "This field is required";
+          : "Trường này là bắt buộc";
     }
 
     if ("author" in fieldValues) {
       temp.author =
-        fieldValues.author.trim() !== "" ? "" : "This field is required";
+        fieldValues.author.trim() !== "" ? "" : "Trường này là bắt buộc";
     }
 
     if ("price" in fieldValues) {
-      temp.price =
-        fieldValues.price > 0 ? "" : "This field must be greater than 0";
+      temp.price = fieldValues.price > 0 ? "" : "Trường này phải lớn hơn 0";
     }
 
     if ("currentNumber" in fieldValues) {
       temp.currentNumber =
-        fieldValues.currentNumber >= 0
-          ? ""
-          : "This field must be greater than 0";
+        fieldValues.currentNumber >= 0 ? "" : "Trường này phải lớn hơn 0";
     }
 
     if ("numberOfPage" in fieldValues) {
       temp.numberOfPage =
-        fieldValues.numberOfPage > 0 ? "" : "This field must be greater than 0";
+        fieldValues.numberOfPage > 0 ? "" : "Trường này phải lớn hơn 0";
     }
 
     setErrors({
@@ -117,7 +114,7 @@ function ProductForm(props: TypeProps) {
         <Grid item xs={6}>
           <Controls.Input
             name="title"
-            label="Title"
+            label="Tiêu đề"
             value={values.title}
             onChange={handleInputChange}
             error={errors.title}
@@ -127,7 +124,7 @@ function ProductForm(props: TypeProps) {
           />
           <Controls.Input
             name="longDescription"
-            label="Long Description"
+            label="Mô tả"
             multiline
             maxRows={8.5}
             value={values.longDescription}
@@ -139,7 +136,7 @@ function ProductForm(props: TypeProps) {
           />
           <Controls.Input
             name="price"
-            label="Price"
+            label="Giá"
             value={values.price}
             onChange={handleInputChange}
             error={errors.price}
@@ -151,7 +148,7 @@ function ProductForm(props: TypeProps) {
           />
           <Controls.Input
             name="author"
-            label="Author"
+            label="Tác giả"
             value={values.author}
             onChange={handleInputChange}
             error={errors.author}
@@ -163,7 +160,7 @@ function ProductForm(props: TypeProps) {
           {isView && (
             <Controls.Select
               name="categoryId"
-              label="Category"
+              label="Danh mục"
               value={values.categoryId ? values.categoryId : ""}
               onChange={handleInputChange}
               options={categoryItems()}
@@ -176,7 +173,7 @@ function ProductForm(props: TypeProps) {
         <Grid item xs={6}>
           <Controls.Input
             name="currentNumber"
-            label="Current Number"
+            label="Số lượng còn"
             value={values.currentNumber}
             onChange={handleInputChange}
             error={errors.currentNumber}
@@ -188,7 +185,7 @@ function ProductForm(props: TypeProps) {
           />
           <Controls.Input
             name="numberOfPage"
-            label="Number Of Page"
+            label="Số trang"
             value={values.numberOfPage}
             onChange={handleInputChange}
             error={errors.numberOfPage}
@@ -201,7 +198,7 @@ function ProductForm(props: TypeProps) {
           {isView && (
             <Controls.Input
               name="quantityPurchased"
-              label="Quantity Purchased"
+              label="Số lượng đã mua"
               value={values.quantityPurchased}
               disabled
               InputProps={{
@@ -215,7 +212,7 @@ function ProductForm(props: TypeProps) {
           {!isView && (
             <Controls.Select
               name="categoryId"
-              label="Category"
+              label="Danh mục"
               value={values.categoryId ? values.categoryId : ""}
               onChange={handleInputChange}
               options={categoryItems()}
@@ -228,7 +225,7 @@ function ProductForm(props: TypeProps) {
             <>
               <Controls.Input
                 name="createdAt"
-                label="Created At"
+                label="Được tạo lúc"
                 value={dayjs(values.createdAt).format(DEFAULT_DATETIME_FORMAT)}
                 InputProps={{
                   readOnly: isView,
@@ -236,7 +233,7 @@ function ProductForm(props: TypeProps) {
               />
               <Controls.Input
                 name="updatedAt"
-                label="Updated At"
+                label="Được cập nhật lúc"
                 value={dayjs(values.updatedAt).format(DEFAULT_DATETIME_FORMAT)}
                 InputProps={{
                   readOnly: isView,
@@ -248,9 +245,9 @@ function ProductForm(props: TypeProps) {
         {!isView && (
           <Grid item xs={12} style={{ marginTop: "1em" }}>
             <div style={{ textAlign: "center" }}>
-              <Controls.Button type="submit" text="Submit" />
+              <Controls.Button type="submit" text="Gửi đi" />
               <Controls.Button
-                text="Reset"
+                text="Đặt lại"
                 color="default"
                 onClick={resetForm}
               />

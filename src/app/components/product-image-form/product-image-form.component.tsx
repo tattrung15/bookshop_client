@@ -8,7 +8,7 @@ import Controls from "../controls";
 import ImageGridList from "../image-grid-list";
 
 const acceptFileTypes = "image/jpeg, image/png";
-const messageSuggest = "Only *.jpeg and *.png images will be accepted";
+const messageSuggest = "Chỉ các hình ảnh *.jpeg và *.png mới được chấp nhận";
 
 const initialProductImageValues: Partial<UpdateProductImageDto> = {
   productId: 0,
@@ -87,7 +87,7 @@ function ProductImageForm(props: TypeProps) {
           {!isView && !isEdit && !!productNoImages.length && (
             <Controls.Select
               name="productId"
-              label="Title"
+              label="Tiêu đề"
               value={values.productId}
               options={productNoImages}
               onChange={handleInputChange}
@@ -98,7 +98,7 @@ function ProductImageForm(props: TypeProps) {
           {(isView || isEdit) && (
             <Controls.Input
               name="title"
-              label="Title"
+              label="Tiêu đề"
               value={values.title ?? ""}
               onChange={handleInputChange}
               InputProps={{
@@ -121,7 +121,7 @@ function ProductImageForm(props: TypeProps) {
         {!isView && (
           <Grid item xs={12}>
             <div style={{ textAlign: "center" }}>
-              <Controls.Button type="submit" text="Submit" />
+              <Controls.Button type="submit" text="Gửi đi" />
             </div>
           </Grid>
         )}

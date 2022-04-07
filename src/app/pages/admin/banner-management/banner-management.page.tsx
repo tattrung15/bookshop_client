@@ -151,7 +151,7 @@ function BannerManagement() {
         );
       }
       subscribeOnce(updateBannerObs, () => {
-        enqueueSnackbar("Update banner successfully", {
+        enqueueSnackbar("Cập nhật banner thành công", {
           variant: TYPE_ALERT.SUCCESS,
         });
         resetForm();
@@ -165,7 +165,7 @@ function BannerManagement() {
         type: values.type ?? BANNER_TYPE.CATEGORY,
       };
       subscribeOnce(BannerService.createBanner(newBanner), () => {
-        enqueueSnackbar("Create banner successfully", {
+        enqueueSnackbar("Tạo banner thành công", {
           variant: TYPE_ALERT.SUCCESS,
         });
         resetForm();
@@ -182,7 +182,7 @@ function BannerManagement() {
 
   const handleDeleteBanner = () => {
     subscribeOnce(BannerService.deleteBanner(recordForAction.id), () => {
-      enqueueSnackbar("Delete banner successfully", {
+      enqueueSnackbar("Xóa banner thành công", {
         variant: TYPE_ALERT.SUCCESS,
       });
       setForceUpdate();
@@ -233,14 +233,14 @@ function BannerManagement() {
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
-        Banner Management
+        Quản lý banner
       </Typography>
       <Box style={{ display: "flex" }}>
         <Button variant="contained" color="primary" onClick={onAddBannerClick}>
-          Add banner
+          Thêm banner
         </Button>
         <PopupDialog
-          title="Banner form"
+          title="Biểu mẫu banner"
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
@@ -253,7 +253,7 @@ function BannerManagement() {
         </PopupDialog>
         <TextField
           style={{ marginLeft: "1em" }}
-          label="Search name..."
+          label="Tìm kiếm theo tiêu đề"
           variant="outlined"
           size="small"
           value={searchState}
@@ -273,17 +273,17 @@ function BannerManagement() {
             <TableHead>
               <TableRow>
                 <TableCell width="10%">STT</TableCell>
-                <TableCell width="29%">Title</TableCell>
-                <TableCell width="20%">Image</TableCell>
-                <TableCell width="20%">Active</TableCell>
+                <TableCell width="29%">Tiêu đề</TableCell>
+                <TableCell width="20%">Số lượng ảnh</TableCell>
+                <TableCell width="20%">Kích hoạt</TableCell>
                 <TableCell width="7%" align="center">
-                  View
+                  Xem
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Edit
+                  Cập nhật
                 </TableCell>
                 <TableCell width="7%" align="center">
-                  Delete
+                  Xóa
                 </TableCell>
               </TableRow>
             </TableHead>
