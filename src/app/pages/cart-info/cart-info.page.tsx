@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { Money as MoneyIcon } from "@material-ui/icons";
 import { useDispatch } from "react-redux";
+import { Helmet } from "react-helmet-async";
 import { useStyles } from "./make-style";
 import AppBar from "@app/components/app-bar";
 import CustomBreadcrumbs from "@app/components/custom-breadcrumbs";
@@ -57,6 +58,9 @@ function CartInfo() {
 
   return (
     <>
+      <Helmet>
+        <title>Giỏ hàng</title>
+      </Helmet>
       <AppBar />
       <Box
         paddingTop={2}

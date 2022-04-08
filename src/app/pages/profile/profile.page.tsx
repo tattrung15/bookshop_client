@@ -3,6 +3,7 @@ import { NavLink, Route, Routes } from "react-router-dom";
 import { Box, Grid, Paper, Tooltip, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 import { useStyles } from "./make-style";
 import { GlobalState } from "@app/store";
 import UserService from "@app/services/http/user.service";
@@ -60,6 +61,9 @@ function Profile() {
 
   return (
     <>
+      <Helmet>
+        <title>Hồ sơ</title>
+      </Helmet>
       <AppBar />
       <Box paddingTop={2} className={classes.container}>
         <CustomBreadcrumbs

@@ -6,6 +6,7 @@ import {
   AssignmentTurnedIn as AssignmentTurnedInIcon,
 } from "@material-ui/icons";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 import { useStyles } from "./make-style";
 import CustomBreadcrumbs from "@app/components/custom-breadcrumbs";
 import AppBar from "@app/components/app-bar";
@@ -91,6 +92,9 @@ function Checkout() {
 
   return (
     <>
+      <Helmet>
+        <title>Thanh toán</title>
+      </Helmet>
       <AppBar />
       <Box
         paddingTop={2}

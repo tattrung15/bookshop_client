@@ -6,6 +6,7 @@ import "./core/styles/index.scss";
 import { Provider } from "react-redux";
 import store from "@app/store";
 import { SnackbarProvider } from "notistack";
+import { HelmetProvider } from "react-helmet-async";
 
 // import { ThemeProvider } from "@material-ui/core";
 // import { unstable_createMuiStrictModeTheme } from "@material-ui/core/styles";
@@ -23,7 +24,9 @@ ReactDOM.render(
           horizontal: "center",
         }}
       >
-        <App />
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
       </SnackbarProvider>
     </Provider>
     {/* </ThemeProvider> */}

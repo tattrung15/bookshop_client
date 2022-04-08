@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
+import { Helmet } from "react-helmet-async";
 import {
   bannerCombo,
   bannerManga,
@@ -104,6 +105,9 @@ export default function HomePage() {
 
   return (
     <>
+      <Helmet>
+        <title>Trang chủ</title>
+      </Helmet>
       <AppBar />
       <MainSlider />
       <Box

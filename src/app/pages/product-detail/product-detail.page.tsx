@@ -13,6 +13,7 @@ import MuiImageSlider from "mui-image-slider";
 import { switchMap } from "rxjs/operators";
 import { useDispatch } from "react-redux";
 import { useSnackbar } from "notistack";
+import { Helmet } from "react-helmet-async";
 import { useStyles } from "./make-style";
 import { Product } from "@app/models/product.model";
 import AppBar from "@app/components/app-bar";
@@ -127,6 +128,9 @@ function ProductDetail() {
 
   return (
     <div ref={pageRef}>
+      <Helmet>
+        <title>{product.title && product.title}</title>
+      </Helmet>
       <AppBar />
       <Box paddingTop={2}>
         {product.category?.name && (
