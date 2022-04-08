@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import {
   Room as RoomIcon,
@@ -61,8 +61,9 @@ const OrderItemInfo = ({ item }: { item: OrderItem }) => {
 function Checkout() {
   const classes = useStyles();
 
-  const { subscribeUntilDestroy } = useObservable();
+  const navigate = useNavigate();
   const { id: userId } = useSelector(selectAuth);
+  const { subscribeUntilDestroy } = useObservable();
 
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(new User(null));
@@ -81,7 +82,7 @@ function Checkout() {
             responseData.orderItems.sort((a, b) => a.id - b.id);
             setOrderItems(responseData.orderItems);
           } else {
-            setOrderItems([]);
+            navigate("/", { replace: true });
           }
         }
       );
