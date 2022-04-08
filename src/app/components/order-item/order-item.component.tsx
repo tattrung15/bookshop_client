@@ -38,7 +38,6 @@ function OrderItemComponent(props: PropTypes) {
   };
 
   const handleUpdate = () => {
-    console.log(item.id);
     subscribeOnce(OrderItemService.updateQuantity(item.id, quantity), () => {
       enqueueSnackbar("Cập nhật số lượng thành công", {
         variant: TYPE_ALERT.SUCCESS,

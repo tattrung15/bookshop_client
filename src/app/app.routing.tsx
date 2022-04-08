@@ -5,6 +5,7 @@ import HomePage from "./pages/home";
 import ProductDetail from "./pages/product-detail";
 import Profile from "./pages/profile";
 import CartInfo from "./pages/cart-info";
+import Checkout from "./pages/checkout";
 
 export const routes: RouteGuardShape[] = [
   {
@@ -42,6 +43,14 @@ export const routes: RouteGuardShape[] = [
   {
     path: "/cart",
     component: CartInfo,
+    config: {
+      roles: [Role.MEMBER],
+      redirect: "/",
+    },
+  },
+  {
+    path: "/checkout",
+    component: Checkout,
     config: {
       roles: [Role.MEMBER],
       redirect: "/",

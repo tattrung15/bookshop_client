@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { Money as MoneyIcon } from "@material-ui/icons";
 import { useDispatch } from "react-redux";
@@ -20,8 +20,9 @@ import useDestroy from "@core/hooks/use-destroy.hook";
 function CartInfo() {
   const classes = useStyles();
 
-  const { destroy$ } = useDestroy();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { destroy$ } = useDestroy();
   const { subscribeUntilDestroy } = useObservable();
   const [forceUpdate, setForceUpdate] = useForceUpdate();
 
@@ -48,6 +49,10 @@ function CartInfo() {
   const handleOnDeleteSuccess = () => {
     setForceUpdate();
     dispatch(fetchCart({ destroy$ }));
+  };
+
+  const onBtnOrderClick = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -178,9 +183,9 @@ function CartInfo() {
                       variant="contained"
                       color="primary"
                       startIcon={<MoneyIcon />}
-                      // onClick={handleBuy}
+                      onClick={onBtnOrderClick}
                     >
-                      Thanh toán
+                      Đặt hàng
                     </Button>
                   </Grid>
                 </Box>
