@@ -277,7 +277,7 @@ function AppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            {!!authState.id && (
+            {authState.role === Role.MEMBER && (
               <Link
                 to={"/cart"}
                 style={{

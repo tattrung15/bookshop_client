@@ -54,11 +54,16 @@ function App() {
 
     const token = HttpService.getAccessToken() || "";
 
-    subscribeOnce(AuthService.validate(token), (data) => {
-      dispatch(storeUser(new User(data.result.data.user)));
-      StorageService.set("access_token", data.result.data.jwt);
-      StorageService.set("role", data.result.data.user.role);
-      dispatch(fetchCart({ destroy$ }));
+    subscribeOnce(AuthService.validate(token), (response) => {
+      const role = response.result.data.user.role;
+
+      dispatch(storeUser(new User(response.result.data.user)));
+      StorageService.set("access_token", response.result.data.jwt);
+      StorageService.set("role", role);
+
+      if (role === Role.MEMBER) {
+        dispatch(fetchCart({ destroy$ }));
+      }
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

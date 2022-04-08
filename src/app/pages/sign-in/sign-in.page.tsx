@@ -14,7 +14,6 @@ import {
 import { LockOutlined as LockOutlinedIcon } from "@material-ui/icons";
 import clsx from "clsx";
 import { useDispatch } from "react-redux";
-import { switchMap } from "rxjs/operators";
 import { useStyles } from "./make-style";
 import AuthService from "@app/services/http/auth.service";
 import useObservable from "@core/hooks/use-observable.hook";
@@ -22,8 +21,6 @@ import StorageService from "@core/services/storage";
 import { User } from "@app/models/user.model";
 import { storeUser } from "@app/store/auth/auth.action";
 import HttpService from "@core/services/http/http.service";
-import CartService from "@app/services/http/cart.service";
-import { clearCart, storeCart } from "@app/store/cart/cart.action";
 
 export default function SignIn() {
   const classes = useStyles();
@@ -41,24 +38,15 @@ export default function SignIn() {
 
   const handleLogin = () => {
     subscribeOnce(
-      AuthService.login(accountState.username, accountState.password).pipe(
-        switchMap((response) => {
-          dispatch(storeUser(new User(response.result.data.user)));
-          if (accountState.isRemembered) {
-            StorageService.set("access_token", response.result.data.jwt);
-            StorageService.set("role", response.result.data.user.role);
-          } else {
-            StorageService.setSession("access_token", response.result.data.jwt);
-            StorageService.setSession("role", response.result.data.user.role);
-          }
-          return CartService.getCart();
-        })
-      ),
-      (cartResult) => {
-        if (cartResult?.data) {
-          dispatch(storeCart(cartResult.data?.orderItems?.length ?? 0));
+      AuthService.login(accountState.username, accountState.password),
+      (response) => {
+        dispatch(storeUser(new User(response.result.data.user)));
+        if (accountState.isRemembered) {
+          StorageService.set("access_token", response.result.data.jwt);
+          StorageService.set("role", response.result.data.user.role);
         } else {
-          dispatch(clearCart());
+          StorageService.setSession("access_token", response.result.data.jwt);
+          StorageService.setSession("role", response.result.data.user.role);
         }
         navigate("/", { replace: true });
       }

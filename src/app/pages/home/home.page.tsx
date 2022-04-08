@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { useDispatch } from "react-redux";
 import {
   bannerCombo,
   bannerManga,
@@ -17,10 +18,16 @@ import { Product } from "@app/models/product.model";
 import { ResponseResult } from "@core/services/http/http.service";
 import ProductItem from "@app/components/product-item";
 import MainSlider from "@app/components/main-slider";
+import RoleService from "@app/services/role.service";
+import { Role } from "@app/shared/types/user.type";
+import useDestroy from "@core/hooks/use-destroy.hook";
+import { fetchCart } from "@app/store/cart/cart.epic";
 
 export default function HomePage() {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+  const { destroy$ } = useDestroy();
   const { subscribeUntilDestroy } = useObservable();
 
   const [newProducts, setNewProducts] = useState<Product[]>([]);
@@ -30,6 +37,12 @@ export default function HomePage() {
   const [productBestSelling, setProductBestSelling] = useState<Product[]>([]);
 
   useEffect(() => {
+    const role = RoleService.getRole();
+
+    if (role === Role.MEMBER) {
+      dispatch(fetchCart({ destroy$ }));
+    }
+
     const options: ProductPaginationOption = {
       page: 1,
       perPage: 4,
