@@ -22,7 +22,11 @@ import {
   buildImageSrc,
   calculateTotalAmount,
 } from "@app/shared/helpers/helpers";
-import { imageNotFound } from "@app/shared/constants/common";
+import {
+  imageNotFound,
+  imagePaymentSuccessful,
+} from "@app/shared/constants/common";
+import PopupDialog from "@app/components/popup-dialog";
 
 const OrderItemInfo = ({ item }: { item: OrderItem }) => {
   return (
@@ -65,6 +69,7 @@ function Checkout() {
   const { id: userId } = useSelector(selectAuth);
   const { subscribeUntilDestroy } = useObservable();
 
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(new User(null));
 
@@ -91,12 +96,48 @@ function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+  const onPaymentClick = () => {
+    setIsOpenPopup(true);
+  };
+
   return (
     <>
       <Helmet>
         <title>Thanh toán</title>
       </Helmet>
       <AppBar />
+      <PopupDialog
+        title=""
+        openPopup={isOpenPopup}
+        setOpenPopup={setIsOpenPopup}
+      >
+        <Box maxWidth="100%" style={{ margin: "1em auto" }}>
+          <Box
+            paddingX={5.5}
+            maxWidth="100%"
+            style={{ margin: "0 auto", textAlign: "center" }}
+          >
+            <Typography
+              variant="h5"
+              style={{ fontWeight: "bolder" }}
+              color="textPrimary"
+            >
+              Đặt hàng thành công
+            </Typography>
+          </Box>
+          <div style={{ textAlign: "center" }}>
+            <img src={imagePaymentSuccessful} alt="" width="50%" />
+          </div>
+          <div style={{ textAlign: "center", marginTop: "1em" }}>
+            <Button variant="contained" color="primary">
+              Tiếp tục mua
+            </Button>
+            <Button variant="contained" style={{ marginLeft: "1em" }}>
+              Xem đơn hàng
+            </Button>
+          </div>
+        </Box>
+      </PopupDialog>
       <Box
         paddingTop={2}
         paddingX={5.5}
@@ -180,7 +221,7 @@ function Checkout() {
                   fullWidth
                   variant="contained"
                   color="primary"
-                  // onClick={onPaymentClick}
+                  onClick={onPaymentClick}
                 >
                   Thanh toán
                 </Button>

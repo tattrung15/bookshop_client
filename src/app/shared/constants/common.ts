@@ -2,6 +2,7 @@ import bannerCombo from "@app/assets/images/banner_combo.jpg";
 import bannerManga from "@app/assets/images/banner_manga.jpg";
 import bannerWingsbooks from "@app/assets/images/banner_wingsbooks.jpg";
 import imageNotFound from "@app/assets/images/image-not-found.jpg";
+import imagePaymentSuccessful from "@app/assets/images/image_payment_successful.jpg";
 import { PaginationOption } from "@core/services/http/http.service";
 import {
   Dashboard as DashboardIcon,
@@ -44,7 +45,13 @@ export enum TYPE_ALERT {
   WARNING = "warning",
 }
 
-export { bannerCombo, bannerManga, bannerWingsbooks, imageNotFound };
+export {
+  bannerCombo,
+  bannerManga,
+  bannerWingsbooks,
+  imageNotFound,
+  imagePaymentSuccessful,
+};
 
 export const PAGING_DEFAULT_LIMIT = 10;
 export const STRING_LENGTH_LIMIT = 255;
