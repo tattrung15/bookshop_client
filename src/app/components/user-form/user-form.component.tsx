@@ -35,14 +35,14 @@ const roleItems = () => {
     .filter((item) => item.id !== Role.GUEST);
 };
 
-type TypeProps = {
+type PropTypes = {
   isEdit: boolean;
   isView: boolean;
   recordForAction: User;
   addOrEdit: (values: UpdateUserDto, resetForm: () => void) => void;
 };
 
-function UserForm(props: TypeProps) {
+function UserForm(props: PropTypes) {
   const { isEdit, isView, recordForAction, addOrEdit } = props;
 
   const [isShowPassword, setIsShowPassword] = useState(false);

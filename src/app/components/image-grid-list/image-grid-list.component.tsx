@@ -3,11 +3,11 @@ import { ProductImage } from "@app/models/product-image.model";
 import { useStyles } from "./make-style";
 import { buildImageSrc } from "@app/shared/helpers/helpers";
 
-type TypeProps = {
+type PropTypes = {
   images: ProductImage[];
 };
 
-function ImageGridList(props: TypeProps) {
+function ImageGridList(props: PropTypes) {
   const { images } = props;
 
   const classes = useStyles();

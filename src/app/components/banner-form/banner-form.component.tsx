@@ -27,14 +27,14 @@ const bannerItems = () => {
   }));
 };
 
-type TypeProps = {
+type PropTypes = {
   isEdit: boolean;
   isView: boolean;
   recordForAction: UpdateBannerDto;
   addOrEdit: (values: Partial<UpdateBannerDto>, resetForm: () => void) => void;
 };
 
-function BannerForm(props: TypeProps) {
+function BannerForm(props: PropTypes) {
   const classes = useStyles();
   const { isEdit, isView, recordForAction, addOrEdit } = props;
 

@@ -4,6 +4,7 @@ import Dashboard from "./pages/admin/dashboard";
 import HomePage from "./pages/home";
 import ProductDetail from "./pages/product-detail";
 import Profile from "./pages/profile";
+import CartInfo from "./pages/cart-info";
 
 export const routes: RouteGuardShape[] = [
   {
@@ -35,6 +36,14 @@ export const routes: RouteGuardShape[] = [
     component: ProductDetail,
     config: {
       roles: [Role.GUEST, Role.ADMIN, Role.MEMBER],
+      redirect: "/",
+    },
+  },
+  {
+    path: "/cart",
+    component: CartInfo,
+    config: {
+      roles: [Role.MEMBER],
       redirect: "/",
     },
   },

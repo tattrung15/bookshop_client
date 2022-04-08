@@ -23,7 +23,7 @@ const initialProductValues: UpdateProductDto = {
   updatedAt: new Date(),
 };
 
-type TypeProps = {
+type PropTypes = {
   isEdit: boolean;
   isView: boolean;
   recordForAction: Category;
@@ -31,7 +31,7 @@ type TypeProps = {
   categories: Category[];
 };
 
-function ProductForm(props: TypeProps) {
+function ProductForm(props: PropTypes) {
   const { isEdit, isView, recordForAction, addOrEdit, categories } = props;
 
   const categoryItems = () => {

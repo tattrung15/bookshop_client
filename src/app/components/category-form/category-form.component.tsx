@@ -18,7 +18,7 @@ const initialCategoryValues: UpdateCategoryDto = {
   updatedAt: new Date(),
 };
 
-type TypeProps = {
+type PropTypes = {
   isEdit: boolean;
   isView: boolean;
   recordForAction: Category;
@@ -26,7 +26,7 @@ type TypeProps = {
   categories: Category[];
 };
 
-function CategoryForm(props: TypeProps) {
+function CategoryForm(props: PropTypes) {
   const { isEdit, isView, recordForAction, addOrEdit, categories } = props;
 
   const categoryItems = () => {

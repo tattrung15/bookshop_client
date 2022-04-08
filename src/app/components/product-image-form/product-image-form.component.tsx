@@ -16,7 +16,7 @@ const initialProductImageValues: Partial<UpdateProductImageDto> = {
   files: [],
 };
 
-type TypeProps = {
+type PropTypes = {
   isEdit: boolean;
   isView: boolean;
   recordForAction: Partial<UpdateProductImageDto>;
@@ -27,7 +27,7 @@ type TypeProps = {
   productNoImages: Product[];
 };
 
-function ProductImageForm(props: TypeProps) {
+function ProductImageForm(props: PropTypes) {
   const { isEdit, isView, recordForAction, addOrEdit, productNoImages } = props;
 
   if (productNoImages.length) {

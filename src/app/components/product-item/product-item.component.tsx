@@ -4,11 +4,11 @@ import { imageNotFound } from "@app/shared/constants/common";
 import "./product-item.style.scss";
 import ViewService from "@app/services/view.service";
 
-type TypeProps = {
+type PropTypes = {
   item: Product;
 };
 
-function ProductItem(props: TypeProps) {
+function ProductItem(props: PropTypes) {
   const { item } = props;
 
   const baseUrl = new URL(process.env.REACT_APP_BASE_API_URL || "");
