@@ -59,6 +59,7 @@ function ProductDetail() {
         ProductService.getDetail(slug).pipe(
           switchMap((product) => {
             setProduct(product);
+            setQuantity(1);
             const options: PaginationOption = {
               page: 1,
               perPage: 4,
