@@ -5,7 +5,7 @@ import {
   Room as RoomIcon,
   AssignmentTurnedIn as AssignmentTurnedInIcon,
 } from "@material-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { useStyles } from "./make-style";
 import CustomBreadcrumbs from "@app/components/custom-breadcrumbs";
@@ -26,7 +26,9 @@ import {
   imageNotFound,
   imagePaymentSuccessful,
 } from "@app/shared/constants/common";
-import PopupDialog from "@app/components/popup-dialog";
+import SaleOrderService from "@app/services/http/sale-order.service";
+import { fetchCart } from "@app/store/cart/cart.epic";
+import useDestroy from "@core/hooks/use-destroy.hook";
 
 const OrderItemInfo = ({ item }: { item: OrderItem }) => {
   return (
@@ -65,12 +67,15 @@ const OrderItemInfo = ({ item }: { item: OrderItem }) => {
 function Checkout() {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { destroy$ } = useDestroy();
   const { id: userId } = useSelector(selectAuth);
-  const { subscribeUntilDestroy } = useObservable();
+  const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
-  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [saleOrderId, setSaleOrderId] = useState<number>(0);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
   const [currentUser, setCurrentUser] = useState<User>(new User(null));
 
   useEffect(() => {
@@ -86,7 +91,9 @@ function Checkout() {
             const responseData = response.data as Cart;
             responseData.orderItems.sort((a, b) => a.id - b.id);
             setOrderItems(responseData.orderItems);
+            setSaleOrderId(responseData.id);
           } else {
+            setSaleOrderId(0);
             navigate("/", { replace: true });
           }
         }
@@ -97,7 +104,14 @@ function Checkout() {
   }, [userId]);
 
   const onPaymentClick = () => {
-    setIsOpenPopup(true);
+    if (saleOrderId) {
+      subscribeOnce(SaleOrderService.paymentSaleOrder(saleOrderId), () => {
+        dispatch(fetchCart({ destroy$ }));
+        setOrderItems([]);
+        setSaleOrderId(0);
+        setIsOrderSuccessful(true);
+      });
+    }
   };
 
   return (
@@ -106,12 +120,106 @@ function Checkout() {
         <title>Thanh toán</title>
       </Helmet>
       <AppBar />
-      <PopupDialog
-        title=""
-        openPopup={isOpenPopup}
-        setOpenPopup={setIsOpenPopup}
-      >
-        <Box maxWidth="100%" style={{ margin: "1em auto" }}>
+      {!isOrderSuccessful ? (
+        <Box
+          paddingTop={2}
+          paddingX={5.5}
+          maxWidth="1200px"
+          style={{ margin: "0 auto" }}
+        >
+          <CustomBreadcrumbs
+            navigation={[{ title: "Trang chủ", linkTo: "/" }]}
+            textPrimary="Thanh toán"
+          />
+          <Box
+            paddingTop={4}
+            paddingX={5.5}
+            maxWidth="1200px"
+            style={{ margin: "0 auto", display: "flex" }}
+          >
+            <Grid item xs={7} md={7} style={{ padding: "0.5em" }}>
+              <Box className={classes.blockShadow}>
+                <Typography
+                  className={classes.titleGradient}
+                  color="textPrimary"
+                >
+                  <AssignmentTurnedInIcon className={classes.icon} />
+                  Thông tin đơn hàng
+                </Typography>
+                {!!orderItems.length &&
+                  orderItems.map((item, index) => (
+                    <OrderItemInfo item={item} key={index} />
+                  ))}
+              </Box>
+            </Grid>
+            <Grid item xs={5} md={5} style={{ padding: "0.5em" }}>
+              <Box className={classes.blockShadow}>
+                <Box
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Grid>
+                    <Typography
+                      className={classes.titleGradient}
+                      color="textPrimary"
+                    >
+                      <RoomIcon className={classes.icon} />
+                      Địa chỉ nhận hàng
+                    </Typography>
+                  </Grid>
+                  <Grid>
+                    <Link to="/profile" className={classes.changeProfileLink}>
+                      Thay đổi ▶
+                    </Link>
+                  </Grid>
+                </Box>
+                <Box padding={2}>
+                  {currentUser.username && (
+                    <>
+                      <span style={{ fontWeight: "bolder" }}>
+                        {currentUser.firstName + " " + currentUser.lastName}
+                      </span>
+                      <span> | {currentUser.phone}</span>
+                      <Typography
+                        color="textPrimary"
+                        style={{ marginTop: "0.5em" }}
+                      >
+                        {currentUser.address}
+                      </Typography>
+                    </>
+                  )}
+                </Box>
+              </Box>
+              <Box className={classes.blockShadow} style={{ marginTop: "1em" }}>
+                <Box className={classes.paddingFlexCenter}>
+                  <Grid item xs={6} md={6}>
+                    Tổng thanh toán
+                  </Grid>
+                  <Grid item xs={6} md={6}>
+                    <Typography
+                      color="secondary"
+                      style={{ fontWeight: "bolder", fontSize: "1.5em" }}
+                    >
+                      {calculateTotalAmount(orderItems).toLocaleString("vn") +
+                        "đ"}
+                    </Typography>
+                  </Grid>
+                </Box>
+                <Box className={classes.paddingFlexCenter}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={onPaymentClick}
+                  >
+                    Thanh toán
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </Box>
+        </Box>
+      ) : (
+        <Box maxWidth="100%" style={{ margin: "2em auto" }}>
           <Box
             paddingX={5.5}
             maxWidth="100%"
@@ -126,10 +234,14 @@ function Checkout() {
             </Typography>
           </Box>
           <div style={{ textAlign: "center" }}>
-            <img src={imagePaymentSuccessful} alt="" width="50%" />
+            <img src={imagePaymentSuccessful} alt="" width="30%" />
           </div>
           <div style={{ textAlign: "center", marginTop: "1em" }}>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/", { replace: true })}
+            >
               Tiếp tục mua
             </Button>
             <Button variant="contained" style={{ marginLeft: "1em" }}>
@@ -137,99 +249,7 @@ function Checkout() {
             </Button>
           </div>
         </Box>
-      </PopupDialog>
-      <Box
-        paddingTop={2}
-        paddingX={5.5}
-        maxWidth="1200px"
-        style={{ margin: "0 auto" }}
-      >
-        <CustomBreadcrumbs
-          navigation={[{ title: "Trang chủ", linkTo: "/" }]}
-          textPrimary="Thanh toán"
-        />
-        <Box
-          paddingTop={4}
-          paddingX={5.5}
-          maxWidth="1200px"
-          style={{ margin: "0 auto", display: "flex" }}
-        >
-          <Grid item xs={7} md={7} style={{ padding: "0.5em" }}>
-            <Box className={classes.blockShadow}>
-              <Typography className={classes.titleGradient} color="textPrimary">
-                <AssignmentTurnedInIcon className={classes.icon} />
-                Thông tin đơn hàng
-              </Typography>
-              {!!orderItems.length &&
-                orderItems.map((item, index) => (
-                  <OrderItemInfo item={item} key={index} />
-                ))}
-            </Box>
-          </Grid>
-          <Grid item xs={5} md={5} style={{ padding: "0.5em" }}>
-            <Box className={classes.blockShadow}>
-              <Box style={{ display: "flex", justifyContent: "space-between" }}>
-                <Grid>
-                  <Typography
-                    className={classes.titleGradient}
-                    color="textPrimary"
-                  >
-                    <RoomIcon className={classes.icon} />
-                    Địa chỉ nhận hàng
-                  </Typography>
-                </Grid>
-                <Grid>
-                  <Link to="/profile" className={classes.changeProfileLink}>
-                    Thay đổi ▶
-                  </Link>
-                </Grid>
-              </Box>
-              <Box padding={2}>
-                {currentUser.username && (
-                  <>
-                    <span style={{ fontWeight: "bolder" }}>
-                      {currentUser.firstName + " " + currentUser.lastName}
-                    </span>
-                    <span> | {currentUser.phone}</span>
-                    <Typography
-                      color="textPrimary"
-                      style={{ marginTop: "0.5em" }}
-                    >
-                      {currentUser.address}
-                    </Typography>
-                  </>
-                )}
-              </Box>
-            </Box>
-            <Box className={classes.blockShadow} style={{ marginTop: "1em" }}>
-              <Box className={classes.paddingFlexCenter}>
-                <Grid item xs={6} md={6}>
-                  Tổng thanh toán
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <Typography
-                    color="secondary"
-                    style={{ fontWeight: "bolder", fontSize: "1.5em" }}
-                  >
-                    {calculateTotalAmount(orderItems).toLocaleString("vn") +
-                      "đ"}
-                  </Typography>
-                </Grid>
-              </Box>
-              <Box className={classes.paddingFlexCenter}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  onClick={onPaymentClick}
-                >
-                  Thanh toán
-                </Button>
-              </Box>
-            </Box>
-          </Grid>
-        </Box>
-      </Box>
+      )}
     </>
   );
 }
