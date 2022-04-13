@@ -63,6 +63,14 @@ export const DEFAULT_PAGINATION_OPTION: PaginationOption = {
   perPage: PAGING_DEFAULT_LIMIT,
 };
 
+export const DELIVERY_INDEX = {
+  ADDED_TO_CART: "DaThemVaoGio",
+  WAITING_TO_CONFIRM: "ChoXacNhan",
+  DELIVERING: "DangGiaoHang",
+  DELIVERED: "DaGiao",
+  CANCELED: "DaHuy",
+};
+
 export const mainMenuItems: MenuItem[] = [
   {
     linkTo: "/",

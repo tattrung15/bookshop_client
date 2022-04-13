@@ -28,13 +28,19 @@ import {
   PaginationOption,
   ResponseResult,
 } from "@core/services/http/http.service";
-import { DEFAULT_PAGINATION_OPTION } from "@app/shared/constants/common";
+import {
+  DEFAULT_PAGINATION_OPTION,
+  TYPE_ALERT,
+  DELIVERY_INDEX,
+} from "@app/shared/constants/common";
 import { SaleOrder } from "@app/models/sale-order.model";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import useObservable from "@core/hooks/use-observable.hook";
 import SaleOrderService from "@app/services/http/sale-order.service";
 import Controls from "@app/components/controls";
 import { GlobalState } from "@app/store";
+import PopupDialog from "@app/components/popup-dialog";
+import SaleOrderForm from "@app/components/sale-order-form";
 
 function SaleOrderManagement() {
   const classes = useStyles();
@@ -47,9 +53,15 @@ function SaleOrderManagement() {
   const typingTimeoutRef = useRef<any>(null);
 
   const [total, setTotal] = useState(0);
+  const [isView, setIsView] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [searchState, setSearchState] = useState(0);
-  const [deliverySelected, setDeliverySelected] = useState(0);
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [deliverFilter, setDeliveryFilter] = useState(0);
   const [saleOrders, setSaleOrders] = useState<SaleOrder[]>([]);
+  const [recordForAction, setRecordForAction] = useState<SaleOrder>(
+    new SaleOrder(null)
+  );
   const [pagination, setPagination] = useState(() => {
     const options: PaginationOption = {
       ...DEFAULT_PAGINATION_OPTION,
@@ -68,6 +80,20 @@ function SaleOrderManagement() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);
+
+  const updateSaleOrderDelivery = (saleOrderId: number, deliveryId: number) => {
+    subscribeOnce(
+      SaleOrderService.updateSaleOrderDelivery(saleOrderId, deliveryId),
+      () => {
+        setIsOpenPopup(false);
+        setRecordForAction(new SaleOrder(null));
+        setForceUpdate();
+        enqueueSnackbar("Cập nhật trạng thái thành công", {
+          variant: TYPE_ALERT.SUCCESS,
+        });
+      }
+    );
+  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = +event.target.value;
@@ -98,11 +124,11 @@ function SaleOrderManagement() {
     }
   };
 
-  const handleSelectedDeliveryChange = (
+  const handleDeliveryFilterChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = +event.target.value;
-    setDeliverySelected(value);
+    setDeliveryFilter(value);
     if (value) {
       const options: PaginationOption = {
         ...pagination,
@@ -120,8 +146,19 @@ function SaleOrderManagement() {
     }
   };
 
-  const openViewDialog = (item: SaleOrder) => {};
-  const openInPopup = (item: SaleOrder) => {};
+  const openViewDialog = (item: SaleOrder) => {
+    setIsEdit(false);
+    setIsView(true);
+    setRecordForAction(item);
+    setIsOpenPopup(true);
+  };
+
+  const openInPopup = (item: SaleOrder) => {
+    setIsEdit(true);
+    setIsView(false);
+    setRecordForAction(item);
+    setIsOpenPopup(true);
+  };
 
   const handlePageChange = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
@@ -151,24 +188,19 @@ function SaleOrderManagement() {
         Quản lý đơn hàng
       </Typography>
       <Box style={{ position: "relative" }}>
-        {/* <PopupForm
-          title="View Sale Order"
-          openPopup={openPopupView}
-          setOpenPopup={setOpenPopupView}
+        <PopupDialog
+          title="Biểu mẫu đơn hàng"
+          openPopup={isOpenPopup}
+          setOpenPopup={setIsOpenPopup}
         >
-          <ViewSaleOrder recordForView={recordForView} />
-        </PopupForm>
-        <PopupForm
-          title="Update Sale Order"
-          openPopup={openPopupEdit}
-          setOpenPopup={setOpenPopupEdit}
-        >
-          <EditSaleOrder
-            recordForEdit={recordForEdit}
+          <SaleOrderForm
+            isEdit={isEdit}
+            isView={isView}
+            recordForAction={recordForAction}
             deliveries={deliveries}
-            handleEditItem={handleEditItem}
+            updateSaleOrderDelivery={updateSaleOrderDelivery}
           />
-        </PopupForm> */}
+        </PopupDialog>
         <Box style={{ display: "flex" }}>
           <Box style={{ marginTop: "1em" }}>
             <TextField
@@ -197,15 +229,20 @@ function SaleOrderManagement() {
                     style={{ width: "12em" }}
                     name="deliveryId"
                     label="Lọc theo trạng thái"
-                    value={deliverySelected}
+                    value={deliverFilter}
                     options={[
                       { id: 0, title: "Tất cả" },
-                      ...deliveries.map((delivery) => ({
-                        id: delivery.id,
-                        title: delivery.value,
-                      })),
+                      ...deliveries
+                        .filter(
+                          (delivery) =>
+                            delivery.index !== DELIVERY_INDEX.ADDED_TO_CART
+                        )
+                        .map((delivery) => ({
+                          id: delivery.id,
+                          title: delivery.value,
+                        })),
                     ]}
-                    onChange={handleSelectedDeliveryChange}
+                    onChange={handleDeliveryFilterChange}
                   />
                 )}
               </Grid>
@@ -248,9 +285,11 @@ function SaleOrderManagement() {
                       </IconButton>
                     </TableCell>
                     <TableCell align="center">
-                      <IconButton onClick={() => openInPopup(item)}>
-                        <CreateIcon style={{ color: "black" }} />
-                      </IconButton>
+                      {item.delivery.index !== DELIVERY_INDEX.CANCELED && (
+                        <IconButton onClick={() => openInPopup(item)}>
+                          <CreateIcon style={{ color: "black" }} />
+                        </IconButton>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
