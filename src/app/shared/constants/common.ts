@@ -2,7 +2,7 @@ import bannerCombo from "@app/assets/images/banner_combo.jpg";
 import bannerManga from "@app/assets/images/banner_manga.jpg";
 import bannerWingsbooks from "@app/assets/images/banner_wingsbooks.jpg";
 import imageNotFound from "@app/assets/images/image-not-found.jpg";
-import imagePaymentSuccessful from "@app/assets/images/image_payment_successful.jpg";
+import imagePaymentSuccessful from "@app/assets/images/image_payment_successful.png";
 import { PaginationOption } from "@core/services/http/http.service";
 import {
   Dashboard as DashboardIcon,
