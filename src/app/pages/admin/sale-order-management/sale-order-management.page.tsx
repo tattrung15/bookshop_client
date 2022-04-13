@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   TableRow,
   TableHead,
@@ -21,6 +21,7 @@ import {
   Create as CreateIcon,
   Search as SearchIcon,
 } from "@material-ui/icons";
+import { useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useStyles } from "./make-style";
 import {
@@ -33,15 +34,21 @@ import useForceUpdate from "@core/hooks/use-force-update.hook";
 import useObservable from "@core/hooks/use-observable.hook";
 import SaleOrderService from "@app/services/http/sale-order.service";
 import Controls from "@app/components/controls";
+import { GlobalState } from "@app/store";
 
 function SaleOrderManagement() {
   const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
+  const { deliveries } = useSelector(selectDelivery);
   const [forceUpdate, setForceUpdate] = useForceUpdate();
   const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
+  const typingTimeoutRef = useRef<any>(null);
+
   const [total, setTotal] = useState(0);
+  const [searchState, setSearchState] = useState(0);
+  const [deliverySelected, setDeliverySelected] = useState(0);
   const [saleOrders, setSaleOrders] = useState<SaleOrder[]>([]);
   const [pagination, setPagination] = useState(() => {
     const options: PaginationOption = {
@@ -61,6 +68,57 @@ function SaleOrderManagement() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = +event.target.value;
+    setSearchState(value);
+    if (value > 0) {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      typingTimeoutRef.current = setTimeout(() => {
+        subscribeOnce(
+          SaleOrderService.getSaleOrderForAdmin(value),
+          (data: SaleOrder) => {
+            if (data && data.id) {
+              setSaleOrders([data]);
+              setTotal(1);
+            } else {
+              setSaleOrders([]);
+              setTotal(0);
+            }
+          }
+        );
+      }, 500);
+    } else if (value === 0) {
+      setForceUpdate();
+    } else {
+      setSaleOrders([]);
+      setTotal(0);
+    }
+  };
+
+  const handleSelectedDeliveryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = +event.target.value;
+    setDeliverySelected(value);
+    if (value) {
+      const options: PaginationOption = {
+        ...pagination,
+        equal: {
+          delivery: value,
+        },
+      };
+      setPagination(options);
+      setSearchState(0);
+    } else {
+      const options: PaginationOption = {
+        ...DEFAULT_PAGINATION_OPTION,
+      };
+      setPagination(options);
+    }
+  };
 
   const openViewDialog = (item: SaleOrder) => {};
   const openInPopup = (item: SaleOrder) => {};
@@ -114,11 +172,11 @@ function SaleOrderManagement() {
         <Box style={{ display: "flex" }}>
           <Box style={{ marginTop: "1em" }}>
             <TextField
-              label="Search by Sale Order Id:"
+              label="Tìm kiếm theo mã đơn hàng"
               id="outlined-size-small"
               variant="outlined"
               size="small"
-              // value={searchState}
+              value={searchState || ""}
               type="number"
               InputProps={{
                 startAdornment: (
@@ -126,20 +184,30 @@ function SaleOrderManagement() {
                     <SearchIcon color="action" />
                   </InputAdornment>
                 ),
+                inputProps: { min: 0 },
               }}
-              // onChange={handleSearchChange}
+              onChange={handleSearchChange}
             />
           </Box>
           <Box style={{ marginLeft: "2em" }}>
             <Grid container>
               <Grid item style={{ width: "20em" }}>
-                {/* <Controls.Select
-                  name="deliveryId"
-                  label="Filter by delivery"
-                  value={deliverySelected}
-                  options={deliveriesSelect}
-                  onChange={handleSelectedDeliveryChange}
-                /> */}
+                {!!deliveries.length && (
+                  <Controls.Select
+                    style={{ width: "12em" }}
+                    name="deliveryId"
+                    label="Lọc theo trạng thái"
+                    value={deliverySelected}
+                    options={[
+                      { id: 0, title: "Tất cả" },
+                      ...deliveries.map((delivery) => ({
+                        id: delivery.id,
+                        title: delivery.value,
+                      })),
+                    ]}
+                    onChange={handleSelectedDeliveryChange}
+                  />
+                )}
               </Grid>
             </Grid>
           </Box>
@@ -201,5 +269,7 @@ function SaleOrderManagement() {
     </Container>
   );
 }
+
+const selectDelivery = (state: GlobalState) => state.delivery;
 
 export default SaleOrderManagement;
