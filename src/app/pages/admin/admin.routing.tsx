@@ -5,6 +5,7 @@ import CategoryManagement from "./category-management";
 import ProductImageManagement from "./product-image-management";
 import ProductManagement from "./product-management";
 import RecentOrderManagement from "./recent-order-management";
+import SaleOrderManagement from "./sale-order-management";
 import UserManagement from "./user-management";
 
 export const routes: RouteGuardShape[] = [
@@ -43,6 +44,14 @@ export const routes: RouteGuardShape[] = [
   {
     path: "/product-image-management",
     component: ProductImageManagement,
+    config: {
+      roles: [Role.ADMIN],
+      redirect: "/",
+    },
+  },
+  {
+    path: "/sale-order-management",
+    component: SaleOrderManagement,
     config: {
       roles: [Role.ADMIN],
       redirect: "/",
