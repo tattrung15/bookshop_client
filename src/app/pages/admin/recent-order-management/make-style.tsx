@@ -11,4 +11,8 @@ export const useStyles = makeStyles((theme: Theme) => ({
     overflow: "auto",
     flexDirection: "column",
   },
+  screenName: {
+    display: "flex",
+    justifyContent: "center",
+  },
 }));
