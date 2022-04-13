@@ -26,7 +26,7 @@ import {
   MoreVert as MoreIcon,
 } from "@material-ui/icons";
 import clsx from "clsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GlobalState } from "@app/store";
 import { Role } from "@app/shared/types/user.type";
@@ -39,6 +39,7 @@ function AppBar() {
   const classes = useStyles();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [state, setState] = useState({ left: false });
@@ -76,6 +77,7 @@ function AppBar() {
     StorageService.set("role", "");
     StorageService.setSession("access_token", "");
     StorageService.setSession("role", "");
+    navigate("/", { replace: true });
   };
 
   const menuId = "primary-search-account-menu";

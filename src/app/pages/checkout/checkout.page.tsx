@@ -75,7 +75,7 @@ function Checkout() {
 
   const [saleOrderId, setSaleOrderId] = useState<number>(0);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
+  const [isOrderSuccess, setIsOrderSuccess] = useState(false);
   const [currentUser, setCurrentUser] = useState<User>(new User(null));
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function Checkout() {
         dispatch(fetchCart({ destroy$ }));
         setOrderItems([]);
         setSaleOrderId(0);
-        setIsOrderSuccessful(true);
+        setIsOrderSuccess(true);
       });
     }
   };
@@ -120,7 +120,7 @@ function Checkout() {
         <title>Thanh toán</title>
       </Helmet>
       <AppBar />
-      {!isOrderSuccessful ? (
+      {!isOrderSuccess ? (
         <Box
           paddingTop={2}
           paddingX={5.5}
