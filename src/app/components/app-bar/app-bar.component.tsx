@@ -264,17 +264,16 @@ function AppBar() {
               placeholder="Tìm kiếm sản phẩm"
               className={classes.searchInput}
               inputProps={{ "aria-label": "search" }}
-              // TODO
-              // onKeyPress={(ev) => {
-              //   if (ev.which === 13 || ev.keyCode === 13) {
-              //     const strSearch = ev.target.value;
-              //     ev.target.value = "";
-              //     history.push({
-              //       pathname: "/search",
-              //       search: `?keyword=${strSearch}`,
-              //     });
-              //   }
-              // }}
+              onKeyPress={(event: any) => {
+                if (event.which === 13 || event.keyCode === 13) {
+                  const strSearch = event.target.value;
+                  event.target.value = "";
+                  navigate({
+                    pathname: "/products",
+                    search: `?search=${strSearch}`,
+                  });
+                }
+              }}
             />
           </div>
           <div className={classes.grow} />

@@ -20,6 +20,12 @@ class _CategoryService {
     }).pipe(pluck("result"));
   }
 
+  public getDetail(categoryId: number | string): Observable<Category> {
+    return HttpService.get(`/categories/${categoryId}`).pipe(
+      map((response: any) => new Category(response.result.data))
+    );
+  }
+
   public createCategory(category: CreateCategoryDto): Observable<Category> {
     return HttpService.post("/categories", {
       body: { ...category },

@@ -136,7 +136,7 @@ function HomePage() {
           </div>
 
           <Box className={classes.showMoreBox}>
-            <Link to="" className={classes.showMoreLink}>
+            <Link to="/products" className={classes.showMoreLink}>
               <Button variant="contained">Xem thêm</Button>
             </Link>
           </Box>
@@ -159,7 +159,10 @@ function HomePage() {
           </div>
 
           <Box className={classes.showMoreBox}>
-            <Link to="" className={classes.showMoreLink}>
+            <Link
+              to="/products?mode=top-selling"
+              className={classes.showMoreLink}
+            >
               <Button variant="contained">Xem thêm</Button>
             </Link>
           </Box>
@@ -193,7 +196,10 @@ function HomePage() {
           </div>
 
           <Box className={classes.showMoreBox}>
-            <Link to="" className={classes.showMoreLink}>
+            <Link
+              to="/products?category=combo"
+              className={classes.showMoreLink}
+            >
               <Button variant="contained">Xem thêm</Button>
             </Link>
           </Box>
@@ -212,7 +218,7 @@ function HomePage() {
       >
         <Box marginTop={5}>
           <Typography variant="h6" gutterBottom align="center">
-            COMIC - MANGA
+            MANGA - COMIC
           </Typography>
 
           <div className={classes.root}>
@@ -227,7 +233,10 @@ function HomePage() {
           </div>
 
           <Box className={classes.showMoreBox}>
-            <Link to="" className={classes.showMoreLink}>
+            <Link
+              to="/products?category=manga-comic"
+              className={classes.showMoreLink}
+            >
               <Button variant="contained">Xem thêm</Button>
             </Link>
           </Box>
@@ -265,7 +274,10 @@ function HomePage() {
           </div>
 
           <Box className={classes.showMoreBox}>
-            <Link to="" className={classes.showMoreLink}>
+            <Link
+              to="/products?category=wings-books"
+              className={classes.showMoreLink}
+            >
               <Button variant="contained">Xem thêm</Button>
             </Link>
           </Box>

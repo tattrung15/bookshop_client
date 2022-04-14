@@ -141,7 +141,7 @@ function ProductDetail() {
               { title: "Thể loại", linkTo: "/categories" },
               {
                 title: product.category.name,
-                linkTo: `/categories/${product.category.slug}`,
+                linkTo: `/products?category=${product.category.slug}`,
               },
             ]}
             textPrimary={product.title}
@@ -285,7 +285,9 @@ function ProductDetail() {
           <Box className={classes.showMoreBox}>
             <Link
               to={
-                product.category ? `/categories/${product.category.slug}` : ""
+                product.category
+                  ? `/products?category=${product.category.slug}`
+                  : ""
               }
               className={classes.showMoreLink}
             >

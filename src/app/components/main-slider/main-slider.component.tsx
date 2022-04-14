@@ -106,12 +106,14 @@ function MainSlider(props: PropTypes) {
                           "has-child": !!item.linkedCategories?.length ?? false,
                         })}
                       >
-                        <Link to={`/categories/${item.slug}`}>{item.name}</Link>
+                        <Link to={`/products?category=${item.slug}`}>
+                          {item.name}
+                        </Link>
                         {!!item.linkedCategories?.length && (
                           <ul className="sub-menu">
                             {item.linkedCategories.map((item, index) => (
                               <li key={index}>
-                                <Link to={`/categories/${item.slug}`}>
+                                <Link to={`/products?category=${item.slug}`}>
                                   {item.name}
                                 </Link>
                               </li>

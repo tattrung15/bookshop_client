@@ -1,9 +1,10 @@
 import { RouteGuardShape } from "@core/types/route.type";
 import { Role } from "./shared/types/user.type";
-import Dashboard from "./pages/admin/dashboard";
 import HomePage from "./pages/home";
+import ProductList from "./pages/product-list";
 import ProductDetail from "./pages/product-detail";
 import Profile from "./pages/profile";
+import Dashboard from "./pages/admin/dashboard";
 import CartInfo from "./pages/cart-info";
 import Checkout from "./pages/checkout";
 
@@ -14,6 +15,22 @@ export const routes: RouteGuardShape[] = [
     config: {
       roles: [Role.GUEST, Role.ADMIN, Role.MEMBER],
       redirect: "/login",
+    },
+  },
+  {
+    path: "/products",
+    component: ProductList,
+    config: {
+      roles: [Role.GUEST, Role.ADMIN, Role.MEMBER],
+      redirect: "/login",
+    },
+  },
+  {
+    path: "/products/:slug",
+    component: ProductDetail,
+    config: {
+      roles: [Role.GUEST, Role.ADMIN, Role.MEMBER],
+      redirect: "/",
     },
   },
   {
@@ -29,14 +46,6 @@ export const routes: RouteGuardShape[] = [
     component: Dashboard,
     config: {
       roles: [Role.ADMIN],
-      redirect: "/",
-    },
-  },
-  {
-    path: "/products/:slug",
-    component: ProductDetail,
-    config: {
-      roles: [Role.GUEST, Role.ADMIN, Role.MEMBER],
       redirect: "/",
     },
   },
