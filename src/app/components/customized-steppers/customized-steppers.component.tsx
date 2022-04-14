@@ -16,7 +16,11 @@ const getSteps = () => {
   return ["Chờ xác nhận", "Đang giao hàng", "Đã giao hàng"];
 };
 
-const ColorlibStepIcon = (props) => {
+const ColorlibStepIcon = (props: {
+  active: boolean;
+  completed: boolean;
+  icon: number;
+}) => {
   const classes = useColorlibStepIconStyles();
   const { active, completed } = props;
 
@@ -61,8 +65,8 @@ function CustomizedSteppers(props: PropTypes) {
         activeStep={activeStep ?? -1}
         connector={<ColorlibConnector />}
       >
-        {steps.map((label) => (
-          <Step key={label}>
+        {steps.map((label, index) => (
+          <Step key={index}>
             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
           </Step>
         ))}
