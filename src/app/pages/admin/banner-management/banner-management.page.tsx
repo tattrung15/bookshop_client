@@ -79,7 +79,7 @@ function BannerManagement() {
       BannerService.getList(pagination),
       (response: ResponseResult) => {
         setBanners(response.data as Banner[]);
-        setTotal(response?.pagination?.total ?? 0);
+        setTotal(response.pagination?.total ?? 0);
       }
     );
 

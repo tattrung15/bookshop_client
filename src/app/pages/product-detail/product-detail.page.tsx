@@ -190,6 +190,17 @@ function ProductDetail() {
                     </span>
                   </li>
                   <li>
+                    Thể loại:{" "}
+                    <Link
+                      to={`/products?category=${product.category?.slug}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <span style={{ fontWeight: "bolder" }}>
+                        {product.category?.name}
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
                     Số trang:{" "}
                     <span style={{ fontWeight: "bolder" }}>
                       {product.numberOfPage}

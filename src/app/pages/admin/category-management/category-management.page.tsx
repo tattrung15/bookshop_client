@@ -78,7 +78,7 @@ function CategoryManagement() {
       CategoryService.getList(pagination),
       (response: ResponseResult) => {
         setCategories(response.data as Category[]);
-        setTotal(response?.pagination?.total || 0);
+        setTotal(response.pagination?.total || 0);
       }
     );
 

@@ -46,7 +46,7 @@ function RecentOrderManagement() {
       SaleOrderService.getListForAdmin(pagination),
       (response: ResponseResult) => {
         setSaleOrders(response.data as SaleOrder[]);
-        setTotal(response?.pagination?.total || 0);
+        setTotal(response.pagination?.total || 0);
       }
     );
 

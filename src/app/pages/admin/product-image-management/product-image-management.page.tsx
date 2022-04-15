@@ -78,7 +78,7 @@ function ProductImageManagement() {
       ProductService.getList(pagination),
       (response: ResponseResult) => {
         setProducts(response.data as Product[]);
-        setTotal(response?.pagination?.total || 0);
+        setTotal(response.pagination?.total || 0);
       }
     );
 

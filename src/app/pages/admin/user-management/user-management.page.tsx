@@ -73,7 +73,7 @@ function UserManagement() {
       UserService.getList(pagination),
       (response: ResponseResult) => {
         setUsers(response.data as User[]);
-        setTotal(response?.pagination?.total || 0);
+        setTotal(response.pagination?.total || 0);
       }
     );
 
