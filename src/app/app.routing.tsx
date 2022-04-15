@@ -1,6 +1,7 @@
 import { RouteGuardShape } from "@core/types/route.type";
 import { Role } from "./shared/types/user.type";
 import HomePage from "./pages/home";
+import CategoryList from "./pages/category-list";
 import ProductList from "./pages/product-list";
 import ProductDetail from "./pages/product-detail";
 import Profile from "./pages/profile";
@@ -18,11 +19,19 @@ export const routes: RouteGuardShape[] = [
     },
   },
   {
+    path: "/categories",
+    component: CategoryList,
+    config: {
+      roles: [Role.GUEST, Role.ADMIN, Role.MEMBER],
+      redirect: "/",
+    },
+  },
+  {
     path: "/products",
     component: ProductList,
     config: {
       roles: [Role.GUEST, Role.ADMIN, Role.MEMBER],
-      redirect: "/login",
+      redirect: "/",
     },
   },
   {
