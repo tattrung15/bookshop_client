@@ -1,17 +1,18 @@
 import { Link } from "react-router-dom";
-
 import { Grid, Button, Box } from "@material-ui/core";
-
 import {
   Twitter as TwitterIcon,
   Facebook as FacebookIcon,
   Instagram as InstagramIcon,
 } from "@material-ui/icons";
-
+import { useSelector } from "react-redux";
+import { GlobalState } from "@app/store";
 import { useStyles } from "./make-style";
 
-export default function Footer() {
+function Footer() {
   const classes = useStyles();
+
+  const { username } = useSelector(selectAuth);
 
   return (
     <Box marginTop={10} className="bs-bg-primary">
@@ -26,7 +27,7 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="" className={classes.footerMenuItem}>
+                  <Link to="/products" className={classes.footerMenuItem}>
                     SÁCH
                   </Link>
                 </li>
@@ -65,24 +66,26 @@ export default function Footer() {
           <Grid style={{ width: "50%" }}>
             <Box style={{ textAlign: "center" }}>
               <h1>BOOKSHOP</h1>
-              <Box style={{ marginTop: "5em" }}>
-                <Button style={{ marginRight: "1em" }} variant="contained">
-                  <Link
-                    to="/login"
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    Đăng nhập
-                  </Link>
-                </Button>
-                <Button style={{ marginRight: "1em" }} variant="contained">
-                  <Link
-                    to="/signup"
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    Đăng ký
-                  </Link>
-                </Button>
-              </Box>
+              {!username && (
+                <Box style={{ marginTop: "5em" }}>
+                  <Button style={{ marginRight: "1em" }} variant="contained">
+                    <Link
+                      to="/login"
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      Đăng nhập
+                    </Link>
+                  </Button>
+                  <Button style={{ marginRight: "1em" }} variant="contained">
+                    <Link
+                      to="/signup"
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      Đăng ký
+                    </Link>
+                  </Button>
+                </Box>
+              )}
             </Box>
           </Grid>
         </div>
@@ -90,3 +93,7 @@ export default function Footer() {
     </Box>
   );
 }
+
+const selectAuth = (state: GlobalState) => state.auth;
+
+export default Footer;
