@@ -12,7 +12,7 @@ import { OrderItem } from "@app/models/order-item.model";
 import CartService from "@app/services/http/cart.service";
 import { ResponseResult } from "@core/services/http/http.service";
 import { Cart } from "@app/models/cart.model";
-import OrderItemComponent from "@app/components/order-item";
+import CartItem from "@app/components/cart-item";
 import { calculateTotalAmount } from "@app/shared/helpers/helpers";
 import useForceUpdate from "@core/hooks/use-force-update.hook";
 import { fetchCart } from "@app/store/cart/cart.epic";
@@ -139,7 +139,7 @@ function CartInfo() {
               </Box>
               {!!orderItems.length &&
                 orderItems.map((item, index) => (
-                  <OrderItemComponent
+                  <CartItem
                     item={item}
                     key={index}
                     onUpdateSuccess={handleOnUpdateSuccess}

@@ -12,6 +12,8 @@ import { User } from "@app/models/user.model";
 import ProfileForm from "@app/components/profile-form";
 import AppBar from "@app/components/app-bar";
 import CustomBreadcrumbs from "@app/components/custom-breadcrumbs";
+import OrderInfo from "../order-info";
+import { DELIVERY_STATE } from "@app/shared/constants/common";
 
 const handleLinkActiving = ({ isActive }: { isActive: boolean }) => {
   return isActive
@@ -111,7 +113,7 @@ function Profile() {
                     <li className={classes.itemNavLink}>
                       <NavLink
                         className={classes.navLink}
-                        to="/profile/order"
+                        to={`/profile/order?state=${DELIVERY_STATE.WAITING_TO_CONFIRM}`}
                         style={handleLinkActiving}
                       >
                         <i
@@ -143,20 +145,18 @@ function Profile() {
                 path=""
                 element={<ProfileForm onUpdateSuccess={onUpdateSuccess} />}
               />
-              {/* <Route path="don-hang">
-                <Box style={{ padding: "1em 1em 1em 0" }}>
-                  <Box
-                    style={{
-                      boxShadow: "1px 0px 3px 1px #888888",
-                      borderLeft: "1px solid black",
-                    }}
-                  >
-                    <Box style={{ padding: "0.5em" }}>
-                      <OrderClient />
-                    </Box>
+              <Route
+                path="order"
+                element={
+                  <Box style={{ padding: "1em 1em 1em 0" }}>
+                    <Paper>
+                      <Box style={{ padding: "0.5em" }}>
+                        <OrderInfo />
+                      </Box>
+                    </Paper>
                   </Box>
-                </Box>
-              </Route> */}
+                }
+              />
               <Route
                 path="recharge"
                 element={

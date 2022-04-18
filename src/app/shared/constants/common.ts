@@ -73,6 +73,13 @@ export const DELIVERY_INDEX = {
   CANCELED: "DaHuy",
 };
 
+export const DELIVERY_STATE = {
+  WAITING_TO_CONFIRM: "waiting-to-confirm",
+  DELIVERING: "delivering",
+  DELIVERED: "delivered",
+  CANCELED: "cancel",
+};
+
 export const mainMenuItems: MenuItem[] = [
   {
     linkTo: "/",

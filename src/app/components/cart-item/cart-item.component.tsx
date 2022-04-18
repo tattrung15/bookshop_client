@@ -16,7 +16,7 @@ type PropTypes = {
   onDeleteSuccess: () => void;
 };
 
-function OrderItemComponent(props: PropTypes) {
+function CartItem(props: PropTypes) {
   const classes = useStyles();
   const { item, onUpdateSuccess, onDeleteSuccess } = props;
 
@@ -119,4 +119,4 @@ function OrderItemComponent(props: PropTypes) {
   );
 }
 
-export default OrderItemComponent;
+export default CartItem;
