@@ -5,8 +5,14 @@ import HttpService, {
 } from "@core/services/http/http.service";
 import { SaleOrder } from "@app/models/sale-order.model";
 
+export type SaleOrderPaginationOption = PaginationOption & {
+  deliveryIndex?: string;
+};
+
 class _SaleOrderService {
-  public getListForMember(options?: PaginationOption): Observable<any> {
+  public getListForMember(
+    options?: SaleOrderPaginationOption
+  ): Observable<any> {
     return HttpService.get("/sale-orders", {
       queryParams: { ...options },
     }).pipe(pluck("result"));

@@ -10,6 +10,7 @@ import {
 import {
   DEFAULT_DATE_FORMAT,
   DELIVERY_INDEX,
+  DELIVERY_INDEX_MAP,
   imageNotFound,
 } from "@app/shared/constants/common";
 import { Form } from "@app/hooks/use-form.hook";
@@ -17,12 +18,6 @@ import { SaleOrder } from "@app/models/sale-order.model";
 import { Delivery } from "@app/models/delivery.model";
 import CustomizedSteppers from "../customized-steppers";
 import Controls from "@app/components/controls";
-
-const DELIVERY_INDEX_MAP = {
-  ChoXacNhan: 0,
-  DangGiaoHang: 1,
-  DaGiao: 2,
-};
 
 const SaleOrderItem = ({ item }: { item: OrderItem }) => {
   const classes = useStyles();

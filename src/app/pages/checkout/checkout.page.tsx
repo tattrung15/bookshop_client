@@ -244,7 +244,11 @@ function Checkout() {
             >
               Tiếp tục mua
             </Button>
-            <Button variant="contained" style={{ marginLeft: "1em" }}>
+            <Button
+              variant="contained"
+              style={{ marginLeft: "1em" }}
+              onClick={() => navigate("/profile/order", { replace: true })}
+            >
               Xem đơn hàng
             </Button>
           </div>
