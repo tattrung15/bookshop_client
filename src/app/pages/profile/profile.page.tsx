@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { Box, Grid, Paper, Tooltip, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import { useSelector } from "react-redux";
@@ -41,7 +41,16 @@ function Profile() {
 
   const { subscribeOnce } = useObservable();
 
+  const location = useLocation();
   const { id: userId } = useSelector(selectAuth);
+  const query = new URLSearchParams(location.search);
+
+  const [title, setTitle] = useState("Thông tin tài khoản");
+  const [state, setState] = useState(DELIVERY_STATE.WAITING_TO_CONFIRM);
+  const [breadcrumbs, setBreadcrumbs] = useState({
+    navigation: [{ title: "Trang chủ", linkTo: "/" }],
+    textPrimary: "Thông tin tài khoản",
+  });
   const [currentUser, setCurrentUser] = useState<User>(new User(null));
 
   useEffect(() => {
@@ -54,6 +63,41 @@ function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+  useEffect(() => {
+    if (location.pathname === "/profile") {
+      setTitle("Thông tin tài khoản");
+      setBreadcrumbs({
+        navigation: [{ title: "Trang chủ", linkTo: "/" }],
+        textPrimary: "Thông tin tài khoản",
+      });
+    } else if (location.pathname === "/profile/order") {
+      setState(query.get("state") ?? DELIVERY_STATE.WAITING_TO_CONFIRM);
+      setTitle("Đơn hàng");
+      setBreadcrumbs({
+        navigation: [{ title: "Trang chủ", linkTo: "/" }],
+        textPrimary: "Đơn hàng",
+      });
+    } else if (location.pathname === "/profile/recharge") {
+      setTitle("Nạp tiền");
+      setBreadcrumbs({
+        navigation: [{ title: "Trang chủ", linkTo: "/" }],
+        textPrimary: "Nạp tiền",
+      });
+    } else if (location.pathname.includes("/profile/order-detail/")) {
+      setTitle("Chi tiết đơn hàng");
+
+      setBreadcrumbs({
+        navigation: [
+          { title: "Trang chủ", linkTo: "/" },
+          { title: "Đơn hàng", linkTo: `/profile/order?state=${state}` },
+        ],
+        textPrimary: "Chi tiết đơn hàng",
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
+
   const onUpdateSuccess = () => {
     if (userId) {
       subscribeOnce(UserService.getUserById(userId), (data) => {
@@ -65,14 +109,16 @@ function Profile() {
   return (
     <>
       <Helmet>
-        <title>Hồ sơ</title>
+        <title>{title}</title>
       </Helmet>
       <AppBar />
       <Box paddingTop={2} className={classes.container}>
-        <CustomBreadcrumbs
-          navigation={[{ title: "Trang chủ", linkTo: "/" }]}
-          textPrimary="Thông tin tài khoản"
-        />
+        {!!breadcrumbs.navigation.length && (
+          <CustomBreadcrumbs
+            navigation={breadcrumbs.navigation}
+            textPrimary={breadcrumbs.textPrimary}
+          />
+        )}
         <Box paddingTop={2} style={{ display: "flex" }}>
           <Grid item xs={3} md={3} style={{ marginRight: "1em" }}>
             <Paper>

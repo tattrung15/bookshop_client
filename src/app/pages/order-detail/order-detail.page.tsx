@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 import { Box, Grid, Typography, Divider, Paper } from "@material-ui/core";
-import { Helmet } from "react-helmet-async";
 import CustomizedSteppers from "@app/components/customized-steppers";
 import {
   DEFAULT_DATETIME_FORMAT,
@@ -44,9 +43,6 @@ function OrderDetail() {
 
   return (
     <>
-      <Helmet>
-        <title>Chi tiết đơn hàng</title>
-      </Helmet>
       <Box className={classes.orderDetailWrapper}>
         <Paper>
           <Box style={{ padding: "0.5em" }}>
