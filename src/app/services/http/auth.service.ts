@@ -1,5 +1,6 @@
 import { Observable } from "rxjs";
 import HttpService from "@core/services/http/http.service";
+import { CreateUserDto } from "@app/models/user.model";
 
 class _AuthService {
   public login(username: string, password: string): Observable<any> {
@@ -8,6 +9,12 @@ class _AuthService {
         username,
         password,
       },
+    });
+  }
+
+  public signUp(createUserDto: CreateUserDto): Observable<any> {
+    return HttpService.post("/auth/signup", {
+      body: { ...createUserDto },
     });
   }
 
