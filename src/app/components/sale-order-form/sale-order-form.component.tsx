@@ -1,88 +1,18 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { Grid, Box, Typography, Divider } from "@material-ui/core";
-import { useStyles } from "./make-style";
-import { OrderItem } from "@app/models/order-item.model";
-import {
-  buildImageSrc,
-  calculateTotalAmount,
-} from "@app/shared/helpers/helpers";
+import { calculateTotalAmount } from "@app/shared/helpers/helpers";
 import {
   DEFAULT_DATE_FORMAT,
   DELIVERY_INDEX,
   DELIVERY_INDEX_MAP,
-  imageNotFound,
 } from "@app/shared/constants/common";
 import { Form } from "@app/hooks/use-form.hook";
 import { SaleOrder } from "@app/models/sale-order.model";
 import { Delivery } from "@app/models/delivery.model";
 import CustomizedSteppers from "../customized-steppers";
 import Controls from "@app/components/controls";
-
-const SaleOrderItem = ({ item }: { item: OrderItem }) => {
-  const classes = useStyles();
-
-  return (
-    <>
-      <Box
-        style={{
-          marginTop: "0.5em",
-          display: "flex",
-        }}
-      >
-        <Grid item xs={5} md={5}>
-          <Box
-            style={{
-              display: "flex",
-            }}
-          >
-            <Grid item xs={4} md={4}>
-              <img
-                src={
-                  !!item.product.productImages.length
-                    ? buildImageSrc(item.product.productImages[0].imageUrl)
-                    : imageNotFound
-                }
-                alt=""
-                style={{ width: "80%" }}
-              />
-            </Grid>
-            <Grid item xs={8} md={8}>
-              <Typography color="textPrimary" style={{ fontWeight: "bolder" }}>
-                {item.product.title}
-              </Typography>
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid item xs={3} md={3} className={classes.textCenter}>
-          <Typography color="textPrimary">
-            {item.product.price.toLocaleString("vn")}đ
-          </Typography>
-        </Grid>
-        <Grid item xs={2} md={2} className={classes.textCenter}>
-          <Typography color="textPrimary" style={{ fontWeight: "bolder" }}>
-            {item.quantity}
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          xs={3}
-          md={3}
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-          }}
-        >
-          <Typography color="textPrimary" style={{ fontWeight: "bolder" }}>
-            {(item.product.price * item.quantity).toLocaleString("vn") + "đ"}
-          </Typography>
-        </Grid>
-      </Box>
-      <Divider />
-    </>
-  );
-};
+import SaleOrderItem from "../sale-order-item";
 
 type PropTypes = {
   isView: boolean;

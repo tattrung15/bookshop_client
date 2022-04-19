@@ -42,14 +42,14 @@ function OrderItem(props: PropTypes) {
           <Box>
             Mã đơn hàng:{" "}
             <Link
-              to={`/order-detail/${item.id}`}
+              to={`/profile/order-detail/${item.id}`}
               className={classes.orderItemLink}
             >
               {item.id}
             </Link>
             {" | "}
             <Link
-              to={`/order-detail/${item.id}`}
+              to={`/profile/order-detail/${item.id}`}
               className={classes.orderItemLink}
             >
               Chi tiết
@@ -100,7 +100,7 @@ function OrderItem(props: PropTypes) {
       <Box style={{ padding: "0.5em" }}>
         <Box style={{ display: "flex", justifyContent: "flex-end" }}>
           <Link
-            to={`/order-detail/${item.id}`}
+            to={`/profile/order-detail/${item.id}`}
             className={classes.orderItemLink}
           >
             {"Theo dõi đơn hàng >>"}

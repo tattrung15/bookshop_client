@@ -14,6 +14,7 @@ import AppBar from "@app/components/app-bar";
 import CustomBreadcrumbs from "@app/components/custom-breadcrumbs";
 import OrderInfo from "../order-info";
 import { DELIVERY_STATE } from "@app/shared/constants/common";
+import OrderDetail from "../order-detail";
 
 const handleLinkActiving = ({ isActive }: { isActive: boolean }) => {
   return isActive
@@ -156,6 +157,10 @@ function Profile() {
                     </Paper>
                   </Box>
                 }
+              />
+              <Route
+                path="order-detail/:saleOrderId"
+                element={<OrderDetail />}
               />
               <Route
                 path="recharge"
