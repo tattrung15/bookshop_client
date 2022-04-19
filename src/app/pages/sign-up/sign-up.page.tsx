@@ -211,7 +211,7 @@ export default function SignUp() {
             >
               Đăng ký
             </Button>
-            <Grid container justify="flex-end">
+            <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/login" className="bs-text-primary">
                   Đăng nhập
