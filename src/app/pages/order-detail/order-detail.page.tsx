@@ -57,7 +57,7 @@ function OrderDetail() {
               <Grid item xs={4} md={4}>
                 <Box>
                   Mã đơn hàng:{" "}
-                  <span style={{ color: "blue" }}>{saleOrderId}</span>
+                  <span className="bs-text-primary">{saleOrderId}</span>
                 </Box>
                 <Box>
                   Thời gian đặt hàng:

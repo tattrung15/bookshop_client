@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Box, Grid, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
+import clsx from "clsx";
 import CustomizedSteppers from "../customized-steppers";
 import { SaleOrder } from "@app/models/sale-order.model";
 import {
@@ -43,14 +44,14 @@ function OrderItem(props: PropTypes) {
             Mã đơn hàng:{" "}
             <Link
               to={`/profile/order-detail/${item.id}`}
-              className={classes.orderItemLink}
+              className={clsx(classes.orderItemLink, "bs-text-primary")}
             >
               {item.id}
             </Link>
             {" | "}
             <Link
               to={`/profile/order-detail/${item.id}`}
-              className={classes.orderItemLink}
+              className={clsx(classes.orderItemLink, "bs-text-primary")}
             >
               Chi tiết
             </Link>
@@ -101,7 +102,7 @@ function OrderItem(props: PropTypes) {
         <Box style={{ display: "flex", justifyContent: "flex-end" }}>
           <Link
             to={`/profile/order-detail/${item.id}`}
-            className={classes.orderItemLink}
+            className={clsx(classes.orderItemLink, "bs-text-primary")}
           >
             {"Theo dõi đơn hàng >>"}
           </Link>

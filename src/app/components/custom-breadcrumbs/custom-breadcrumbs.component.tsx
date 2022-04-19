@@ -23,7 +23,12 @@ function CustomBreadcrumbs(props: PropTypes) {
       >
         {!!navigation.length &&
           navigation.map((item, index) => (
-            <Link key={index} color="inherit" to={item.linkTo}>
+            <Link
+              key={index}
+              color="inherit"
+              to={item.linkTo}
+              className="bs-text-primary"
+            >
               {item.title}
             </Link>
           ))}
