@@ -15,6 +15,8 @@ import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import { UpdateUserDto, User } from "@app/models/user.model";
 import { useStyles } from "./make-style";
+import PopupDialog from "../popup-dialog";
+import ChangePasswordForm from "../change-password-form";
 
 type PropTypes = {
   onUpdateSuccess: () => void;
@@ -27,6 +29,8 @@ function ProfileForm(props: PropTypes) {
   const { subscribeOnce } = useObservable();
 
   const { id: userId } = useSelector(selectAuth);
+
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [userInfo, setUserInfo] = useState<Partial<UpdateUserDto>>({
     firstName: "",
     lastName: "",
@@ -79,6 +83,13 @@ function ProfileForm(props: PropTypes) {
           <Typography color="textPrimary" className={classes.formTitle}>
             Thông tin tài khoản
           </Typography>
+          <PopupDialog
+            title="Thay đổi mật khẩu"
+            openPopup={isOpenPopup}
+            setOpenPopup={setIsOpenPopup}
+          >
+            <ChangePasswordForm />
+          </PopupDialog>
           <Divider style={{ margin: "0.5em auto" }} />
           <Box maxWidth={"50%"} className={classes.wrapFields}>
             <Box className={classes.fieldMarginTop}>
@@ -142,7 +153,15 @@ function ProfileForm(props: PropTypes) {
               />
             </Box>
             <Box className={classes.fieldMarginTop}>
-              <Link to="#">Thay đổi mật khẩu</Link>
+              <Link
+                to="#"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setIsOpenPopup(true);
+                }}
+              >
+                Thay đổi mật khẩu
+              </Link>
             </Box>
             <Box
               className={clsx(
