@@ -134,7 +134,13 @@ function App() {
         aria-describedby="alert-dialog-description"
       >
         <DialogContent>
-          {dialogContent}
+          <div
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {dialogContent}
+          </div>
           <div className="app-dialog-btn-close">
             <Button variant="contained" onClick={handleClose}>
               Close

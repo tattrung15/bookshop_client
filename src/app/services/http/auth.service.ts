@@ -25,6 +25,14 @@ class _AuthService {
       },
     });
   }
+
+  public resetPassword(username: string): Observable<any> {
+    return HttpService.delete("/auth/password", {
+      body: {
+        username,
+      },
+    });
+  }
 }
 
 const AuthService = new _AuthService();

@@ -18,4 +18,10 @@ export const useStyles = makeStyles((theme: Theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  rootForm: {
+    "& .MuiFormControl-root": {
+      width: "80%",
+      margin: theme.spacing(1),
+    },
+  },
 }));

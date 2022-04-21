@@ -10,6 +10,8 @@ import {
   Grid,
   Typography,
   Container,
+  Dialog,
+  DialogContent,
 } from "@material-ui/core";
 import { LockOutlined as LockOutlinedIcon } from "@material-ui/icons";
 import clsx from "clsx";
@@ -23,6 +25,7 @@ import { User } from "@app/models/user.model";
 import { storeUser } from "@app/store/auth/auth.action";
 import HttpService from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
+import Controls from "@app/components/controls";
 
 export default function SignIn() {
   const classes = useStyles();
@@ -32,7 +35,10 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [username, setUsername] = useState("");
   const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [dialogContent, setDialogContent] = useState<string>("");
   const [accountState, setAccountState] = useState({
     username: "",
     password: "",
@@ -84,9 +90,19 @@ export default function SignIn() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (validate()) {
-    //   changePassword(values.oldPassword, values.newPassword);
-    // }
+
+    subscribeOnce(AuthService.resetPassword(username), () => {
+      setOpenDialog(true);
+      setIsOpenPopup(false);
+      setDialogContent(
+        `Chúng tôi đã gửi một mật khẩu mới đến địa chỉ email của bạn,
+         vui lòng kiểm tra hộp thư đến của bạn`
+      );
+    });
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -108,9 +124,34 @@ export default function SignIn() {
             openPopup={isOpenPopup}
             setOpenPopup={setIsOpenPopup}
           >
-            {/* <form onSubmit={}>
-            <Grid container></Grid>
-            </form> */}
+            <form
+              className={classes.rootForm}
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
+              <Grid container>
+                <Grid item xs={12} style={{ textAlign: "center" }}>
+                  <Controls.Input
+                    name="username"
+                    label="Username"
+                    value={username}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setUsername(event.target.value);
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <div style={{ textAlign: "center" }}>
+                  <Controls.Button type="submit" text="Gửi đi" />
+                  <Controls.Button
+                    text="Đặt lại"
+                    color="default"
+                    onClick={() => setUsername("")}
+                  />
+                </div>
+              </Grid>
+            </form>
           </PopupDialog>
           <form className={classes.form}>
             <TextField
@@ -162,7 +203,14 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="#" className="bs-text-primary">
+                <Link
+                  to="#"
+                  className="bs-text-primary"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setIsOpenPopup(true);
+                  }}
+                >
                   Quên mật khẩu?
                 </Link>
               </Grid>
@@ -175,6 +223,29 @@ export default function SignIn() {
           </form>
         </div>
       </Container>
+      <Dialog
+        open={openDialog}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <div
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              fontSize: "16px",
+            }}
+          >
+            {dialogContent}
+          </div>
+          <div className="app-dialog-btn-close">
+            <Button variant="contained" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
