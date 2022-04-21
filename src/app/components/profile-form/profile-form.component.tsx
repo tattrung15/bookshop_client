@@ -11,12 +11,14 @@ import {
 } from "@material-ui/core";
 import { GlobalState } from "@app/store";
 import { useSelector } from "react-redux";
+import { useSnackbar } from "notistack";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import { UpdateUserDto, User } from "@app/models/user.model";
 import { useStyles } from "./make-style";
 import PopupDialog from "../popup-dialog";
 import ChangePasswordForm from "../change-password-form";
+import { TYPE_ALERT } from "@app/shared/constants/common";
 
 type PropTypes = {
   onUpdateSuccess: () => void;
@@ -27,6 +29,7 @@ function ProfileForm(props: PropTypes) {
 
   const classes = useStyles();
   const { subscribeOnce } = useObservable();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { id: userId } = useSelector(selectAuth);
 
@@ -73,6 +76,18 @@ function ProfileForm(props: PropTypes) {
       };
       setUserInfo(newUserInfo);
       onUpdateSuccess();
+      enqueueSnackbar("Cập nhật thông tin thành công", {
+        variant: TYPE_ALERT.SUCCESS,
+      });
+    });
+  };
+
+  const changePassword = (oldPassword: string, newPassword: string) => {
+    subscribeOnce(UserService.changePassword(oldPassword, newPassword), () => {
+      setIsOpenPopup(false);
+      enqueueSnackbar("Thay đổi mật khẩu thành công", {
+        variant: TYPE_ALERT.SUCCESS,
+      });
     });
   };
 
@@ -88,7 +103,7 @@ function ProfileForm(props: PropTypes) {
             openPopup={isOpenPopup}
             setOpenPopup={setIsOpenPopup}
           >
-            <ChangePasswordForm />
+            <ChangePasswordForm changePassword={changePassword} />
           </PopupDialog>
           <Divider style={{ margin: "0.5em auto" }} />
           <Box maxWidth={"50%"} className={classes.wrapFields}>

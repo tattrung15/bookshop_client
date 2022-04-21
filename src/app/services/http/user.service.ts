@@ -33,6 +33,15 @@ class _UserService {
     }).pipe(map((response: any) => new User(response.result.data)));
   }
 
+  public changePassword(
+    oldPassword: string,
+    newPassword: string
+  ): Observable<User> {
+    return HttpService.patch(`/users/password`, {
+      body: { oldPassword, newPassword },
+    }).pipe(map((response: any) => new User(response.result.data)));
+  }
+
   public deleteUser(userId: number): Observable<User> {
     return HttpService.delete(`/users/${userId}`).pipe(
       map((response: any) => new User(response.result.data))

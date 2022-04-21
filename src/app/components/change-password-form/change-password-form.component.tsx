@@ -11,12 +11,23 @@ const initialUserValues = {
   cfPassword: "",
 };
 
-function ChangePasswordForm() {
+type PropTypes = {
+  changePassword: (oldPassword: string, newPassword: string) => void;
+};
+
+function ChangePasswordForm(props: PropTypes) {
+  const { changePassword } = props;
+
   const [isShowPassword, setIsShowPassword] = useState(false);
 
   const validate = (fieldValues = values) => {
     const temp = { ...errors };
 
+    if ("oldPassword" in fieldValues) {
+      temp.oldPassword = fieldValues.oldPassword
+        ? ""
+        : "Trường này là bắt buộc";
+    }
     if ("newPassword" in fieldValues) {
       temp.newPassword = !fieldValues.newPassword
         ? "Trường này là bắt buộc"
@@ -26,7 +37,7 @@ function ChangePasswordForm() {
     }
     if ("cfPassword" in fieldValues) {
       temp.cfPassword =
-        values.password === fieldValues.cfPassword
+        values.newPassword === fieldValues.cfPassword
           ? ""
           : "Không khớp với mật khẩu";
     }
@@ -45,7 +56,7 @@ function ChangePasswordForm() {
   const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (validate()) {
-      // addOrEdit(values, resetForm);
+      changePassword(values.oldPassword, values.newPassword);
     }
   };
 
