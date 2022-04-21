@@ -8,7 +8,10 @@ import { UpdateUserDto, User } from "@app/models/user.model";
 import { Role } from "@app/shared/types/user.type";
 import { titleCase } from "@core/helpers/string.helper";
 import Controls from "../controls";
-import { DEFAULT_DATETIME_FORMAT } from "@app/shared/constants/common";
+import {
+  DEFAULT_DATETIME_FORMAT,
+  REGEX_PASSWORD,
+} from "@app/shared/constants/common";
 
 const initialUserValues: UpdateUserDto = {
   id: 0,
@@ -87,9 +90,7 @@ function UserForm(props: PropTypes) {
         if ("password" in fieldValues) {
           temp.password = !fieldValues.password
             ? "Trường này là bắt buộc"
-            : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
-                fieldValues.password
-              )
+            : REGEX_PASSWORD.test(fieldValues.password)
             ? ""
             : "Mật khẩu ít nhất 8 ký tự, ít nhất một chữ cái và một số";
         }
@@ -104,9 +105,7 @@ function UserForm(props: PropTypes) {
       if ("password" in fieldValues) {
         temp.password = !fieldValues.password
           ? "Trường này là bắt buộc"
-          : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
-              fieldValues.password
-            )
+          : REGEX_PASSWORD.test(fieldValues.password)
           ? ""
           : "Mật khẩu ít nhất 8 ký tự, ít nhất một chữ cái và một số";
       }

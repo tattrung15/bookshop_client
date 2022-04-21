@@ -3,6 +3,7 @@ import { Grid, IconButton, InputAdornment } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Form, useForm } from "@app/hooks/use-form.hook";
 import Controls from "../controls";
+import { REGEX_PASSWORD } from "@app/shared/constants/common";
 
 const initialUserValues = {
   oldPassword: "",
@@ -19,9 +20,7 @@ function ChangePasswordForm() {
     if ("newPassword" in fieldValues) {
       temp.newPassword = !fieldValues.newPassword
         ? "Trường này là bắt buộc"
-        : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,}$/.test(
-            fieldValues.newPassword
-          )
+        : REGEX_PASSWORD.test(fieldValues.newPassword)
         ? ""
         : "Mật khẩu ít nhất 8 ký tự, ít nhất một chữ cái và một số";
     }

@@ -60,6 +60,9 @@ export const STRING_LENGTH_LIMIT = 255;
 export const DEFAULT_DATE_FORMAT = "YYYY/MM/DD";
 export const DEFAULT_DATETIME_FORMAT = "YYYY/MM/DD HH:mm:ss";
 
+const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&_]{8,255}$/;
+export const REGEX_PASSWORD = regexPassword;
+
 export const DEFAULT_PAGINATION_OPTION: PaginationOption = {
   page: 1,
   perPage: PAGING_DEFAULT_LIMIT,
