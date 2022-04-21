@@ -56,7 +56,7 @@ function CategoryForm(props: PropTypes) {
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
     useForm(initialCategoryValues, true, validate);
 
-  const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isEdit) {
       if (validate()) {

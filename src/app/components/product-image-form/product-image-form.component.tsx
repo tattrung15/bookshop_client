@@ -57,7 +57,7 @@ function ProductImageForm(props: PropTypes) {
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
     useForm(initialProductImageValues, true, validate);
 
-  const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newProductImage: Partial<UpdateProductImageDto> = {
       productId: values.productId,

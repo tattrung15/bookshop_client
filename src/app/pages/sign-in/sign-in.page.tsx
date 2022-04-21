@@ -22,6 +22,7 @@ import StorageService from "@core/services/storage";
 import { User } from "@app/models/user.model";
 import { storeUser } from "@app/store/auth/auth.action";
 import HttpService from "@core/services/http/http.service";
+import PopupDialog from "@app/components/popup-dialog";
 
 export default function SignIn() {
   const classes = useStyles();
@@ -31,6 +32,7 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [accountState, setAccountState] = useState({
     username: "",
     password: "",
@@ -80,6 +82,13 @@ export default function SignIn() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // if (validate()) {
+    //   changePassword(values.oldPassword, values.newPassword);
+    // }
+  };
+
   return (
     <>
       <Helmet>
@@ -94,6 +103,15 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Đăng nhập
           </Typography>
+          <PopupDialog
+            title="Quên mật khẩu"
+            openPopup={isOpenPopup}
+            setOpenPopup={setIsOpenPopup}
+          >
+            {/* <form onSubmit={}>
+            <Grid container></Grid>
+            </form> */}
+          </PopupDialog>
           <form className={classes.form}>
             <TextField
               variant="outlined"
