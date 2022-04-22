@@ -55,10 +55,7 @@ function HomePage() {
     subscribeUntilDestroy(
       ProductService.getList(options),
       (response: ResponseResult) => {
-        const data: Product[] = response.data.map(
-          (item: any) => new Product(item)
-        );
-        setProductBestSelling(data);
+        setProductBestSelling(response.data as Product[]);
       }
     );
 
@@ -66,40 +63,28 @@ function HomePage() {
     subscribeUntilDestroy(
       ProductService.getList(options),
       (response: ResponseResult) => {
-        const data: Product[] = response.data.map(
-          (item: any) => new Product(item)
-        );
-        setNewProducts(data);
+        setNewProducts(response.data as Product[]);
       }
     );
 
     subscribeUntilDestroy(
       ProductService.getListByCategory("combo", options),
       (response: ResponseResult) => {
-        const data: Product[] = response.data.map(
-          (item: any) => new Product(item)
-        );
-        setProductCombo(data);
+        setProductCombo(response.data as Product[]);
       }
     );
 
     subscribeUntilDestroy(
       ProductService.getListByCategory("wings-books", options),
       (response: ResponseResult) => {
-        const data: Product[] = response.data.map(
-          (item: any) => new Product(item)
-        );
-        setProductWingsBooks(data);
+        setProductWingsBooks(response.data as Product[]);
       }
     );
 
     subscribeUntilDestroy(
       ProductService.getListByCategory("manga-comic", options),
       (response: ResponseResult) => {
-        const data: Product[] = response.data.map(
-          (item: any) => new Product(item)
-        );
-        setProductComicManga(data);
+        setProductComicManga(response.data as Product[]);
       }
     );
 

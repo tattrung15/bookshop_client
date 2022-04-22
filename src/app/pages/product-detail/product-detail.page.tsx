@@ -71,10 +71,7 @@ function ProductDetail() {
           })
         ),
         (response: ResponseResult) => {
-          const data: Product[] = response.data.map(
-            (item: any) => new Product(item)
-          );
-          setSimilarProducts(data);
+          setSimilarProducts(response.data as Product[]);
         }
       );
     }
@@ -89,10 +86,7 @@ function ProductDetail() {
       subscribeUntilDestroy(
         ProductService.getList(options),
         (response: ResponseResult) => {
-          const data: Product[] = response.data.map(
-            (item: any) => new Product(item)
-          );
-          setLastViewProducts(data);
+          setLastViewProducts(response.data as Product[]);
         }
       );
     }
