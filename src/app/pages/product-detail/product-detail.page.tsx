@@ -338,7 +338,7 @@ function ProductDetail() {
             </div>
 
             <Box className={classes.showMoreBox}>
-              <Link to="" className={classes.showMoreLink}>
+              <Link to="/products-viewed" className={classes.showMoreLink}>
                 <Button variant="contained">Xem thêm</Button>
               </Link>
             </Box>
