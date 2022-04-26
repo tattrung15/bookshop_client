@@ -55,6 +55,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   searchInput: {
+    width: "100%",
     color: "inherit",
     "& .MuiInputBase-input": {
       color: "white",
@@ -64,7 +65,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
       transition: theme.transitions.create("width"),
       width: "100%",
       [theme.breakpoints.up("md")]: {
-        width: "50ch",
+        width: "100%",
       },
     },
   },
