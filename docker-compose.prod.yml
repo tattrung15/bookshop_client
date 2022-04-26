@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  bookshop-client:
+    container_name: bookshop-client
+    restart: on-failure
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - REACT_APP_BASE_API_URL=https://api-bookshop.trungbt.me/api
+    networks:
+      - bookshop_server_app-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bookshop_client.rule=Host(`bookshop.trungbt.me`)" # <== Setting the domain for the ttv client
+      - "traefik.http.routers.bookshop_client.entrypoints=web"
+      - "traefik.http.routers.bookshop_client.middlewares=redirect@file"
+      - "traefik.http.routers.bookshop_client-secured.rule=Host(`bookshop.trungbt.me`)" # <== Setting the domain for the ttv client
+      - "traefik.http.routers.bookshop_client-secured.entrypoints=websecure"
+      - "traefik.http.routers.bookshop_client-secured.tls.certresolver=myresolver"
+
+networks:
+  bookshop_server_app-network:
+    external: true
