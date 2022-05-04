@@ -69,65 +69,63 @@ function MainSlider(props: PropTypes) {
 
   return (
     <Box paddingTop={5} paddingX={5.5} marginBottom={2.5}>
-      {!!banners.length && (
-        <Box style={{ position: "relative", borderTop: "1px solid black" }}>
-          {shouldShowBanner && (
-            <Carousel
-              dynamicHeight={false}
-              showStatus={false}
-              showThumbs={false}
-              interval={4000}
-              transitionTime={1000}
-              swipeScrollTolerance={50}
-              infiniteLoop
-              autoPlay
-              emulateTouch
-            >
-              {banners.map((item, index) => (
-                <div key={index}>
-                  <img src={buildImageSrc(item.imageUrl ?? "")} alt="" />
-                </div>
-              ))}
-            </Carousel>
-          )}
-          <div className="menu-wrapper">
-            <ul>
-              <li>
-                <Link to="">
-                  <i className="fa fa-bars"></i>{" "}
-                  <span style={{ fontWeight: "500" }}>Danh mục sản phẩm</span>
-                </Link>
-                <ul className="menu">
-                  {!!categories.length &&
-                    categories.map((item, index) => (
-                      <li
-                        key={index}
-                        className={clsx({
-                          "has-child": !!item.linkedCategories?.length ?? false,
-                        })}
-                      >
-                        <Link to={`/products?category=${item.slug}`}>
-                          {item.name}
-                        </Link>
-                        {!!item.linkedCategories?.length && (
-                          <ul className="sub-menu">
-                            {item.linkedCategories.map((item, index) => (
-                              <li key={index}>
-                                <Link to={`/products?category=${item.slug}`}>
-                                  {item.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </Box>
-      )}
+      <Box style={{ position: "relative", borderTop: "1px solid black" }}>
+        {!!banners.length && shouldShowBanner && (
+          <Carousel
+            dynamicHeight={false}
+            showStatus={false}
+            showThumbs={false}
+            interval={4000}
+            transitionTime={1000}
+            swipeScrollTolerance={50}
+            infiniteLoop
+            autoPlay
+            emulateTouch
+          >
+            {banners.map((item, index) => (
+              <div key={index}>
+                <img src={buildImageSrc(item.imageUrl ?? "")} alt="" />
+              </div>
+            ))}
+          </Carousel>
+        )}
+        <div className="menu-wrapper">
+          <ul>
+            <li>
+              <Link to="">
+                <i className="fa fa-bars"></i>{" "}
+                <span style={{ fontWeight: "500" }}>Danh mục sản phẩm</span>
+              </Link>
+              <ul className="menu">
+                {!!categories.length &&
+                  categories.map((item, index) => (
+                    <li
+                      key={index}
+                      className={clsx({
+                        "has-child": !!item.linkedCategories?.length ?? false,
+                      })}
+                    >
+                      <Link to={`/products?category=${item.slug}`}>
+                        {item.name}
+                      </Link>
+                      {!!item.linkedCategories?.length && (
+                        <ul className="sub-menu">
+                          {item.linkedCategories.map((item, index) => (
+                            <li key={index}>
+                              <Link to={`/products?category=${item.slug}`}>
+                                {item.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </Box>
     </Box>
   );
 }
