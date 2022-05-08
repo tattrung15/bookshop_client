@@ -91,7 +91,7 @@ function RecentOrderManagement() {
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
-                    <TableCell width="10%">Ngày</TableCell>
+                    <TableCell width="10%">Ngày đặt</TableCell>
                     <TableCell width="20%">Tên khách hàng</TableCell>
                     <TableCell width="15%">Số điện thoại</TableCell>
                     <TableCell width="40%">Địa chỉ</TableCell>

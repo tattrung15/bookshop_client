@@ -42,7 +42,7 @@ export default function SignIn() {
   const [accountState, setAccountState] = useState({
     username: "",
     password: "",
-    isRemembered: false,
+    isRemembered: true,
   });
 
   const handleLogin = () => {
