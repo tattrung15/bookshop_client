@@ -21,10 +21,13 @@ import {
 import {
   DEFAULT_DATE_FORMAT,
   DEFAULT_PAGINATION_OPTION,
+  FETCH_TYPE,
 } from "@app/shared/constants/common";
 import { SaleOrder } from "@app/models/sale-order.model";
 import useObservable from "@core/hooks/use-observable.hook";
-import SaleOrderService from "@app/services/http/sale-order.service";
+import SaleOrderService, {
+  SaleOrderPaginationOption,
+} from "@app/services/http/sale-order.service";
 import { calculateTotalAmount } from "@app/shared/helpers/helpers";
 
 function RecentOrderManagement() {
@@ -35,8 +38,9 @@ function RecentOrderManagement() {
   const [total, setTotal] = useState(0);
   const [saleOrders, setSaleOrders] = useState<SaleOrder[]>([]);
   const [pagination, setPagination] = useState(() => {
-    const options: PaginationOption = {
+    const options: SaleOrderPaginationOption = {
       ...DEFAULT_PAGINATION_OPTION,
+      fetchType: FETCH_TYPE.ADMIN,
     };
     return options;
   });
@@ -101,7 +105,7 @@ function RecentOrderManagement() {
                     saleOrders.map((item, index) => (
                       <TableRow key={index}>
                         <TableCell>
-                          {dayjs(item.createdAt).format(DEFAULT_DATE_FORMAT)}
+                          {dayjs(item.orderedAt).format(DEFAULT_DATE_FORMAT)}
                         </TableCell>
                         <TableCell>
                           {item.user.firstName + " " + item.user.lastName}

@@ -12,6 +12,7 @@ export class SaleOrder extends Model {
   orderItems: OrderItem[];
   createdAt: Date;
   updatedAt: Date;
+  orderedAt: Date;
 
   constructor(data: any) {
     super();

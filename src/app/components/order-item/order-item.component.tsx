@@ -59,7 +59,7 @@ function OrderItem(props: PropTypes) {
           <Box>
             Thời gian đặt hàng:
             <br />
-            {dayjs(item.createdAt).format(DEFAULT_DATETIME_FORMAT)}
+            {dayjs(item.orderedAt).format(DEFAULT_DATETIME_FORMAT)}
           </Box>
         </Grid>
         <Grid item xs={4} md={4}>

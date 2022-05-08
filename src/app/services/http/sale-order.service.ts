@@ -4,9 +4,11 @@ import HttpService, {
   PaginationOption,
 } from "@core/services/http/http.service";
 import { SaleOrder } from "@app/models/sale-order.model";
+import { FETCH_TYPE } from "@app/shared/constants/common";
 
 export type SaleOrderPaginationOption = PaginationOption & {
   deliveryIndex?: string;
+  fetchType?: FETCH_TYPE;
 };
 
 class _SaleOrderService {
@@ -24,7 +26,7 @@ class _SaleOrderService {
     );
   }
 
-  public getListForAdmin(options?: PaginationOption): Observable<any> {
+  public getListForAdmin(options?: SaleOrderPaginationOption): Observable<any> {
     return HttpService.get("/sale-orders/admin", {
       queryParams: { ...options },
     }).pipe(pluck("result"));

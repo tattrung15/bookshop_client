@@ -263,7 +263,7 @@ function SaleOrderManagement() {
                 <TableCell width="7%" align="center">
                   Xem
                 </TableCell>
-                <TableCell width="7%" align="center">
+                <TableCell width="9%" align="center">
                   Cập nhật
                 </TableCell>
               </TableRow>

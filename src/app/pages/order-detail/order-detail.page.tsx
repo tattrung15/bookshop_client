@@ -62,7 +62,7 @@ function OrderDetail() {
                 <Box>
                   Thời gian đặt hàng:
                   <br />
-                  {dayjs(saleOrder.createdAt).format(DEFAULT_DATETIME_FORMAT)}
+                  {dayjs(saleOrder.orderedAt).format(DEFAULT_DATETIME_FORMAT)}
                 </Box>
               </Grid>
               <Grid item xs={8} md={8}>

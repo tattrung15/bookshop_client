@@ -274,12 +274,12 @@ function BannerManagement() {
               <TableRow>
                 <TableCell width="10%">STT</TableCell>
                 <TableCell width="29%">Tiêu đề</TableCell>
-                <TableCell width="20%">Số lượng ảnh</TableCell>
+                <TableCell width="18%">Số lượng ảnh</TableCell>
                 <TableCell width="20%">Kích hoạt</TableCell>
                 <TableCell width="7%" align="center">
                   Xem
                 </TableCell>
-                <TableCell width="7%" align="center">
+                <TableCell width="9%" align="center">
                   Cập nhật
                 </TableCell>
                 <TableCell width="7%" align="center">

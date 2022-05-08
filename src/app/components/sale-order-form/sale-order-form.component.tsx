@@ -90,7 +90,7 @@ function SaleOrderForm(props: PropTypes) {
                             <Box>
                               Đặt ngày:{" "}
                               {recordForAction.id &&
-                                dayjs(recordForAction.createdAt).format(
+                                dayjs(recordForAction.orderedAt).format(
                                   DEFAULT_DATE_FORMAT
                                 )}
                             </Box>

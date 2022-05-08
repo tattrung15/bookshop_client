@@ -288,7 +288,9 @@ function UserManagement() {
                 <TableCell>Email</TableCell>
                 <TableCell>Địa chỉ</TableCell>
                 <TableCell align="justify">Xem</TableCell>
-                <TableCell align="justify">Cập nhật</TableCell>
+                <TableCell width="9%" align="justify">
+                  Cập nhật
+                </TableCell>
                 <TableCell align="justify">Xóa</TableCell>
               </TableRow>
             </TableHead>
