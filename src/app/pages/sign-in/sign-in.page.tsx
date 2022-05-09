@@ -26,6 +26,7 @@ import { storeUser } from "@app/store/auth/auth.action";
 import HttpService from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import Controls from "@app/components/controls";
+import useEventListener from "@core/hooks/use-event-listener";
 
 export default function SignIn() {
   const classes = useStyles();
@@ -44,6 +45,19 @@ export default function SignIn() {
     password: "",
     isRemembered: true,
   });
+
+  useEffect(() => {
+    const token = HttpService.getAccessToken() || "";
+
+    subscribeOnce(AuthService.validate(token), (data) => {
+      dispatch(storeUser(new User(data.result.data.user)));
+      StorageService.set("access_token", data.result.data.jwt);
+      StorageService.set("role", data.result.data.user.role);
+      navigate("/", { replace: true });
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLogin = () => {
     subscribeOnce(
@@ -75,19 +89,6 @@ export default function SignIn() {
     });
   };
 
-  useEffect(() => {
-    const token = HttpService.getAccessToken() || "";
-
-    subscribeOnce(AuthService.validate(token), (data) => {
-      dispatch(storeUser(new User(data.result.data.user)));
-      StorageService.set("access_token", data.result.data.jwt);
-      StorageService.set("role", data.result.data.user.role);
-      navigate("/", { replace: true });
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -104,6 +105,15 @@ export default function SignIn() {
   const handleClose = () => {
     setOpenDialog(false);
   };
+
+  const onEnterKeydown = (event: KeyboardEvent) => {
+    if (event.code === "Enter" || event.code === "NumpadEnter") {
+      event.preventDefault();
+      handleLogin();
+    }
+  };
+
+  useEventListener("keydown", onEnterKeydown);
 
   return (
     <>
