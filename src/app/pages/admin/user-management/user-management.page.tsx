@@ -335,13 +335,13 @@ function UserManagement() {
         />
       </Paper>
       <ConfirmDialog
-        title="Delete user?"
+        title="Xóa người dùng?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
         onConfirm={handleDeleteUser}
       >
         {recordForAction &&
-          "Do you want to delete user: " + recordForAction.username}
+          "Bạn có muốn xóa người dùng: " + recordForAction.username}
         ?
       </ConfirmDialog>
     </Container>

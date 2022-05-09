@@ -340,13 +340,13 @@ function ProductManagement() {
         />
       </Paper>
       <ConfirmDialog
-        title="Delete product?"
+        title="Xóa sản phẩm?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
         onConfirm={handleDeleteProduct}
       >
         {recordForAction &&
-          "Do you want to delete product: " + recordForAction.title}
+          "Bạn có muốn xóa sản phẩm: " + recordForAction.title}
         ?
       </ConfirmDialog>
     </Container>

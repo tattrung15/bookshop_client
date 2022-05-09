@@ -335,13 +335,12 @@ function CategoryManagement() {
         />
       </Paper>
       <ConfirmDialog
-        title="Delete category?"
+        title="Xóa danh mục?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
         onConfirm={handleDeleteCategory}
       >
-        {recordForAction &&
-          "Do you want to delete category: " + recordForAction.name}
+        {recordForAction && "Bạn có muốn xóa danh mục: " + recordForAction.name}
         ?
       </ConfirmDialog>
     </Container>

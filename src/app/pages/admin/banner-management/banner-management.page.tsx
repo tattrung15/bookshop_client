@@ -333,14 +333,12 @@ function BannerManagement() {
         />
       </Paper>
       <ConfirmDialog
-        title="Delete banner?"
+        title="Xóa banner?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
         onConfirm={handleDeleteBanner}
       >
-        {recordForAction &&
-          "Do you want to delete banner: " + recordForAction.title}
-        ?
+        {recordForAction && "Bạn có muốn xóa banner: " + recordForAction.title}?
       </ConfirmDialog>
     </Container>
   );

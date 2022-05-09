@@ -324,13 +324,13 @@ function ProductImageManagement() {
         />
       </Paper>
       <ConfirmDialog
-        title="Delete product images?"
+        title="Xóa hình ảnh sản phẩm?"
         open={confirmDialogOpen}
         setOpen={setConfirmDialogOpen}
         onConfirm={handleDeleteProductImages}
       >
         {recordForAction &&
-          "Do you want to delete product images: " + recordForAction.title}
+          "Bạn có muốn xóa hình ảnh sản phẩm: " + recordForAction.title}
         ?
       </ConfirmDialog>
     </Container>
