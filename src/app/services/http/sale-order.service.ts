@@ -54,6 +54,12 @@ class _SaleOrderService {
       map((response: any) => new SaleOrder(response.result.data))
     );
   }
+
+  public cancelSaleOrder(saleOrderId: number): Observable<SaleOrder> {
+    return HttpService.delete(`/sale-orders/${saleOrderId}`).pipe(
+      map((response: any) => new SaleOrder(response.result.data))
+    );
+  }
 }
 
 const SaleOrderService = new _SaleOrderService();

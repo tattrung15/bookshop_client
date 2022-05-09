@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
-import { Box, Grid, Typography, Divider, Paper } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  Typography,
+  Divider,
+  Paper,
+  Button,
+} from "@material-ui/core";
 import CustomizedSteppers from "@app/components/customized-steppers";
 import {
   DEFAULT_DATETIME_FORMAT,
@@ -14,13 +21,17 @@ import SaleOrderService from "@app/services/http/sale-order.service";
 import SaleOrderItem from "@app/components/sale-order-item";
 import { calculateTotalAmount } from "@app/shared/helpers/helpers";
 import { useStyles } from "./make-style";
+import ConfirmDialog from "@app/components/confirm-dialog";
+import useForceUpdate from "@core/hooks/use-force-update.hook";
 
 function OrderDetail() {
   const classes = useStyles();
 
   const { saleOrderId } = useParams();
-  const { subscribeUntilDestroy } = useObservable();
+  const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
+  const [forceUpdate, setForceUpdate] = useForceUpdate();
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [saleOrder, setSaleOrder] = useState<SaleOrder>(new SaleOrder(null));
   const [deliveryIndex, setDeliveryIndex] = useState(() => {
     return DELIVERY_INDEX_MAP[DELIVERY_INDEX.WAITING_TO_CONFIRM];
@@ -39,20 +50,45 @@ function OrderDetail() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [saleOrderId]);
+  }, [saleOrderId, forceUpdate]);
+
+  const openConfirmDialog = () => {
+    setConfirmDialogOpen(true);
+  };
+
+  const handleCancelSaleOrder = () => {
+    if (saleOrder.id) {
+      subscribeOnce(SaleOrderService.cancelSaleOrder(saleOrder.id), () => {
+        setForceUpdate();
+      });
+    }
+  };
 
   return (
     <>
       <Box className={classes.orderDetailWrapper}>
         <Paper>
           <Box style={{ padding: "0.5em" }}>
-            <Box>
-              <Typography color="textPrimary">
-                <span style={{ fontWeight: "bolder" }}>Đơn hàng </span>/ Chi
-                tiết đơn hàng
+            <Box style={{ display: "flex" }}>
+              <Typography color="textPrimary" style={{ marginTop: "auto" }}>
+                <span style={{ fontWeight: "bolder" }}>Đơn hàng </span>
+                <span>/ Chi tiết đơn hàng</span>
               </Typography>
+              {saleOrder.delivery?.index ===
+                DELIVERY_INDEX.WAITING_TO_CONFIRM && (
+                <Box style={{ marginLeft: "auto" }}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="small"
+                    onClick={openConfirmDialog}
+                  >
+                    Hủy đơn hàng
+                  </Button>
+                </Box>
+              )}
             </Box>
-            <Divider />
+            <Divider style={{ margin: "0.5em 0 0.5em 0" }} />
             <Box style={{ display: "flex" }}>
               <Grid item xs={4} md={4}>
                 <Box>
@@ -152,6 +188,14 @@ function OrderDetail() {
           </Box>
         </Paper>
       </Box>
+      <ConfirmDialog
+        title="Hủy đơn hàng?"
+        open={confirmDialogOpen}
+        setOpen={setConfirmDialogOpen}
+        onConfirm={handleCancelSaleOrder}
+      >
+        Bạn có muốn hủy đơn hàng không?
+      </ConfirmDialog>
     </>
   );
 }
