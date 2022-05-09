@@ -284,7 +284,7 @@ function CategoryManagement() {
                 <TableCell width="7%" align="center">
                   Xem
                 </TableCell>
-                <TableCell width="9%" align="center">
+                <TableCell width="7%" align="center">
                   Cập nhật
                 </TableCell>
                 <TableCell width="7%" align="center">
@@ -305,17 +305,17 @@ function CategoryManagement() {
                         "..."}
                     </TableCell>
                     <TableCell>{item.parentCategory?.name}</TableCell>
-                    <TableCell align="justify">
+                    <TableCell align="center">
                       <IconButton onClick={() => openViewDialog(item)}>
                         <VisibilityIcon style={{ color: "black" }} />
                       </IconButton>
                     </TableCell>
-                    <TableCell align="justify">
+                    <TableCell align="center">
                       <IconButton onClick={() => openInPopup(item)}>
                         <CreateIcon style={{ color: "black" }} />
                       </IconButton>
                     </TableCell>
-                    <TableCell align="justify">
+                    <TableCell align="center">
                       <IconButton onClick={() => openConfirmDialog(item)}>
                         <DeleteIcon style={{ color: "red" }} />
                       </IconButton>

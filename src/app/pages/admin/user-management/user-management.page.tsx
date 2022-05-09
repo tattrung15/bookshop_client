@@ -287,11 +287,11 @@ function UserManagement() {
                 <TableCell>Điện thoại</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Địa chỉ</TableCell>
-                <TableCell align="justify">Xem</TableCell>
-                <TableCell width="9%" align="justify">
+                <TableCell align="center">Xem</TableCell>
+                <TableCell width="7%" align="center">
                   Cập nhật
                 </TableCell>
-                <TableCell align="justify">Xóa</TableCell>
+                <TableCell align="center">Xóa</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -305,17 +305,17 @@ function UserManagement() {
                     <TableCell>{item.phone}</TableCell>
                     <TableCell>{item.email}</TableCell>
                     <TableCell>{item.address}</TableCell>
-                    <TableCell align="justify">
+                    <TableCell align="center">
                       <IconButton onClick={() => openViewDialog(item)}>
                         <VisibilityIcon style={{ color: "black" }} />
                       </IconButton>
                     </TableCell>
-                    <TableCell align="justify">
+                    <TableCell align="center">
                       <IconButton onClick={() => openInPopup(item)}>
                         <CreateIcon style={{ color: "black" }} />
                       </IconButton>
                     </TableCell>
-                    <TableCell align="justify">
+                    <TableCell align="center">
                       <IconButton onClick={() => openConfirmDialog(item)}>
                         <DeleteIcon style={{ color: "red" }} />
                       </IconButton>
