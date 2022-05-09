@@ -9,6 +9,8 @@ import { FETCH_TYPE } from "@app/shared/constants/common";
 export type SaleOrderPaginationOption = PaginationOption & {
   deliveryIndex?: string;
   fetchType?: FETCH_TYPE;
+  fromDate?: string;
+  toDate?: string;
 };
 
 class _SaleOrderService {

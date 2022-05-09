@@ -12,6 +12,9 @@ import {
   TableContainer,
   Paper,
   Typography,
+  Box,
+  TextField,
+  Button,
 } from "@material-ui/core";
 import { useStyles } from "./make-style";
 import {
@@ -30,12 +33,22 @@ import SaleOrderService, {
 } from "@app/services/http/sale-order.service";
 import { calculateTotalAmount } from "@app/shared/helpers/helpers";
 
+const calculateTotalSaleOrders = (saleOrders: SaleOrder[]): number => {
+  let total = 0;
+  for (const saleOrder of saleOrders) {
+    total += calculateTotalAmount(saleOrder.orderItems);
+  }
+  return total;
+};
+
 function RecentOrderManagement() {
   const classes = useStyles();
 
   const { subscribeUntilDestroy } = useObservable();
 
   const [total, setTotal] = useState(0);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const [saleOrders, setSaleOrders] = useState<SaleOrder[]>([]);
   const [pagination, setPagination] = useState(() => {
     const options: SaleOrderPaginationOption = {
@@ -79,6 +92,52 @@ function RecentOrderManagement() {
     setPagination(newPagination);
   };
 
+  const onFromDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fromDateString = event.target.value;
+    if (fromDateString === "") {
+      setFromDate(fromDateString);
+      return;
+    }
+    if (!toDate) {
+      setFromDate(fromDateString);
+    } else {
+      if (
+        dayjs(fromDateString).isBefore(dayjs(toDate)) ||
+        dayjs(fromDateString).isSame(dayjs(toDate))
+      ) {
+        setFromDate(fromDateString);
+      }
+    }
+  };
+
+  const onToDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const toDateString = event.target.value;
+    if (toDateString === "") {
+      setToDate(toDateString);
+      return;
+    }
+    if (!fromDate) {
+      setToDate(toDateString);
+    } else {
+      if (
+        dayjs(toDateString).isAfter(dayjs(fromDate)) ||
+        dayjs(toDateString).isSame(dayjs(fromDate))
+      ) {
+        setToDate(toDateString);
+      }
+    }
+  };
+
+  const onFilterButtonClick = () => {
+    const options: SaleOrderPaginationOption = {
+      ...DEFAULT_PAGINATION_OPTION,
+      fetchType: FETCH_TYPE.ADMIN,
+      ...(fromDate && { fromDate }),
+      ...(toDate && { toDate }),
+    };
+    setPagination(options);
+  };
+
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid item xs={12}>
@@ -86,6 +145,43 @@ function RecentOrderManagement() {
           Đơn đặt hàng gần đây
         </Typography>
         <Grid item xs={12}>
+          <Box paddingY={2}>
+            <Typography style={{ marginBottom: "1em" }}>
+              Lọc theo khoảng ngày
+            </Typography>
+            <Box style={{ display: "flex", alignItems: "center" }}>
+              <TextField
+                variant="outlined"
+                label="Từ ngày"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{ marginRight: "1em" }}
+                value={fromDate}
+                onChange={onFromDateChange}
+              />
+              <TextField
+                variant="outlined"
+                label="Đến ngày"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{ marginRight: "1em" }}
+                value={toDate}
+                onChange={onToDateChange}
+              />
+              <Button
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={onFilterButtonClick}
+              >
+                Lọc
+              </Button>
+            </Box>
+          </Box>
           <Paper className={classes.paper}>
             <TableContainer style={{ maxHeight: 450 }}>
               <Table stickyHeader aria-label="sticky table">
@@ -122,6 +218,14 @@ function RecentOrderManagement() {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Box style={{ display: "flex", marginLeft: "auto" }}>
+              <Typography style={{ marginTop: "1em" }}>
+                {!!saleOrders.length &&
+                  `Tổng thanh toán: ${calculateTotalSaleOrders(
+                    saleOrders
+                  ).toLocaleString("vn")}đ`}
+              </Typography>
+            </Box>
             <TablePagination
               component="div"
               count={total}
