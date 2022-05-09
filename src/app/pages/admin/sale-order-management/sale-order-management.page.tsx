@@ -15,14 +15,17 @@ import {
   InputAdornment,
   Grid,
   Container,
+  Button,
 } from "@material-ui/core";
 import {
   Visibility as VisibilityIcon,
   Create as CreateIcon,
   Search as SearchIcon,
+  Print as PrintIcon,
 } from "@material-ui/icons";
 import { useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
+import { useReactToPrint } from "react-to-print";
 import { useStyles } from "./make-style";
 import {
   PaginationOption,
@@ -51,6 +54,7 @@ function SaleOrderManagement() {
   const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
   const typingTimeoutRef = useRef<any>(null);
+  const componentPrintRef = useRef<HTMLDivElement>(null);
 
   const [total, setTotal] = useState(0);
   const [isView, setIsView] = useState(false);
@@ -182,6 +186,30 @@ function SaleOrderManagement() {
     setPagination(newPagination);
   };
 
+  const handlePrint = useReactToPrint({
+    content: () => {
+      const componentToPrint = componentPrintRef.current?.cloneNode(
+        true
+      ) as HTMLDivElement;
+      const orderDetailWrapper = componentToPrint.querySelector(
+        "#orderDetailWrapper"
+      ) as HTMLDivElement;
+      orderDetailWrapper.style.padding = "1em 1em 1em 1em";
+      (
+        orderDetailWrapper.querySelector(
+          "#customizedSteppers"
+        ) as HTMLDivElement
+      ).style.display = "none";
+      return orderDetailWrapper;
+    },
+  });
+
+  const onPrintButtonClick = () => {
+    if (componentPrintRef.current) {
+      handlePrint();
+    }
+  };
+
   return (
     <Container maxWidth="xl" className={classes.container}>
       <Typography variant="h4" className={classes.screenName}>
@@ -193,13 +221,25 @@ function SaleOrderManagement() {
           openPopup={isOpenPopup}
           setOpenPopup={setIsOpenPopup}
         >
-          <SaleOrderForm
-            isEdit={isEdit}
-            isView={isView}
-            recordForAction={recordForAction}
-            deliveries={deliveries}
-            updateSaleOrderDelivery={updateSaleOrderDelivery}
-          />
+          <div>
+            <Button
+              variant="contained"
+              color="default"
+              startIcon={<PrintIcon />}
+              onClick={onPrintButtonClick}
+            >
+              In đơn hàng
+            </Button>
+            <div ref={componentPrintRef}>
+              <SaleOrderForm
+                isEdit={isEdit}
+                isView={isView}
+                recordForAction={recordForAction}
+                deliveries={deliveries}
+                updateSaleOrderDelivery={updateSaleOrderDelivery}
+              />
+            </div>
+          </div>
         </PopupDialog>
         <Box style={{ display: "flex" }}>
           <Box style={{ marginTop: "1em" }}>

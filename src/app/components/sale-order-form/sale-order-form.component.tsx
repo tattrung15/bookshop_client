@@ -66,7 +66,10 @@ function SaleOrderForm(props: PropTypes) {
               <Box maxWidth="1200px" style={{ margin: "0 auto" }}>
                 <Box style={{ display: "flex" }}>
                   <Grid item xs={12}>
-                    <Box style={{ padding: "1em 1em 1em 0" }}>
+                    <Box
+                      id="orderDetailWrapper"
+                      style={{ padding: "1em 1em 1em 0" }}
+                    >
                       <Box
                         style={{
                           boxShadow: "0px 0px 3px 1px #888888",
@@ -96,11 +99,13 @@ function SaleOrderForm(props: PropTypes) {
                             </Box>
                           </Grid>
                           <Grid item xs={8} md={8}>
-                            {recordForAction.id && (
-                              <CustomizedSteppers
-                                indexActiveStep={deliveryIndex}
-                              />
-                            )}
+                            <div id="customizedSteppers">
+                              {recordForAction.id && (
+                                <CustomizedSteppers
+                                  indexActiveStep={deliveryIndex}
+                                />
+                              )}
+                            </div>
                           </Grid>
                         </Box>
                         <Box

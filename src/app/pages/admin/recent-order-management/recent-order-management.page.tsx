@@ -142,7 +142,7 @@ function RecentOrderManagement() {
     <Container maxWidth="lg" className={classes.container}>
       <Grid item xs={12}>
         <Typography variant="h4" className={classes.screenName}>
-          Đơn đặt hàng gần đây
+          Thống kê đơn đặt hàng
         </Typography>
         <Grid item xs={12}>
           <Box paddingY={2}>
