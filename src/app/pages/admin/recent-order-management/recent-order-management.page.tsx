@@ -192,7 +192,7 @@ function RecentOrderManagement() {
                     <TableCell width="15%">Số điện thoại</TableCell>
                     <TableCell width="40%">Địa chỉ</TableCell>
                     <TableCell width="15%" align="right">
-                      Thanh toán
+                      Số tiền
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -221,7 +221,7 @@ function RecentOrderManagement() {
             <Box style={{ display: "flex", marginLeft: "auto" }}>
               <Typography style={{ marginTop: "1em" }}>
                 {!!saleOrders.length &&
-                  `Tổng thanh toán: ${calculateTotalSaleOrders(
+                  `Tổng tiền: ${calculateTotalSaleOrders(
                     saleOrders
                   ).toLocaleString("vn")}đ`}
               </Typography>
