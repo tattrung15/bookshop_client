@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import { OrderItem } from "@app/models/order-item.model";
 import { imageNotFound } from "@app/shared/constants/common";
@@ -34,7 +35,12 @@ function SaleOrderItem({ item }: { item: OrderItem }) {
             </Grid>
             <Grid item xs={8} md={8}>
               <Typography color="textPrimary" style={{ fontWeight: "bolder" }}>
-                {item.product.title}
+                <Link
+                  to={`/products/${item.product.slug}`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {item.product.title}
+                </Link>
               </Typography>
             </Grid>
           </Box>

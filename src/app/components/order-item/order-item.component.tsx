@@ -90,7 +90,12 @@ function OrderItem(props: PropTypes) {
               alt=""
             />
             <Typography className={classes.orderItemTitle}>
-              {item.orderItems[0].product.title}
+              <Link
+                to={`/products/${item.orderItems[0].product.slug}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                {item.orderItems[0].product.title}
+              </Link>
             </Typography>
           </Grid>
           <Grid item xs={6} md={6}>
