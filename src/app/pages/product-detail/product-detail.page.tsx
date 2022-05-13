@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Divider,
@@ -11,7 +11,7 @@ import {
 import { ShoppingCart as ShoppingCartIcon } from "@material-ui/icons";
 import MuiImageSlider from "mui-image-slider";
 import { switchMap } from "rxjs/operators";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { Helmet } from "react-helmet-async";
 import { useStyles } from "./make-style";
@@ -36,11 +36,16 @@ import { CreateCartDto } from "@app/models/cart.model";
 import CartService from "@app/services/http/cart.service";
 import { fetchCart } from "@app/store/cart/cart.epic";
 import useDestroy from "@core/hooks/use-destroy.hook";
+import { GlobalState } from "@app/store";
+import { Role } from "@app/shared/types/user.type";
 
 function ProductDetail() {
   const classes = useStyles();
 
+  const { id: userId, role: userRole } = useSelector(selectAuth);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { slug } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const { destroy$ } = useDestroy();
@@ -103,6 +108,26 @@ function ProductDetail() {
   };
 
   const onAddToCartClick = () => {
+    if (!userId) {
+      navigate(
+        {
+          pathname: "/login",
+          search: `?backUrl=/products/${product.slug}`,
+        },
+        {
+          replace: true,
+        }
+      );
+      return;
+    }
+
+    if (userRole !== Role.MEMBER) {
+      enqueueSnackbar("Bạn không thể thêm sản phẩm vào giỏ hàng", {
+        variant: TYPE_ALERT.WARNING,
+      });
+      return;
+    }
+
     if (quantity <= 0) {
       enqueueSnackbar("Số lượng không hợp lệ", {
         variant: TYPE_ALERT.WARNING,
@@ -343,5 +368,7 @@ function ProductDetail() {
     </div>
   );
 }
+
+const selectAuth = (state: GlobalState) => state.auth;
 
 export default ProductDetail;

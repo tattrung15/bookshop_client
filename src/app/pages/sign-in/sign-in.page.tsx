@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -35,6 +35,9 @@ export default function SignIn() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const query = new URLSearchParams(location.search);
 
   const [username, setUsername] = useState("");
   const [isOpenPopup, setIsOpenPopup] = useState(false);
@@ -71,7 +74,13 @@ export default function SignIn() {
           StorageService.setSession("access_token", response.result.data.jwt);
           StorageService.setSession("role", response.result.data.user.role);
         }
-        navigate("/", { replace: true });
+
+        const backUrl = query.get("backUrl");
+        if (backUrl && backUrl.startsWith("/")) {
+          navigate(backUrl, { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
       }
     );
   };
