@@ -104,6 +104,7 @@ export default function SignIn() {
     subscribeOnce(AuthService.resetPassword(username), () => {
       setOpenDialog(true);
       setIsOpenPopup(false);
+      setUsername("");
       setDialogContent(
         `Chúng tôi đã gửi một mật khẩu mới đến địa chỉ email của bạn,
          vui lòng kiểm tra hộp thư đến của bạn`
