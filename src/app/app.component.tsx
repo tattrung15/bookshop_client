@@ -73,11 +73,13 @@ function App() {
   useLayoutEffect(() => {
     HttpService.onError$.subscribe((ajaxResponse) => {
       if (!["/"].includes(window.location.pathname)) {
-        setOpenDialog(true);
-        setDialogContent(
-          ajaxResponse?.response?.message ??
-            "Cannot fetch data, please try again..."
-        );
+        const connectErrorMsg = "Cannot fetch data, please try again...";
+        const msgResponse = ajaxResponse?.response?.message ?? connectErrorMsg;
+
+        if (!msgResponse.includes("JWT")) {
+          setOpenDialog(true);
+          setDialogContent(msgResponse);
+        }
       }
     });
 
