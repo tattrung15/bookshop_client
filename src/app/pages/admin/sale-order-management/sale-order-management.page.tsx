@@ -222,14 +222,16 @@ function SaleOrderManagement() {
           setOpenPopup={setIsOpenPopup}
         >
           <div>
-            <Button
-              variant="contained"
-              color="default"
-              startIcon={<PrintIcon />}
-              onClick={onPrintButtonClick}
-            >
-              In đơn hàng
-            </Button>
+            {isView && (
+              <Button
+                variant="contained"
+                color="default"
+                startIcon={<PrintIcon />}
+                onClick={onPrintButtonClick}
+              >
+                In đơn hàng
+              </Button>
+            )}
             <div ref={componentPrintRef}>
               <SaleOrderForm
                 isEdit={isEdit}
