@@ -31,6 +31,7 @@ function CategoryForm(props: PropTypes) {
 
   const categoryItems = () => {
     return categories
+      .filter((item) => !item.parentCategory)
       .map((item) => ({
         id: item.id,
         title: titleCase(item.name),
