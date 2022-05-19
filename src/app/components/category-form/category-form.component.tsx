@@ -29,6 +29,10 @@ type PropTypes = {
 function CategoryForm(props: PropTypes) {
   const { isEdit, isView, recordForAction, addOrEdit, categories } = props;
 
+  if (recordForAction.id) {
+    initialCategoryValues.id = recordForAction.id;
+  }
+
   const categoryItems = () => {
     return categories
       .filter((item) => !item.parentCategory)

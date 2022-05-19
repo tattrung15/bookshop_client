@@ -4,7 +4,7 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import { Form, useForm } from "@app/hooks/use-form.hook";
 import { Category } from "@app/models/category.model";
-import { UpdateProductDto } from "@app/models/product.model";
+import { Product, UpdateProductDto } from "@app/models/product.model";
 import { DEFAULT_DATETIME_FORMAT } from "@app/shared/constants/common";
 import { titleCase } from "@core/helpers/string.helper";
 import Controls from "../controls";
@@ -26,13 +26,17 @@ const initialProductValues: UpdateProductDto = {
 type PropTypes = {
   isEdit: boolean;
   isView: boolean;
-  recordForAction: Category;
+  recordForAction: Product;
   addOrEdit: (values: UpdateProductDto, resetForm: () => void) => void;
   categories: Category[];
 };
 
 function ProductForm(props: PropTypes) {
   const { isEdit, isView, recordForAction, addOrEdit, categories } = props;
+
+  if (recordForAction.id) {
+    initialProductValues.id = recordForAction.id;
+  }
 
   const categoryItems = () => {
     return categories.map((item) => ({

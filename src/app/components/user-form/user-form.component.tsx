@@ -48,6 +48,10 @@ type PropTypes = {
 function UserForm(props: PropTypes) {
   const { isEdit, isView, recordForAction, addOrEdit } = props;
 
+  if (recordForAction.id) {
+    initialUserValues.id = recordForAction.id;
+  }
+
   const [isShowPassword, setIsShowPassword] = useState(false);
 
   const validate = (fieldValues = values) => {

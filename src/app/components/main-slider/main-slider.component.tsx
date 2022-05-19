@@ -22,11 +22,11 @@ import CategoryService, {
 } from "@app/services/http/category.service";
 
 type PropTypes = {
-  shouldShowBanner?: boolean;
+  isShowBanner?: boolean;
 };
 
 function MainSlider(props: PropTypes) {
-  const { shouldShowBanner = true } = props;
+  const { isShowBanner = true } = props;
 
   const { subscribeUntilDestroy } = useObservable();
 
@@ -70,7 +70,7 @@ function MainSlider(props: PropTypes) {
   return (
     <Box paddingTop={5} paddingX={5.5} marginBottom={2.5}>
       <Box style={{ position: "relative", borderTop: "1px solid black" }}>
-        {!!banners.length && shouldShowBanner && (
+        {!!banners.length && isShowBanner && (
           <Carousel
             dynamicHeight={false}
             showStatus={false}

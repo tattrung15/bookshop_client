@@ -167,7 +167,7 @@ function ProductDetail() {
           />
         )}
       </Box>
-      <MainSlider shouldShowBanner={false} />
+      <MainSlider isShowBanner={false} />
       <Box
         paddingTop={4}
         paddingX={5.5}
