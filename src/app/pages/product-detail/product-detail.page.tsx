@@ -132,6 +132,7 @@ function ProductDetail() {
       enqueueSnackbar("Số lượng không hợp lệ", {
         variant: TYPE_ALERT.WARNING,
       });
+      return;
     }
 
     const cartDto: CreateCartDto = {
