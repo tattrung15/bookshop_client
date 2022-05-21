@@ -275,10 +275,9 @@ function SaleOrderForm(props: PropTypes) {
                     options={deliveries
                       .filter(
                         (delivery) =>
-                          ![
-                            DELIVERY_INDEX.ADDED_TO_CART,
-                            DELIVERY_INDEX.CANCELED,
-                          ].includes(delivery.index)
+                          ![DELIVERY_INDEX.ADDED_TO_CART].includes(
+                            delivery.index
+                          )
                       )
                       .map((delivery) => ({
                         id: delivery.id,
