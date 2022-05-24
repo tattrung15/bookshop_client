@@ -79,6 +79,11 @@ function ProductForm(props: PropTypes) {
         fieldValues.numberOfPage > 0 ? "" : "Trường này phải lớn hơn 0";
     }
 
+    if ("categoryId" in fieldValues) {
+      temp.categoryId =
+        fieldValues.categoryId > 0 ? "" : "Vui lòng chọn danh mục";
+    }
+
     setErrors({
       ...temp,
     });
