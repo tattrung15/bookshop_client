@@ -156,6 +156,10 @@ function ProductImageManagement() {
         }
       );
     } else {
+      if (!values.productId) {
+        return;
+      }
+
       const newProductImage: CreateProductImageDto = {
         productId: values.productId ?? 0,
         files: values.files ?? [],
