@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import AppBarDrawer from "@app/components/app-bar-drawer";
 import { useStyles } from "./make-style";
 import NotFound from "@app/pages/not-found";
@@ -14,6 +15,9 @@ function Dashboard() {
 
   return (
     <>
+      <Helmet>
+        <title>Admin</title>
+      </Helmet>
       <div className={classes.root}>
         <AppBarDrawer />
         <main className={classes.content}>
