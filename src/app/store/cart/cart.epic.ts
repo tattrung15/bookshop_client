@@ -27,9 +27,9 @@ const fetchAndStoreCartEpic = (
     ofType(CartEpicType.FETCH_CART),
     switchMap((action: AppAction) =>
       CartService.getCart().pipe(
-        map((result: any) => {
+        map((result) => {
           if (result?.data) {
-            return storeCart(result.data?.orderItems?.length ?? 0);
+            return storeCart(result.data["orderItems"]?.length ?? 0);
           } else {
             return clearCart();
           }

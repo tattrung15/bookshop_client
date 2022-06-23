@@ -33,10 +33,7 @@ import {
   DEFAULT_PAGINATION_OPTION,
   TYPE_ALERT,
 } from "@app/shared/constants/common";
-import {
-  PaginationOption,
-  ResponseResult,
-} from "@core/services/http/http.service";
+import { PaginationOption } from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import ConfirmDialog from "@app/components/confirm-dialog";
 import {
@@ -75,13 +72,10 @@ function BannerManagement() {
   });
 
   useEffect(() => {
-    subscribeUntilDestroy(
-      BannerService.getList(pagination),
-      (response: ResponseResult) => {
-        setBanners(response.data as Banner[]);
-        setTotal(response.pagination?.total ?? 0);
-      }
-    );
+    subscribeUntilDestroy(BannerService.getList(pagination), (response) => {
+      setBanners(response.data as Banner[]);
+      setTotal(response.pagination?.total ?? 0);
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);

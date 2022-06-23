@@ -1,10 +1,9 @@
-import { Observable } from "rxjs";
-import HttpService from "@core/services/http/http.service";
+import HttpService, { CoreResponse } from "@core/services/http/http.service";
 import { CreateUserDto } from "@app/models/user.model";
 
 class _AuthService {
-  public login(username: string, password: string): Observable<any> {
-    return HttpService.post("/auth/login", {
+  public login(username: string, password: string) {
+    return HttpService.post<CoreResponse>("/auth/login", {
       body: {
         username,
         password,
@@ -12,22 +11,22 @@ class _AuthService {
     });
   }
 
-  public signUp(createUserDto: CreateUserDto): Observable<any> {
-    return HttpService.post("/auth/signup", {
+  public signUp(createUserDto: CreateUserDto) {
+    return HttpService.post<CoreResponse>("/auth/signup", {
       body: { ...createUserDto },
     });
   }
 
-  public validate(token: string): Observable<any> {
-    return HttpService.post("/auth/validate", {
+  public validate(token: string) {
+    return HttpService.post<CoreResponse>("/auth/validate", {
       body: {
         jwt: token,
       },
     });
   }
 
-  public resetPassword(username: string): Observable<any> {
-    return HttpService.delete("/auth/password", {
+  public resetPassword(username: string) {
+    return HttpService.delete<CoreResponse>("/auth/password", {
       body: {
         username,
       },

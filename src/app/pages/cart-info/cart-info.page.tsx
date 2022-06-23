@@ -10,7 +10,6 @@ import CustomBreadcrumbs from "@app/components/custom-breadcrumbs";
 import useObservable from "@core/hooks/use-observable.hook";
 import { OrderItem } from "@app/models/order-item.model";
 import CartService from "@app/services/http/cart.service";
-import { ResponseResult } from "@core/services/http/http.service";
 import { Cart } from "@app/models/cart.model";
 import CartItem from "@app/components/cart-item";
 import { calculateTotalAmount } from "@app/shared/helpers/helpers";
@@ -30,7 +29,7 @@ function CartInfo() {
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
 
   useEffect(() => {
-    subscribeUntilDestroy(CartService.getCart(), (response: ResponseResult) => {
+    subscribeUntilDestroy(CartService.getCart(), (response) => {
       if (response.data) {
         const responseData = response.data as Cart;
         responseData.orderItems.sort((a, b) => a.id - b.id);

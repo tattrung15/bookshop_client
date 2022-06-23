@@ -31,7 +31,6 @@ import {
   PRODUCT_TYPE,
   TYPE_ALERT,
 } from "@app/shared/constants/common";
-import { ResponseResult } from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import ConfirmDialog from "@app/components/confirm-dialog";
 import { Product } from "@app/models/product.model";
@@ -74,25 +73,19 @@ function ProductImageManagement() {
   });
 
   useEffect(() => {
-    subscribeUntilDestroy(
-      ProductService.getList(pagination),
-      (response: ResponseResult) => {
-        setProducts(response.data as Product[]);
-        setTotal(response.pagination?.total || 0);
-      }
-    );
+    subscribeUntilDestroy(ProductService.getList(pagination), (response) => {
+      setProducts(response.data as Product[]);
+      setTotal(response.pagination?.total || 0);
+    });
 
     const options: ProductPaginationOption = {
       ...DEFAULT_PAGINATION_OPTION,
       productType: PRODUCT_TYPE.NO_IMAGE_ALL,
     };
 
-    subscribeUntilDestroy(
-      ProductService.getList(options),
-      (response: ResponseResult) => {
-        setProductNoImages(response.data as Product[]);
-      }
-    );
+    subscribeUntilDestroy(ProductService.getList(options), (response) => {
+      setProductNoImages(response.data as Product[]);
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);

@@ -1,10 +1,8 @@
-import { Observable } from "rxjs";
-import { Delivery } from "@app/models/delivery.model";
-import HttpService from "@core/services/http/http.service";
+import HttpService, { CoreResponse } from "@core/services/http/http.service";
 
 class _DeliveryService {
-  public getAll(): Observable<Delivery[] | undefined> {
-    return HttpService.get<Delivery[]>("/deliveries");
+  public getAll() {
+    return HttpService.get<CoreResponse>("/deliveries");
   }
 }
 

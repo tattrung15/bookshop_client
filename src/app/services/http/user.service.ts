@@ -1,50 +1,44 @@
-import { Observable } from "rxjs";
-import { map, pluck } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { CreateUserDto, UpdateUserDto, User } from "@app/models/user.model";
 import HttpService, {
   PaginationOption,
+  ResponseResult,
 } from "@core/services/http/http.service";
 
 class _UserService {
-  public getList(options?: PaginationOption): Observable<any> {
+  public getList(options?: PaginationOption) {
     return HttpService.get("/users", {
       queryParams: { ...options },
-    }).pipe(pluck("result"));
+    }).pipe(map<any, ResponseResult>((response) => response.result));
   }
 
-  public createUser(user: CreateUserDto): Observable<User> {
+  public createUser(user: CreateUserDto) {
     return HttpService.post("/users", {
       body: { ...user },
-    }).pipe(map((response: any) => new User(response.result.data)));
+    }).pipe(map<any, User>((response) => response.result.data));
   }
 
-  public getUserById(userId: number): Observable<User> {
+  public getUserById(userId: number) {
     return HttpService.get(`/users/${userId}`).pipe(
-      map((response: any) => new User(response.result.data))
+      map<any, User>((response) => response.result.data)
     );
   }
 
-  public updateUser(
-    userId: number,
-    updateUserDto: Partial<UpdateUserDto>
-  ): Observable<User> {
+  public updateUser(userId: number, updateUserDto: Partial<UpdateUserDto>) {
     return HttpService.patch(`/users/${userId}`, {
       body: { ...updateUserDto },
-    }).pipe(map((response: any) => new User(response.result.data)));
+    }).pipe(map<any, User>((response) => response.result.data));
   }
 
-  public changePassword(
-    oldPassword: string,
-    newPassword: string
-  ): Observable<User> {
+  public changePassword(oldPassword: string, newPassword: string) {
     return HttpService.patch(`/users/password`, {
       body: { oldPassword, newPassword },
-    }).pipe(map((response: any) => new User(response.result.data)));
+    }).pipe(map<any, User>((response) => response.result.data));
   }
 
-  public deleteUser(userId: number): Observable<User> {
+  public deleteUser(userId: number) {
     return HttpService.delete(`/users/${userId}`).pipe(
-      map((response: any) => new User(response.result.data))
+      map<any, User>((response) => response.result.data)
     );
   }
 }

@@ -25,10 +25,7 @@ import ProductService, {
 } from "@app/services/http/product.service";
 import Footer from "@app/components/footer";
 import { buildImageSrc } from "@app/shared/helpers/helpers";
-import {
-  PaginationOption,
-  ResponseResult,
-} from "@core/services/http/http.service";
+import { PaginationOption } from "@core/services/http/http.service";
 import ProductItem from "@app/components/product-item";
 import ViewService from "@app/services/view.service";
 import { imageNotFound, TYPE_ALERT } from "@app/shared/constants/common";
@@ -75,7 +72,7 @@ function ProductDetail() {
             );
           })
         ),
-        (response: ResponseResult) => {
+        (response) => {
           setSimilarProducts(response.data as Product[]);
         }
       );
@@ -88,12 +85,9 @@ function ProductDetail() {
         perPage: 4,
         ids: lastViewIds,
       };
-      subscribeUntilDestroy(
-        ProductService.getList(options),
-        (response: ResponseResult) => {
-          setLastViewProducts(response.data as Product[]);
-        }
-      );
+      subscribeUntilDestroy(ProductService.getList(options), (response) => {
+        setLastViewProducts(response.data as Product[]);
+      });
     }
 
     if (pageRef.current) {

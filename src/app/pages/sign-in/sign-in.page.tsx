@@ -53,9 +53,9 @@ export default function SignIn() {
     const token = HttpService.getAccessToken() || "";
 
     subscribeOnce(AuthService.validate(token), (data) => {
-      dispatch(storeUser(new User(data.result.data.user)));
-      StorageService.set("access_token", data.result.data.jwt);
-      StorageService.set("role", data.result.data.user.role);
+      dispatch(storeUser(new User(data.result?.data.user)));
+      StorageService.set("access_token", data.result?.data.jwt);
+      StorageService.set("role", data.result?.data.user.role);
       navigate("/", { replace: true });
     });
 
@@ -66,13 +66,13 @@ export default function SignIn() {
     subscribeOnce(
       AuthService.login(accountState.username, accountState.password),
       (response) => {
-        dispatch(storeUser(new User(response.result.data.user)));
+        dispatch(storeUser(new User(response.result?.data.user)));
         if (accountState.isRemembered) {
-          StorageService.set("access_token", response.result.data.jwt);
-          StorageService.set("role", response.result.data.user.role);
+          StorageService.set("access_token", response.result?.data.jwt);
+          StorageService.set("role", response.result?.data.user.role);
         } else {
-          StorageService.setSession("access_token", response.result.data.jwt);
-          StorageService.setSession("role", response.result.data.user.role);
+          StorageService.setSession("access_token", response.result?.data.jwt);
+          StorageService.setSession("role", response.result?.data.user.role);
         }
 
         const backUrl = query.get("backUrl");

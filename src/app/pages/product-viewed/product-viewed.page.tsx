@@ -12,7 +12,6 @@ import useObservable from "@core/hooks/use-observable.hook";
 import ProductService, {
   ProductPaginationOption,
 } from "@app/services/http/product.service";
-import { ResponseResult } from "@core/services/http/http.service";
 import { DEFAULT_PAGINATION_OPTION } from "@app/shared/constants/common";
 import ViewService from "@app/services/view.service";
 
@@ -39,19 +38,16 @@ function ProductViewed() {
         perPage: pagination.perPage,
         ids: lastViewIds,
       };
-      subscribeUntilDestroy(
-        ProductService.getList(options),
-        (response: ResponseResult) => {
-          const data: Product[] = response.data.map(
-            (item: any) => new Product(item)
-          );
-          setLastViewProducts(data);
+      subscribeUntilDestroy(ProductService.getList(options), (response) => {
+        const data: Product[] = response.data.map(
+          (item: any) => new Product(item)
+        );
+        setLastViewProducts(data);
 
-          if (data.length < pagination.perPage) {
-            setIsTheLast(true);
-          }
+        if (data.length < pagination.perPage) {
+          setIsTheLast(true);
         }
-      );
+      });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

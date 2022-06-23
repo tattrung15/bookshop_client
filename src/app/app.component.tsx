@@ -56,10 +56,10 @@ function App() {
     const token = HttpService.getAccessToken() || "";
 
     subscribeOnce(AuthService.validate(token), (response) => {
-      const role = response.result.data.user.role;
+      const role = response.result?.data.user.role;
 
-      dispatch(storeUser(new User(response.result.data.user)));
-      StorageService.set("access_token", response.result.data.jwt);
+      dispatch(storeUser(new User(response.result?.data.user)));
+      StorageService.set("access_token", response.result?.data.jwt);
       StorageService.set("role", role);
 
       if (role === Role.MEMBER) {

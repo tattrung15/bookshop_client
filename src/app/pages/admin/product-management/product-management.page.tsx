@@ -31,7 +31,6 @@ import {
   FETCH_TYPE,
   TYPE_ALERT,
 } from "@app/shared/constants/common";
-import { ResponseResult } from "@core/services/http/http.service";
 import PopupDialog from "@app/components/popup-dialog";
 import ConfirmDialog from "@app/components/confirm-dialog";
 import {
@@ -77,24 +76,18 @@ function ProductManagement() {
   });
 
   useEffect(() => {
-    subscribeUntilDestroy(
-      ProductService.getList(pagination),
-      (response: ResponseResult) => {
-        setProducts(response.data as Product[]);
-        setTotal(response.pagination?.total || 0);
-      }
-    );
+    subscribeUntilDestroy(ProductService.getList(pagination), (response) => {
+      setProducts(response.data as Product[]);
+      setTotal(response.pagination?.total || 0);
+    });
 
     const options: CategoryPaginationOption = {
       ...DEFAULT_PAGINATION_OPTION,
       fetchType: FETCH_TYPE.ALL,
     };
-    subscribeUntilDestroy(
-      CategoryService.getList(options),
-      (response: ResponseResult) => {
-        setAllCategories(response.data as Category[]);
-      }
-    );
+    subscribeUntilDestroy(CategoryService.getList(options), (response) => {
+      setAllCategories(response.data as Category[]);
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);

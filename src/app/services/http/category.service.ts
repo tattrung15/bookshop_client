@@ -1,7 +1,7 @@
-import { Observable } from "rxjs";
-import { map, pluck } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import HttpService, {
   PaginationOption,
+  ResponseResult,
 } from "@core/services/http/http.service";
 import {
   Category,
@@ -14,36 +14,36 @@ export type CategoryPaginationOption = PaginationOption & {
 };
 
 class _CategoryService {
-  public getList(options?: CategoryPaginationOption): Observable<any> {
+  public getList(options?: CategoryPaginationOption) {
     return HttpService.get("/categories", {
       queryParams: { ...options },
-    }).pipe(pluck("result"));
+    }).pipe(map<any, ResponseResult>((response) => response.result));
   }
 
-  public getDetail(categoryId: number | string): Observable<Category> {
+  public getDetail(categoryId: number | string) {
     return HttpService.get(`/categories/${categoryId}`).pipe(
-      map((response: any) => new Category(response.result.data))
+      map<any, Category>((response) => response.result.data)
     );
   }
 
-  public createCategory(category: CreateCategoryDto): Observable<Category> {
+  public createCategory(category: CreateCategoryDto) {
     return HttpService.post("/categories", {
       body: { ...category },
-    }).pipe(map((response: any) => new Category(response.result.data)));
+    }).pipe(map<any, Category>((response) => response.result.data));
   }
 
   public updateCategory(
     categoryId: number,
     updateCategoryDto: Partial<UpdateCategoryDto>
-  ): Observable<Category> {
+  ) {
     return HttpService.patch(`/categories/${categoryId}`, {
       body: { ...updateCategoryDto },
-    }).pipe(map((response: any) => new Category(response.result.data)));
+    }).pipe(map<any, Category>((response) => response.result.data));
   }
 
-  public deleteCategory(categoryId: number): Observable<Category> {
+  public deleteCategory(categoryId: number) {
     return HttpService.delete(`/categories/${categoryId}`).pipe(
-      map((response: any) => new Category(response.result.data))
+      map<any, Category>((response) => response.result.data)
     );
   }
 }

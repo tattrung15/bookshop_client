@@ -15,13 +15,9 @@ import useObservable from "@core/hooks/use-observable.hook";
 import ProductService, {
   ProductPaginationOption,
 } from "@app/services/http/product.service";
-import {
-  PaginationOption,
-  ResponseResult,
-} from "@core/services/http/http.service";
+import { PaginationOption } from "@core/services/http/http.service";
 import { DEFAULT_PAGINATION_OPTION } from "@app/shared/constants/common";
 import CategoryService from "@app/services/http/category.service";
-import { Category } from "@app/models/category.model";
 
 function ProductList() {
   const classes = useStyles();
@@ -53,7 +49,7 @@ function ProductList() {
       const category = query.get("category") || "";
       subscribeUntilDestroy(
         CategoryService.getDetail(category).pipe(
-          switchMap((data: Category) => {
+          switchMap((data) => {
             if (data.id) {
               setTextBreadcrumbs(data.name);
             }
@@ -61,7 +57,7 @@ function ProductList() {
             return ProductService.getListByCategory(category, options);
           })
         ),
-        (response: ResponseResult) => {
+        (response) => {
           const data = response.data as Product[];
           const total = response.pagination?.total || 0;
           const perPage = response.pagination?.perPage || 1;
@@ -89,16 +85,13 @@ function ProductList() {
         ...(mode === "top-selling" && { sort: "-quantityPurchased" }),
         ...(search && { like: { title: search } }),
       };
-      subscribeUntilDestroy(
-        ProductService.getList(options),
-        (response: ResponseResult) => {
-          const data = response.data as Product[];
-          const total = response.pagination?.total || 0;
-          const perPage = response.pagination?.perPage || 1;
-          setProducts(data);
-          setNumberOfPage(Math.ceil(total / perPage));
-        }
-      );
+      subscribeUntilDestroy(ProductService.getList(options), (response) => {
+        const data = response.data as Product[];
+        const total = response.pagination?.total || 0;
+        const perPage = response.pagination?.perPage || 1;
+        setProducts(data);
+        setNumberOfPage(Math.ceil(total / perPage));
+      });
     }
 
     if (pageRef.current) {

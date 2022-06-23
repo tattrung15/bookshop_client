@@ -30,9 +30,7 @@ const fetchAndStoreDeliveryEpic = (
     ofType(DeliveryEpicType.FETCH_DELIVERY),
     switchMap((action: AppAction) =>
       DeliveryService.getAll().pipe(
-        map((response: any) =>
-          storeDelivery(response?.result?.data as Delivery[])
-        ),
+        map((response) => storeDelivery(response.result?.data as Delivery[])),
         catchError(() =>
           of({
             type: DeliveryActionType.FETCH_DELIVERY_FAILED,

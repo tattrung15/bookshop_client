@@ -48,9 +48,9 @@ export default function SignUp() {
     const token = HttpService.getAccessToken() || "";
 
     subscribeOnce(AuthService.validate(token), (data) => {
-      dispatch(storeUser(new User(data.result.data.user)));
-      StorageService.set("access_token", data.result.data.jwt);
-      StorageService.set("role", data.result.data.user.role);
+      dispatch(storeUser(new User(data.result?.data.user)));
+      StorageService.set("access_token", data.result?.data.jwt);
+      StorageService.set("role", data.result?.data.user.role);
       navigate("/", { replace: true });
     });
 
@@ -59,9 +59,9 @@ export default function SignUp() {
 
   const onSubmit = () => {
     subscribeOnce(AuthService.signUp(userDto), (response) => {
-      dispatch(storeUser(new User(response.result.data.user)));
-      StorageService.set("access_token", response.result.data.jwt);
-      StorageService.set("role", response.result.data.user.role);
+      dispatch(storeUser(new User(response.result?.data.user)));
+      StorageService.set("access_token", response.result?.data.jwt);
+      StorageService.set("role", response.result?.data.user.role);
 
       navigate("/", { replace: true });
     });

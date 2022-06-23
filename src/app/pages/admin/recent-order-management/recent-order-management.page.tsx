@@ -17,10 +17,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { useStyles } from "./make-style";
-import {
-  PaginationOption,
-  ResponseResult,
-} from "@core/services/http/http.service";
+import { PaginationOption } from "@core/services/http/http.service";
 import {
   DEFAULT_DATE_FORMAT,
   DEFAULT_PAGINATION_OPTION,
@@ -61,7 +58,7 @@ function RecentOrderManagement() {
   useEffect(() => {
     subscribeUntilDestroy(
       SaleOrderService.getListForAdmin(pagination),
-      (response: ResponseResult) => {
+      (response) => {
         setSaleOrders(response.data as SaleOrder[]);
         setTotal(response.pagination?.total || 0);
       }

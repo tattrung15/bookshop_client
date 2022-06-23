@@ -1,7 +1,7 @@
-import { Observable } from "rxjs";
-import { map, pluck } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import HttpService, {
   PaginationOption,
+  ResponseResult,
 } from "@core/services/http/http.service";
 import { FETCH_TYPE } from "@app/shared/constants/common";
 import {
@@ -15,31 +15,28 @@ export type BannerPaginationOption = PaginationOption & {
 };
 
 class _BannerService {
-  public getList(options?: BannerPaginationOption): Observable<any> {
+  public getList(options?: BannerPaginationOption) {
     return HttpService.get("/banners", {
       queryParams: { ...options },
-    }).pipe(pluck("result"));
+    }).pipe(map<any, ResponseResult>((response) => response.result));
   }
 
-  public createBanner(banner: CreateBannerDto): Observable<Banner> {
+  public createBanner(banner: CreateBannerDto) {
     return HttpService.post("/banners", {
       body: { ...banner },
-    }).pipe(map((response: any) => new Banner(response.result.data)));
+    }).pipe(map<any, Banner>((response) => response.result.data));
   }
 
-  public updateBanner(
-    bannerId: number,
-    updateBannerDto: UpdateBannerDto
-  ): Observable<Banner> {
+  public updateBanner(bannerId: number, updateBannerDto: UpdateBannerDto) {
     return HttpService.patch(`/banners/${bannerId}`, {
       body: {
         title: updateBannerDto.title,
         type: updateBannerDto.type,
       },
-    }).pipe(map((response: any) => new Banner(response.result.data)));
+    }).pipe(map<any, Banner>((response) => response.result.data));
   }
 
-  public uploadBannerImage(bannerId: number, file: File): Observable<Banner> {
+  public uploadBannerImage(bannerId: number, file: File) {
     const formData = {
       file: file,
     };
@@ -47,23 +44,20 @@ class _BannerService {
     return HttpService.put(`/banners/${bannerId}/images`, {
       body: formData,
       multipart: true,
-    }).pipe(map((response: any) => new Banner(response.result.data)));
+    }).pipe(map<any, Banner>((response) => response.result.data));
   }
 
-  public changeStatus(
-    bannerId: number,
-    newStatus: boolean
-  ): Observable<Banner> {
+  public changeStatus(bannerId: number, newStatus: boolean) {
     return HttpService.patch(`/banners/${bannerId}/status`, {
       body: {
         isActive: newStatus,
       },
-    }).pipe(map((response: any) => new Banner(response.result.data)));
+    }).pipe(map<any, Banner>((response) => response.result.data));
   }
 
-  public deleteBanner(bannerId: number): Observable<Banner> {
+  public deleteBanner(bannerId: number) {
     return HttpService.delete(`/banners/${bannerId}`).pipe(
-      map((response: any) => new Banner(response.result.data))
+      map<any, Banner>((response) => response.result.data)
     );
   }
 }

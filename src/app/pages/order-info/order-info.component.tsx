@@ -13,7 +13,6 @@ import useObservable from "@core/hooks/use-observable.hook";
 import SaleOrderService, {
   SaleOrderPaginationOption,
 } from "@app/services/http/sale-order.service";
-import { ResponseResult } from "@core/services/http/http.service";
 import OrderItem from "@app/components/order-item";
 
 const handleLinkActiving = (stateFromLink: string, stateFromQuery: string) => {
@@ -50,7 +49,7 @@ function OrderInfo() {
     };
     subscribeUntilDestroy(
       SaleOrderService.getListForMember(options),
-      (response: ResponseResult) => {
+      (response) => {
         const data = response.data as SaleOrder[];
         const total = response.pagination?.total || 0;
         const perPage = response.pagination?.perPage || 1;

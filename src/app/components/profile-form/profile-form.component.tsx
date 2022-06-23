@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
-import { UpdateUserDto, User } from "@app/models/user.model";
+import { UpdateUserDto } from "@app/models/user.model";
 import { useStyles } from "./make-style";
 import PopupDialog from "../popup-dialog";
 import ChangePasswordForm from "../change-password-form";
@@ -44,7 +44,7 @@ function ProfileForm(props: PropTypes) {
 
   useEffect(() => {
     if (userId) {
-      subscribeOnce(UserService.getUserById(userId), (data: User) => {
+      subscribeOnce(UserService.getUserById(userId), (data) => {
         const newUserInfo: Partial<UpdateUserDto> = {
           ...userInfo,
           firstName: data.firstName,
@@ -65,7 +65,7 @@ function ProfileForm(props: PropTypes) {
   };
 
   const onUpdateButtonClick = () => {
-    subscribeOnce(UserService.updateUser(userId, userInfo), (data: User) => {
+    subscribeOnce(UserService.updateUser(userId, userInfo), (data) => {
       const newUserInfo: Partial<UpdateUserDto> = {
         ...userInfo,
         firstName: data.firstName,

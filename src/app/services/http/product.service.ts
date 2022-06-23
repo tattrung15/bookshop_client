@@ -1,7 +1,7 @@
-import { Observable } from "rxjs";
-import { map, pluck } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import HttpService, {
   PaginationOption,
+  ResponseResult,
 } from "@core/services/http/http.service";
 import {
   CreateProductDto,
@@ -16,45 +16,45 @@ export type ProductPaginationOption = PaginationOption & {
 };
 
 class _ProductService {
-  public getList(options?: ProductPaginationOption): Observable<any> {
+  public getList(options?: ProductPaginationOption) {
     return HttpService.get("/products", {
       queryParams: { ...options },
-    }).pipe(pluck("result"));
+    }).pipe(map<any, ResponseResult>((response) => response.result));
   }
 
-  public getDetail(productId: number | string): Observable<Product> {
+  public getDetail(productId: number | string) {
     return HttpService.get(`/products/${productId}`).pipe(
-      map((response: any) => new Product(response.result.data))
+      map<any, Product>((response) => response.result.data)
     );
   }
 
   public getListByCategory(
     categoryId: number | string,
     options?: PaginationOption
-  ): Observable<any> {
+  ) {
     return HttpService.get(`/categories/${categoryId}/products`, {
       queryParams: { ...options },
-    }).pipe(pluck("result"));
+    }).pipe(map<any, ResponseResult>((response) => response.result));
   }
 
-  public createProduct(product: CreateProductDto): Observable<Product> {
+  public createProduct(product: CreateProductDto) {
     return HttpService.post("/products", {
       body: { ...product },
-    }).pipe(map((response: any) => new Product(response.result.data)));
+    }).pipe(map<any, Product>((response) => response.result.data));
   }
 
   public updateProduct(
     productId: number,
     updateProductDto: Partial<UpdateProductDto>
-  ): Observable<Product> {
+  ) {
     return HttpService.patch(`/products/${productId}`, {
       body: { ...updateProductDto },
-    }).pipe(map((response: any) => new Product(response.result.data)));
+    }).pipe(map<any, Product>((response) => response.result.data));
   }
 
-  public deleteProduct(productId: number): Observable<Product> {
+  public deleteProduct(productId: number) {
     return HttpService.delete(`/products/${productId}`).pipe(
-      map((response: any) => new Product(response.result.data))
+      map<any, Product>((response) => response.result.data)
     );
   }
 }

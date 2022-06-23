@@ -27,10 +27,7 @@ import { useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useReactToPrint } from "react-to-print";
 import { useStyles } from "./make-style";
-import {
-  PaginationOption,
-  ResponseResult,
-} from "@core/services/http/http.service";
+import { PaginationOption } from "@core/services/http/http.service";
 import {
   DEFAULT_PAGINATION_OPTION,
   TYPE_ALERT,
@@ -76,7 +73,7 @@ function SaleOrderManagement() {
   useEffect(() => {
     subscribeUntilDestroy(
       SaleOrderService.getListForAdmin(pagination),
-      (response: ResponseResult) => {
+      (response) => {
         setSaleOrders(response.data as SaleOrder[]);
         setTotal(response.pagination?.total || 0);
       }
@@ -107,18 +104,15 @@ function SaleOrderManagement() {
         clearTimeout(typingTimeoutRef.current);
       }
       typingTimeoutRef.current = setTimeout(() => {
-        subscribeOnce(
-          SaleOrderService.getSaleOrderForAdmin(value),
-          (data: SaleOrder) => {
-            if (data && data.id) {
-              setSaleOrders([data]);
-              setTotal(1);
-            } else {
-              setSaleOrders([]);
-              setTotal(0);
-            }
+        subscribeOnce(SaleOrderService.getSaleOrderForAdmin(value), (data) => {
+          if (data && data.id) {
+            setSaleOrders([data]);
+            setTotal(1);
+          } else {
+            setSaleOrders([]);
+            setTotal(0);
           }
-        );
+        });
       }, 500);
     } else if (value === 0) {
       setForceUpdate();

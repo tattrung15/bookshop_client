@@ -152,7 +152,7 @@ export class _HttpService {
     return `${process.env.REACT_APP_BASE_API_URL}${uri}`;
   }
 
-  private generateHttpParams(params: object): any {
+  private generateHttpParams(params: object): string {
     const httpParams: string[] = [];
     const objectToQueryString = (obj: object, prefix?: any) => {
       for (const key in obj) {

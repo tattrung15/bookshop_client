@@ -16,7 +16,6 @@ import useObservable from "@core/hooks/use-observable.hook";
 import UserService from "@app/services/http/user.service";
 import { OrderItem } from "@app/models/order-item.model";
 import CartService from "@app/services/http/cart.service";
-import { ResponseResult } from "@core/services/http/http.service";
 import { Cart } from "@app/models/cart.model";
 import {
   buildImageSrc,
@@ -80,24 +79,21 @@ function Checkout() {
 
   useEffect(() => {
     if (userId) {
-      subscribeUntilDestroy(UserService.getUserById(userId), (data: User) => {
+      subscribeUntilDestroy(UserService.getUserById(userId), (data) => {
         setCurrentUser(data);
       });
 
-      subscribeUntilDestroy(
-        CartService.getCart(),
-        (response: ResponseResult) => {
-          if (response.data) {
-            const responseData = response.data as Cart;
-            responseData.orderItems.sort((a, b) => a.id - b.id);
-            setOrderItems(responseData.orderItems);
-            setSaleOrderId(responseData.id);
-          } else {
-            setSaleOrderId(0);
-            navigate("/", { replace: true });
-          }
+      subscribeUntilDestroy(CartService.getCart(), (response) => {
+        if (response.data) {
+          const responseData = response.data as Cart;
+          responseData.orderItems.sort((a, b) => a.id - b.id);
+          setOrderItems(responseData.orderItems);
+          setSaleOrderId(responseData.id);
+        } else {
+          setSaleOrderId(0);
+          navigate("/", { replace: true });
         }
-      );
+      });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

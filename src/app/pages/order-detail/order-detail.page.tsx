@@ -42,7 +42,7 @@ function OrderDetail() {
     if (saleOrderIdParsed) {
       subscribeUntilDestroy(
         SaleOrderService.getSaleOrderForMember(saleOrderIdParsed),
-        (data: SaleOrder) => {
+        (data) => {
           setSaleOrder(data);
           setDeliveryIndex(DELIVERY_INDEX_MAP[data.delivery.index]);
         }

@@ -39,15 +39,10 @@ function MainSlider(props: PropTypes) {
       fetchType: FETCH_TYPE.USER,
     };
 
-    subscribeUntilDestroy(
-      BannerService.getList(bannerOptions),
-      (response: ResponseResult) => {
-        const data: Banner[] = response.data.map(
-          (item: any) => new Banner(item)
-        );
-        setBanners(data);
-      }
-    );
+    subscribeUntilDestroy(BannerService.getList(bannerOptions), (response) => {
+      const data = (response.data as Banner[]).map((item) => new Banner(item));
+      setBanners(data);
+    });
 
     const categoryOptions: CategoryPaginationOption = {
       ...DEFAULT_PAGINATION_OPTION,
@@ -57,8 +52,8 @@ function MainSlider(props: PropTypes) {
     subscribeUntilDestroy(
       CategoryService.getList(categoryOptions),
       (response: ResponseResult) => {
-        const data: Category[] = response.data.map(
-          (item: any) => new Category(item)
+        const data = (response.data as Category[]).map(
+          (item) => new Category(item)
         );
         setCategories(data);
       }

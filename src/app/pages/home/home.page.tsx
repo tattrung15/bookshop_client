@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import {
   bannerCombo,
@@ -16,20 +15,12 @@ import ProductService, {
 } from "@app/services/http/product.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import { Product } from "@app/models/product.model";
-import { ResponseResult } from "@core/services/http/http.service";
 import ProductItem from "@app/components/product-item";
 import MainSlider from "@app/components/main-slider";
-import { Role } from "@app/shared/types/user.type";
-import useDestroy from "@core/hooks/use-destroy.hook";
-import { fetchCart } from "@app/store/cart/cart.epic";
-import { GlobalState } from "@app/store";
 
 function HomePage() {
   const classes = useStyles();
 
-  const dispatch = useDispatch();
-  const { destroy$ } = useDestroy();
-  const { role } = useSelector(selectAuth);
   const { subscribeUntilDestroy } = useObservable();
 
   const [newProducts, setNewProducts] = useState<Product[]>([]);
@@ -39,51 +30,37 @@ function HomePage() {
   const [productBestSelling, setProductBestSelling] = useState<Product[]>([]);
 
   useEffect(() => {
-    if (role === Role.MEMBER) {
-      dispatch(fetchCart({ destroy$ }));
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role]);
-
-  useEffect(() => {
     const options: ProductPaginationOption = {
       page: 1,
       perPage: 4,
       sort: "-quantityPurchased",
     };
-    subscribeUntilDestroy(
-      ProductService.getList(options),
-      (response: ResponseResult) => {
-        setProductBestSelling(response.data as Product[]);
-      }
-    );
+    subscribeUntilDestroy(ProductService.getList(options), (response) => {
+      setProductBestSelling(response.data as Product[]);
+    });
 
     delete options.sort;
-    subscribeUntilDestroy(
-      ProductService.getList(options),
-      (response: ResponseResult) => {
-        setNewProducts(response.data as Product[]);
-      }
-    );
+    subscribeUntilDestroy(ProductService.getList(options), (response) => {
+      setNewProducts(response.data as Product[]);
+    });
 
     subscribeUntilDestroy(
       ProductService.getListByCategory("combo", options),
-      (response: ResponseResult) => {
+      (response) => {
         setProductCombo(response.data as Product[]);
       }
     );
 
     subscribeUntilDestroy(
       ProductService.getListByCategory("wings-books", options),
-      (response: ResponseResult) => {
+      (response) => {
         setProductWingsBooks(response.data as Product[]);
       }
     );
 
     subscribeUntilDestroy(
       ProductService.getListByCategory("manga-comic", options),
-      (response: ResponseResult) => {
+      (response) => {
         setProductComicManga(response.data as Product[]);
       }
     );
@@ -272,7 +249,5 @@ function HomePage() {
     </>
   );
 }
-
-const selectAuth = (state: GlobalState) => state.auth;
 
 export default HomePage;

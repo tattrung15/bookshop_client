@@ -29,10 +29,7 @@ import UserService from "@app/services/http/user.service";
 import useObservable from "@core/hooks/use-observable.hook";
 import { useStyles } from "./make-style";
 import ConfirmDialog from "@app/components/confirm-dialog";
-import {
-  PaginationOption,
-  ResponseResult,
-} from "@core/services/http/http.service";
+import { PaginationOption } from "@core/services/http/http.service";
 import {
   DEFAULT_PAGINATION_OPTION,
   TYPE_ALERT,
@@ -69,13 +66,10 @@ function UserManagement() {
   });
 
   useEffect(() => {
-    subscribeUntilDestroy(
-      UserService.getList(pagination),
-      (response: ResponseResult) => {
-        setUsers(response.data as User[]);
-        setTotal(response.pagination?.total || 0);
-      }
-    );
+    subscribeUntilDestroy(UserService.getList(pagination), (response) => {
+      setUsers(response.data as User[]);
+      setTotal(response.pagination?.total || 0);
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination, forceUpdate]);
