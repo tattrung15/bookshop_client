@@ -72,10 +72,10 @@ function Checkout() {
   const { id: userId } = useSelector(selectAuth);
   const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
-  const [saleOrderId, setSaleOrderId] = useState<number>(0);
+  const [saleOrderId, setSaleOrderId] = useState(0);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [isOrderSuccess, setIsOrderSuccess] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User>(new User(null));
+  const [currentUser, setCurrentUser] = useState(new User(null));
 
   useEffect(() => {
     if (userId) {

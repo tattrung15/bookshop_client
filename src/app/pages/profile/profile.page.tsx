@@ -51,7 +51,7 @@ function Profile() {
     navigation: [{ title: "Trang chủ", linkTo: "/" }],
     textPrimary: "Thông tin tài khoản",
   });
-  const [currentUser, setCurrentUser] = useState<User>(new User(null));
+  const [currentUser, setCurrentUser] = useState(new User(null));
 
   useEffect(() => {
     if (userId) {

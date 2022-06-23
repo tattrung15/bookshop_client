@@ -41,8 +41,8 @@ export default function SignIn() {
 
   const [username, setUsername] = useState("");
   const [isOpenPopup, setIsOpenPopup] = useState(false);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [dialogContent, setDialogContent] = useState<string>("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState("");
   const [accountState, setAccountState] = useState({
     username: "",
     password: "",

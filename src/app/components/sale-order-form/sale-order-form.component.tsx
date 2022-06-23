@@ -32,7 +32,7 @@ function SaleOrderForm(props: PropTypes) {
   } = props;
 
   const [deliveryIndex, setDeliveryIndex] = useState(0);
-  const [deliveryIndexChange, setDeliveryIndexChange] = useState<number>(() => {
+  const [deliveryIndexChange, setDeliveryIndexChange] = useState(() => {
     return recordForAction.delivery.id;
   });
 

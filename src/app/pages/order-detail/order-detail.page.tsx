@@ -32,7 +32,7 @@ function OrderDetail() {
 
   const [forceUpdate, setForceUpdate] = useForceUpdate();
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [saleOrder, setSaleOrder] = useState<SaleOrder>(new SaleOrder(null));
+  const [saleOrder, setSaleOrder] = useState(new SaleOrder(null));
   const [deliveryIndex, setDeliveryIndex] = useState(() => {
     return DELIVERY_INDEX_MAP[DELIVERY_INDEX.WAITING_TO_CONFIRM];
   });

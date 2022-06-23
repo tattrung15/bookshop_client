@@ -60,9 +60,7 @@ function SaleOrderManagement() {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [deliverFilter, setDeliveryFilter] = useState(0);
   const [saleOrders, setSaleOrders] = useState<SaleOrder[]>([]);
-  const [recordForAction, setRecordForAction] = useState<SaleOrder>(
-    new SaleOrder(null)
-  );
+  const [recordForAction, setRecordForAction] = useState(new SaleOrder(null));
   const [pagination, setPagination] = useState(() => {
     const options: PaginationOption = {
       ...DEFAULT_PAGINATION_OPTION,

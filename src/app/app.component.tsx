@@ -37,9 +37,9 @@ function App() {
 
   const { destroy$ } = useDestroy();
   const { subscribeOnce } = useObservable();
-  const [openBackdop, setOpenBackdrop] = useState<boolean>(false);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [dialogContent, setDialogContent] = useState<string>("");
+  const [openBackdop, setOpenBackdrop] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState("");
 
   const { isDeliveryLoading, isDeliveryError } = useSelector(selectDelivery);
   const { isCartLoading, isCartError } = useSelector(selectCart);

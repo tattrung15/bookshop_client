@@ -49,7 +49,7 @@ function ProductDetail() {
   const { subscribeOnce, subscribeUntilDestroy } = useObservable();
 
   const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState<Product>(new Product(null));
+  const [product, setProduct] = useState(new Product(null));
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [lastViewProducts, setLastViewProducts] = useState<Product[]>([]);
 
